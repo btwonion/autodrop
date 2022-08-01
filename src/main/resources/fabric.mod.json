@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "simpleautodrop",
+  "name": "Simple Auto Drop",
+  "description": "Adds a simple function to automatically drop items.",
+  "contact": {
+    "issues": "https://github.com/btwonion/SimpleAutoDrop/issues",
+    "sources": "https://github.com/btwonion/SimpleAutoDrop"
+  },
+  "authors": [
+    {
+      "name": "btwonion"
+    }
+  ],
+  "contributors": ["btwonion"],
+  "license": ["GNU General Public License v3.0"],
+  "version": "1.0.0",
+  "environment": "client",
+  "depends": {
+    "fabric-language-kotlin": ">=1.8.2+kotlin.1.7.10"
+  },
+  "entrypoints": {
+    "main": [
+      {
+        "adapter": "kotlin",
+        "value": "net.nyon.simpleautodrop.SimpleAutoDrop"
+      }
+    ]
+  },
+  "mixins": [
+    "simpleautodrop.mixins.json"
+  ]
+}
