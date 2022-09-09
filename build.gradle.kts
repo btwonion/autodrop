@@ -35,7 +35,7 @@ val silkVersion: String by project
 dependencies {
     minecraft("com.mojang:minecraft:$minecraftVersion")
     mappings(loom.layered {
-        addLayer(quiltMappings.mappings("org.quiltmc:quilt-mappings:$quiltMappingsVersion"))
+        //addLayer(quiltMappings.mappings("org.quiltmc:quilt-mappings:$quiltMappingsVersion"))
         officialMojangMappings()
     })
 
@@ -44,8 +44,7 @@ dependencies {
     modImplementation("net.fabricmc:fabric-language-kotlin:$fabricLanguageKotlinVersion")
 
     modImplementation("net.silkmc:silk-core:$silkVersion")
-
-    modImplementation("dev.isxander:yet-another-config-lib:$configLibVersion")
+    modImplementation("net.silkmc:silk-commands:$silkVersion")
 }
 
 tasks {
@@ -81,6 +80,16 @@ tasks {
         dependsOn("publishModPublicationToReleasesRepository")
         dependsOn("githubRelease")
     }
+
+    register<Copy>("copyToModsFolder") {
+        group = "mod"
+
+        dependsOn("build")
+
+        from("${project.buildDir}/libs/${project.name}-$version.jar")
+        into("/home/onion/.minecraft/mods/")
+    }
+
 }
 val changelogText =
     file("changelogs/${project.version}.md").takeIf { it.exists() }?.readText() ?: "No changelog provided."
