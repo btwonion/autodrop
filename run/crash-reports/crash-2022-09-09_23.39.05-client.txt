@@ -1,0 +1,157 @@
+---- Minecraft Crash Report ----
+// Why is it breaking :(
+
+Time: 2022-09-09 23:39:05
+Description: Initializing game
+
+java.lang.RuntimeException: Could not execute entrypoint stage 'main' due to errors, provided by 'simpleautodrop'!
+	at net.fabricmc.loader.impl.entrypoint.EntrypointUtils.lambda$invoke0$0(EntrypointUtils.java:51)
+	at net.fabricmc.loader.impl.util.ExceptionUtil.gatherExceptions(ExceptionUtil.java:33)
+	at net.fabricmc.loader.impl.entrypoint.EntrypointUtils.invoke0(EntrypointUtils.java:49)
+	at net.fabricmc.loader.impl.entrypoint.EntrypointUtils.invoke(EntrypointUtils.java:35)
+	at net.fabricmc.loader.impl.game.minecraft.Hooks.startClient(Hooks.java:52)
+	at net.minecraft.client.Minecraft.<init>(Minecraft.java:518)
+	at net.minecraft.client.main.Main.run(Main.java:189)
+	at net.minecraft.client.main.Main.main(Main.java:49)
+	at net.fabricmc.loader.impl.game.minecraft.MinecraftGameProvider.launch(MinecraftGameProvider.java:461)
+	at net.fabricmc.loader.impl.launch.knot.Knot.launch(Knot.java:74)
+	at net.fabricmc.loader.impl.launch.knot.KnotClient.main(KnotClient.java:23)
+	at net.fabricmc.devlaunchinjector.Main.main(Main.java:86)
+Caused by: kotlinx.serialization.json.internal.JsonDecodingException: Expected start of the object '{', but had 'EOF' instead at path: $
+JSON input: [B@21bea30a
+	at kotlinx.serialization.json.internal.JsonExceptionsKt.JsonDecodingException(JsonExceptions.kt:24)
+	at kotlinx.serialization.json.internal.JsonExceptionsKt.JsonDecodingException(JsonExceptions.kt:32)
+	at kotlinx.serialization.json.internal.AbstractJsonLexer.fail(AbstractJsonLexer.kt:530)
+	at kotlinx.serialization.json.internal.AbstractJsonLexer.fail$default(AbstractJsonLexer.kt:528)
+	at kotlinx.serialization.json.internal.AbstractJsonLexer.fail$kotlinx_serialization_json(AbstractJsonLexer.kt:224)
+	at kotlinx.serialization.json.internal.AbstractJsonLexer.unexpectedToken(AbstractJsonLexer.kt:207)
+	at kotlinx.serialization.json.internal.StringJsonLexer.consumeNextToken(StringJsonLexer.kt:74)
+	at kotlinx.serialization.json.internal.StreamingJsonDecoder.beginStructure(StreamingJsonDecoder.kt:97)
+	at dev.nyon.simpleautodrop.config.SimpleAutoDropSettings$$serializer.deserialize(SimpleAutoDropSettings.kt:13)
+	at dev.nyon.simpleautodrop.config.SimpleAutoDropSettings$$serializer.deserialize(SimpleAutoDropSettings.kt:13)
+	at kotlinx.serialization.json.internal.StreamingJsonDecoder.decodeSerializableValue(StreamingJsonDecoder.kt:70)
+	at kotlinx.serialization.json.Json.decodeFromString(Json.kt:95)
+	at dev.nyon.simpleautodrop.config.ConfigHandlerKt.loadConfig(ConfigHandler.kt:27)
+	at dev.nyon.simpleautodrop.SimpleAutoDrop.init(SimpleAutoDrop.kt:26)
+	at dev.nyon.simpleautodrop.MainKt.initClient(Main.kt:4)
+	at java.base/java.lang.invoke.MethodHandleProxies$1.invoke(MethodHandleProxies.java:198)
+	at jdk.proxy3/com.sun.proxy.jdk.proxy3.$Proxy25.onInitialize(Unknown Source)
+	at net.fabricmc.loader.impl.entrypoint.EntrypointUtils.invoke0(EntrypointUtils.java:47)
+	... 9 more
+
+
+A detailed walkthrough of the error, its code path and all known details is as follows:
+---------------------------------------------------------------------------------------
+
+-- Head --
+Thread: Render thread
+Stacktrace:
+	at net.fabricmc.loader.impl.entrypoint.EntrypointUtils.lambda$invoke0$0(EntrypointUtils.java:51)
+	at net.fabricmc.loader.impl.util.ExceptionUtil.gatherExceptions(ExceptionUtil.java:33)
+	at net.fabricmc.loader.impl.entrypoint.EntrypointUtils.invoke0(EntrypointUtils.java:49)
+	at net.fabricmc.loader.impl.entrypoint.EntrypointUtils.invoke(EntrypointUtils.java:35)
+	at net.fabricmc.loader.impl.game.minecraft.Hooks.startClient(Hooks.java:52)
+	at net.minecraft.client.Minecraft.<init>(Minecraft.java:518)
+
+-- Initialization --
+Details:
+	Modules: 
+Stacktrace:
+	at net.minecraft.client.main.Main.run(Main.java:189)
+	at net.minecraft.client.main.Main.main(Main.java:49)
+	at net.fabricmc.loader.impl.game.minecraft.MinecraftGameProvider.launch(MinecraftGameProvider.java:461)
+	at net.fabricmc.loader.impl.launch.knot.Knot.launch(Knot.java:74)
+	at net.fabricmc.loader.impl.launch.knot.KnotClient.main(KnotClient.java:23)
+	at net.fabricmc.devlaunchinjector.Main.main(Main.java:86)
+
+-- System Details --
+Details:
+	Minecraft Version: 1.19.2
+	Minecraft Version ID: 1.19.2
+	Operating System: Linux (amd64) version 5.19.7-200.fc36.x86_64
+	Java Version: 17.0.4, Amazon.com Inc.
+	Java VM Version: OpenJDK 64-Bit Server VM (mixed mode, sharing), Amazon.com Inc.
+	Memory: 1306399128 bytes (1245 MiB) / 2174746624 bytes (2074 MiB) up to 4154458112 bytes (3962 MiB)
+	CPUs: 8
+	Processor Vendor: GenuineIntel
+	Processor Name: Intel(R) Core(TM) i5-8300H CPU @ 2.30GHz
+	Identifier: Intel64 Family 6 Model 158 Stepping 10
+	Microarchitecture: unknown
+	Frequency (GHz): 2.30
+	Number of physical packages: 1
+	Number of physical CPUs: 4
+	Number of logical CPUs: 8
+	Graphics card #0 name: CoffeeLake-H GT2 [UHD Graphics 630]
+	Graphics card #0 vendor: Intel Corporation (0x8086)
+	Graphics card #0 VRAM (MB): 256.00
+	Graphics card #0 deviceId: 0x3e9b
+	Graphics card #0 versionInfo: unknown
+	Virtual memory max (MB): 16115.84
+	Virtual memory used (MB): 14351.07
+	Swap memory total (MB): 8192.00
+	Swap memory used (MB): 576.00
+	JVM Flags: 0 total; 
+	Fabric Mods: 
+		fabric-api: Fabric API 0.60.0+1.19.2
+		fabric-api-base: Fabric API Base 0.4.11+e62f51a390
+		fabric-api-lookup-api-v1: Fabric API Lookup API (v1) 1.6.9+9ff28f4090
+		fabric-biome-api-v1: Fabric Biome API (v1) 9.0.17+aeb40ebe90
+		fabric-blockrenderlayer-v1: Fabric BlockRenderLayer Registration (v1) 1.1.20+aeb40ebe90
+		fabric-client-tags-api-v1: Fabric Client Tags 1.0.1+b35fea8390
+		fabric-command-api-v2: Fabric Command API (v2) 2.1.7+0c17ea9690
+		fabric-content-registries-v0: Fabric Content Registries (v0) 3.2.3+aeb40ebe90
+		fabric-convention-tags-v1: Fabric Convention Tags 1.1.1+7cd20a1490
+		fabric-crash-report-info-v1: Fabric Crash Report Info (v1) 0.2.5+aeb40ebe90
+		fabric-data-generation-api-v1: Fabric Data Generation API (v1) 5.1.8+a680b9b490
+		fabric-dimensions-v1: Fabric Dimensions API (v1) 2.1.30+aeb40ebe90
+		fabric-entity-events-v1: Fabric Entity Events (v1) 1.4.18+9ff28f4090
+		fabric-events-interaction-v0: Fabric Events Interaction (v0) 0.4.28+aeb40ebe90
+		fabric-game-rule-api-v1: Fabric Game Rule API (v1) 1.0.21+aeb40ebe90
+		fabric-gametest-api-v1: Fabric Game Test API (v1) 1.0.35+e62f51a390
+		fabric-item-api-v1: Fabric Item API (v1) 1.5.7+35a03c4390
+		fabric-item-groups-v0: Fabric Item Groups (v0) 0.3.28+aeb40ebe90
+		fabric-key-binding-api-v1: Fabric Key Binding API (v1) 1.0.20+aeb40ebe90
+		fabric-language-kotlin: Fabric Language Kotlin 1.8.3+kotlin.1.7.10
+		fabric-lifecycle-events-v1: Fabric Lifecycle Events (v1) 2.1.2+aeb40ebe90
+		fabric-loot-api-v2: Fabric Loot API (v2) 1.1.3+83a8659290
+		fabric-message-api-v1: Fabric Message API (v1) 5.0.3+176380a290
+		fabric-mining-level-api-v1: Fabric Mining Level API (v1) 2.1.14+33fbc73890
+		fabric-models-v0: Fabric Models (v0) 0.3.17+aeb40ebe90
+		fabric-networking-api-v1: Fabric Networking API (v1) 1.2.4+5eb68ef290
+		fabric-object-builder-api-v1: Fabric Object Builder API (v1) 4.0.11+aeb40ebe90
+		fabric-particles-v1: Fabric Particles (v1) 1.0.10+aeb40ebe90
+		fabric-registry-sync-v0: Fabric Registry Sync (v0) 0.9.24+aeb40ebe90
+		fabric-renderer-api-v1: Fabric Renderer API (v1) 1.0.10+aeb40ebe90
+		fabric-renderer-indigo: Fabric Renderer - Indigo 0.6.12+aeb40ebe90
+		fabric-rendering-data-attachment-v1: Fabric Rendering Data Attachment (v1) 0.3.14+aeb40ebe90
+		fabric-rendering-fluids-v1: Fabric Rendering Fluids (v1) 3.0.7+aeb40ebe90
+		fabric-rendering-v1: Fabric Rendering (v1) 1.10.16+aeb40ebe90
+		fabric-resource-conditions-api-v1: Fabric Resource Conditions API (v1) 2.0.11+e62f51a390
+		fabric-resource-loader-v0: Fabric Resource Loader (v0) 0.6.1+aeb40ebe90
+		fabric-screen-api-v1: Fabric Screen API (v1) 1.0.26+f05effaf90
+		fabric-screen-handler-api-v1: Fabric Screen Handler API (v1) 1.2.13+9ff28f4090
+		fabric-textures-v0: Fabric Textures (v0) 1.0.20+aeb40ebe90
+		fabric-transfer-api-v1: Fabric Transfer API (v1) 2.0.11+83a8659290
+		fabric-transitive-access-wideners-v1: Fabric Transitive Access Wideners (v1) 1.3.0+42d99c3290
+		fabricloader: Fabric Loader 0.14.9
+		java: OpenJDK 64-Bit Server VM 17
+		minecraft: Minecraft 1.19.2
+		silk-all: Silk (All modules) 1.9.2
+			silk-game: Silk Game 1.9.2
+			silk-igui: Silk Inventory GUI 1.9.2
+			silk-nbt: Silk NBT 1.9.2
+			silk-network: Silk Network 1.9.2
+			silk-persistence: Silk Persistence 1.9.2
+		silk-commands: Silk Commands 1.9.2
+		silk-core: Silk Core 1.9.2
+		simpleautodrop: SimpleAutoDrop 1.0.0
+	Launched Version: Fabric
+	Backend library: LWJGL version 3.3.1 SNAPSHOT
+	Backend API: Unknown
+	Window size: <not initialized>
+	GL Caps: Using framebuffer using OpenGL 3.2
+	GL debug messages: <disabled>
+	Using VBOs: Yes
+	Is Modded: Definitely; Client brand changed to 'fabric'
+	Type: Client (map_client.txt)
+	CPU: <unknown>

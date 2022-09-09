@@ -1,4 +1,4 @@
-package net.nyon.simpleautodrop.util
+package dev.nyon.simpleautodrop.util
 
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.PrimitiveKind

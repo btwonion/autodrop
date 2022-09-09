@@ -1,4 +1,4 @@
-package net.nyon.simpleautodrop.config
+package dev.nyon.simpleautodrop.config
 
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
@@ -14,10 +14,10 @@ val config = run {
 private val json = Json { prettyPrint = true }
 
 fun saveConfig() {
-    config.writeBytes(json.encodeToString(settings).encodeToByteArray())
+    config.writeText(json.encodeToString(settings))
 }
 
 fun loadConfig() {
-    if (config.readBytes().isEmpty()) saveConfig()
-    settings = json.decodeFromString(config.readBytes().toString())
+    if (config.readText().isEmpty()) saveConfig()
+    settings = json.decodeFromString(config.readText())
 }

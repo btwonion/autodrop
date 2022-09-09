@@ -18,16 +18,15 @@
   "environment": "client",
   "depends": {
     "fabric-language-kotlin": "1.8.3+kotlin.1.7.10",
-    "yet-another-config-lib": "0.1.1",
     "fabric-api": "0.60.0+1.19.2",
     "silk-all": "1.9.2",
     "minecraft": ">=1.19"
   },
   "entrypoints": {
-    "main": [
+    "client": [
       {
         "adapter": "kotlin",
-        "value": "net.nyon.simpleautodrop.SimpleAutoDropKt::init"
+        "value": "dev.nyon.simpleautodrop.MainKt::initClient"
       }
     ]
   },
