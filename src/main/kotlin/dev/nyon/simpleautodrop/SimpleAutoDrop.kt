@@ -8,6 +8,9 @@ import dev.nyon.simpleautodrop.config.settings
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper
 import net.minecraft.client.KeyMapping
 import net.minecraft.client.Minecraft
+import net.minecraft.core.BlockPos
+import net.minecraft.core.Direction
+import net.minecraft.network.protocol.game.ServerboundPlayerActionPacket
 import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.Item
@@ -42,13 +45,22 @@ object SimpleAutoDrop {
         }
     }
 
-    fun onTake(player: Player, inventory: Inventory) {
+    fun onTake(player: Player, inventory: Inventory, serverSideTake: Boolean) {
         if (!settings.enabled) return
         val itemIds = settings.items.map { Item.getId(it) }
         inventory.items.forEachIndexed { index, itemStack ->
             if (!itemIds.contains(Item.getId(itemStack.item))) return@forEachIndexed
             player.drop(itemStack, false, true)
             inventory.setItem(index, ItemStack.EMPTY)
+            val minecraft = Minecraft.getInstance()
+            if (serverSideTake && !minecraft.isLocalServer) {
+                minecraft.connection?.send(
+                    ServerboundPlayerActionPacket(
+                        ServerboundPlayerActionPacket.Action.DROP_ALL_ITEMS, BlockPos.ZERO, Direction.DOWN
+                    )
+                )
+                player.inventoryMenu.sendAllDataToRemote()
+            }
         }
     }
 

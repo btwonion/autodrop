@@ -20,7 +20,7 @@ public class InventoryMixin {
 
     @Inject(method = "add(ILnet/minecraft/world/item/ItemStack;)Z", at = @At(value = "RETURN"))
     public void onTake(int i, ItemStack itemStack, CallbackInfoReturnable<Boolean> cir) {
-        SimpleAutoDrop.INSTANCE.onTake(player, (Inventory) (Object) this);
+        SimpleAutoDrop.INSTANCE.onTake(player, (Inventory) (Object) this, false);
     }
 
 }
