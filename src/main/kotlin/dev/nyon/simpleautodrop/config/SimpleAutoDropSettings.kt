@@ -72,6 +72,7 @@ val autoDropCommand = clientCommand("autodrop") {
                     text("- $it") {
                         color = 0x50F9FB
                     }
+                    newLine()
                 }
             })
         }
