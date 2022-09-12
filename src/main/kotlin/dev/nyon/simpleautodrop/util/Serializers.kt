@@ -19,5 +19,4 @@ class ItemSerializer : KSerializer<Item> {
     override fun deserialize(decoder: Decoder): Item {
         return Item.byId(decoder.decodeInt())
     }
-
 }

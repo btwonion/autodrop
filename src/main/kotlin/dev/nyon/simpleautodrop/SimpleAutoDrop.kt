@@ -1,20 +1,12 @@
 package dev.nyon.simpleautodrop
 
 import com.mojang.blaze3d.platform.InputConstants
-import dev.nyon.simpleautodrop.config.autoDropCommand
-import dev.nyon.simpleautodrop.config.loadConfig
-import dev.nyon.simpleautodrop.config.saveConfig
-import dev.nyon.simpleautodrop.config.settings
+import dev.nyon.simpleautodrop.config.*
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper
 import net.minecraft.client.KeyMapping
 import net.minecraft.client.Minecraft
-import net.minecraft.core.BlockPos
-import net.minecraft.core.Direction
-import net.minecraft.network.protocol.game.ServerboundPlayerActionPacket
-import net.minecraft.world.entity.player.Inventory
-import net.minecraft.world.entity.player.Player
+import net.minecraft.world.inventory.ClickType
 import net.minecraft.world.item.Item
-import net.minecraft.world.item.ItemStack
 import net.silkmc.silk.core.text.literalText
 import org.lwjgl.glfw.GLFW
 
@@ -45,23 +37,14 @@ object SimpleAutoDrop {
         }
     }
 
-    fun onTake(player: Player, inventory: Inventory, serverSideTake: Boolean) {
+    fun onTake() {
         if (!settings.enabled) return
-        val itemIds = settings.items.map { Item.getId(it) }
-        inventory.items.forEachIndexed { index, itemStack ->
+        val minecraft = Minecraft.getInstance()
+        val player = minecraft.player
+        player?.inventory?.items?.forEachIndexed { index, itemStack ->
             if (!itemIds.contains(Item.getId(itemStack.item))) return@forEachIndexed
-            player.drop(itemStack, false, true)
-            inventory.setItem(index, ItemStack.EMPTY)
-            val minecraft = Minecraft.getInstance()
-            if (serverSideTake && !minecraft.isLocalServer) {
-                minecraft.connection?.send(
-                    ServerboundPlayerActionPacket(
-                        ServerboundPlayerActionPacket.Action.DROP_ALL_ITEMS, BlockPos.ZERO, Direction.DOWN
-                    )
-                )
-                player.inventoryMenu.sendAllDataToRemote()
-            }
+            player.inventoryMenu.clicked(index, 1, ClickType.THROW, player)
+            println("ja")
         }
     }
-
 }

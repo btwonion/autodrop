@@ -18,9 +18,10 @@ public class InventoryMixin {
     @Final
     public Player player;
 
+    @SuppressWarnings("SpellCheckingInspection")
     @Inject(method = "add(ILnet/minecraft/world/item/ItemStack;)Z", at = @At(value = "RETURN"))
     public void onTake(int i, ItemStack itemStack, CallbackInfoReturnable<Boolean> cir) {
-        SimpleAutoDrop.INSTANCE.onTake(player, (Inventory) (Object) this, false);
+        if (!player.getInventory().equals((Inventory) (Object) this)) return;
+        SimpleAutoDrop.INSTANCE.onTake();
     }
-
 }

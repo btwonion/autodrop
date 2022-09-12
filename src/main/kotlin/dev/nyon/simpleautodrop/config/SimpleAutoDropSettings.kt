@@ -1,15 +1,16 @@
 package dev.nyon.simpleautodrop.config
 
+import dev.nyon.simpleautodrop.util.ItemSerializer
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import net.minecraft.commands.arguments.item.ItemInput
 import net.minecraft.world.item.Item
-import dev.nyon.simpleautodrop.util.ItemSerializer
-import kotlinx.serialization.SerialName
 import net.silkmc.silk.commands.clientCommand
 import net.silkmc.silk.commands.player
 import net.silkmc.silk.core.text.literalText
 
 var settings: SimpleAutoDropSettings = SimpleAutoDropSettings(true, arrayListOf())
+var itemIds: MutableList<Int> = settings.items.map { Item.getId(it) }.toMutableList()
 
 @Serializable
 @SerialName("autodrop_settings")
@@ -31,6 +32,7 @@ val autoDropCommand = clientCommand("autodrop") {
                 }
                 settings.items += item
                 saveConfig()
+                itemIds += Item.getId(item)
                 source.player.sendSystemMessage(literalText("This item was enabled for auto drop!") {
                     color = 0x1A631F
                 })
@@ -50,6 +52,7 @@ val autoDropCommand = clientCommand("autodrop") {
                 }
                 settings.items -= item
                 saveConfig()
+                itemIds -= Item.getId(item)
                 source.player.sendSystemMessage(literalText("This item was disabled for auto drop!") {
                     color = 0x1A631F
                 })
@@ -77,5 +80,4 @@ val autoDropCommand = clientCommand("autodrop") {
             })
         }
     }
-
 }

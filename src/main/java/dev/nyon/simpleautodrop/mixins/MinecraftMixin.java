@@ -14,5 +14,4 @@ public class MinecraftMixin {
     public void onTick(CallbackInfo ci) {
         SimpleAutoDrop.INSTANCE.tick((Minecraft) (Object) this);
     }
-
 }
