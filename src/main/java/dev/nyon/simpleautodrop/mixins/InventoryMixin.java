@@ -9,6 +9,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Inventory.class)
@@ -21,6 +22,12 @@ public class InventoryMixin {
     @SuppressWarnings("SpellCheckingInspection")
     @Inject(method = "add(ILnet/minecraft/world/item/ItemStack;)Z", at = @At(value = "RETURN"))
     public void onTake(int i, ItemStack itemStack, CallbackInfoReturnable<Boolean> cir) {
+        if (!player.getInventory().equals((Inventory) (Object) this)) return;
+        SimpleAutoDrop.INSTANCE.onTake();
+    }
+
+    @Inject(method = "setItem", at = @At(value = "RETURN"))
+    public void onTake(int i, ItemStack itemStack, CallbackInfo ci) {
         if (!player.getInventory().equals((Inventory) (Object) this)) return;
         SimpleAutoDrop.INSTANCE.onTake();
     }
