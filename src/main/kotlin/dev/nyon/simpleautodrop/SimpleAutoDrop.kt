@@ -27,7 +27,9 @@ object SimpleAutoDrop {
         autoDropCommand
 
         loadConfig()
-        itemIds = settings.items.map { Item.getId(it) }.toMutableList()
+        settings.items.forEach { (key, value) ->
+            itemIds[key] = value.map { Item.getId(it) }.toMutableList()
+        }
     }
 
     fun tick(client: Minecraft) {
@@ -42,11 +44,12 @@ object SimpleAutoDrop {
 
     fun onTake() {
         if (!settings.enabled) return
+        if (settings.currentArchive == null) return
         val minecraft = Minecraft.getInstance()
         val player = minecraft.player ?: return
         val screen = InventoryScreen(player)
         screen.menu.slots.forEachIndexed { i, slot ->
-            if (slot.item.item == Items.AIR || !itemIds.contains(Item.getId(slot.item.item)) || !slot.hasItem()) return@forEachIndexed
+            if (slot.item.item == Items.AIR || itemIds[settings.currentArchive]?.contains(Item.getId(slot.item.item)) == false || !slot.hasItem()) return@forEachIndexed
             minecraft.gameMode?.handleInventoryMouseClick(
                 screen.menu.containerId, i, 1, ClickType.THROW, player
             )
