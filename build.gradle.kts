@@ -105,7 +105,7 @@ modrinth {
     loaders.set(listOf("fabric", "quilt"))
     dependencies {
         required.project("fabric-api")
-        required.project("fabric-language-api")
+        required.project("fabric-language-kotlin")
         required.project("silk")
     }
     changelog.set(changelogText)
