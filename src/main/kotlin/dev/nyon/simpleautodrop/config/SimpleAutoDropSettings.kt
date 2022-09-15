@@ -22,6 +22,27 @@ data class SimpleAutoDropSettings(
 
 val autoDropCommand = clientCommand("autodrop") {
 
+    literal("list") {
+        runs {
+            if (settings.items.isEmpty()) {
+                source.player.sendSystemMessage(literalText("You don't have any archives yet!") {
+                    color = 0x50F9FB
+                })
+                return@runs
+            }
+            source.player.sendSystemMessage(literalText("You have the following archives:") {
+                color = 0x869097
+                emptyLine()
+                settings.items.keys.forEach {
+                    text("- $it") {
+                        color = 0x50F9FB
+                    }
+                    newLine()
+                }
+            })
+        }
+    }
+
     argument<String>("archive") { archiveArg ->
         suggestList { settings.items.keys }
         literal("add") {
@@ -31,7 +52,7 @@ val autoDropCommand = clientCommand("autodrop") {
                     if (!archiveCheck(archive)) return@runs
                     val item = itemInput().item
                     if (settings.items[archive]?.contains(item) == true) {
-                        source.player.sendSystemMessage(literalText("This item is already enabled for auto drop!") {
+                        source.player.sendSystemMessage(literalText("This item is already enabled for this archive!") {
                             color = 0xEE042A
                         })
                         return@runs
@@ -39,7 +60,7 @@ val autoDropCommand = clientCommand("autodrop") {
                     settings.items[archive]?.add(item)
                     saveConfig()
                     itemIds[archive]?.add(Item.getId(item))
-                    source.player.sendSystemMessage(literalText("This item was enabled for auto drop!") {
+                    source.player.sendSystemMessage(literalText("This item was enabled for this archive!") {
                         color = 0x1A631F
                     })
                 }
@@ -53,7 +74,7 @@ val autoDropCommand = clientCommand("autodrop") {
                     if (!archiveCheck(archive)) return@runs
                     val item = itemInput().item
                     if (settings.items[archive]?.contains(item) == false) {
-                        source.player.sendSystemMessage(literalText("This item is already disabled for auto drop!") {
+                        source.player.sendSystemMessage(literalText("This item is already disabled for this archive!") {
                             color = 0xEE042A
                         })
                         return@runs
@@ -61,7 +82,7 @@ val autoDropCommand = clientCommand("autodrop") {
                     settings.items[archive]?.remove(item)
                     saveConfig()
                     itemIds[archive]?.remove(Item.getId(item))
-                    source.player.sendSystemMessage(literalText("This item was disabled for auto drop!") {
+                    source.player.sendSystemMessage(literalText("This item was disabled for this archive!") {
                         color = 0x1A631F
                     })
                 }
@@ -72,13 +93,13 @@ val autoDropCommand = clientCommand("autodrop") {
             runs {
                 val archive = archiveArg()
                 if (!archiveCheck(archive)) return@runs
-                if (settings.items.isEmpty()) {
-                    source.player.sendSystemMessage(literalText("You don't use auto drop for any item!") {
+                if (settings.items[archive]?.isEmpty() == true) {
+                    source.player.sendSystemMessage(literalText("You don't have any items in this archive yet!") {
                         color = 0x50F9FB
                     })
                     return@runs
                 }
-                source.player.sendSystemMessage(literalText("You have the following items enabled for auto drop:") {
+                source.player.sendSystemMessage(literalText("You have the following items enabled for this archive:") {
                     color = 0x869097
                     emptyLine()
                     settings.items[archive]?.map { it.description.string }?.forEach {
