@@ -1,3 +1,4 @@
+@file:Suppress("SpellCheckingInspection")
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -94,10 +95,10 @@ tasks {
 val changelogText =
     file("changelogs/${project.version}.md").takeIf { it.exists() }?.readText() ?: "No changelog provided."
 
-/*val modrinthId: String by project
+val modrinthID: String by project
 modrinth {
     token.set(findProperty("modrinth.token")?.toString())
-    projectId.set(modrinthId)
+    projectId.set(modrinthID)
     versionNumber.set("${project.version}")
     versionType.set("beta")
     uploadFile.set(tasks["remapJar"])
@@ -109,7 +110,17 @@ modrinth {
     changelog.set(changelogText)
     syncBodyFrom.set(file("README.md").readText())
 }
- */
+
+githubRelease {
+    token(findProperty("github.token")?.toString())
+
+    val split = githubRepo.split("/")
+    owner(split[0])
+    repo(split[1])
+    tagName("v${project.version}")
+    body(changelogText)
+    releaseAssets(tasks["remapJar"].outputs.files)
+}
 
 publishing {
     publications {
