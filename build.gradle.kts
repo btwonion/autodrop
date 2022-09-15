@@ -15,7 +15,7 @@ plugins {
 }
 
 group = "dev.nyon"
-version = "1.0.0"
+version = "1.1.1"
 val authors = listOf("btwonion")
 val githubRepo: String by project
 
@@ -78,7 +78,6 @@ tasks {
 
         dependsOn("modrinth")
         dependsOn("modrinthSyncBody")
-        dependsOn("publishModPublicationToReleasesRepository")
         dependsOn("githubRelease")
     }
 
@@ -100,12 +99,14 @@ modrinth {
     token.set(findProperty("modrinth.token")?.toString())
     projectId.set(modrinthID)
     versionNumber.set("${project.version}")
-    versionType.set("beta")
+    versionType.set("release")
     uploadFile.set(tasks["remapJar"])
     gameVersions.set(listOf("1.19", "1.19.1", "1.19.2"))
     loaders.set(listOf("fabric", "quilt"))
     dependencies {
         required.project("fabric-api")
+        required.project("fabric-language-api")
+        required.project("silk")
     }
     changelog.set(changelogText)
     syncBodyFrom.set(file("README.md").readText())
