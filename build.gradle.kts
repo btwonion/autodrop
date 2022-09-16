@@ -15,7 +15,7 @@ plugins {
 }
 
 group = "dev.nyon"
-version = "1.1.2"
+version = "1.1.3"
 val authors = listOf("btwonion")
 val githubRepo: String by project
 
