@@ -2,9 +2,7 @@
 This mod provides a function to automatically drop items from the
 inventory if they are blacklisted. You can disable it easily threw a hotkey (`default: j`).
 
-## Download
-- Download the jar of the latest release
-- Modrinth (not available yet)
+[![modrinth](https://github.com/modrinth/art/blob/main/Branding/Badge/badge-dark.svg)](https://modrinth.com/mod/autodrop)
 
 ## Managing items
 Add an item:
