@@ -18,8 +18,8 @@
   "environment": "client",
   "depends": {
     "fabric-language-kotlin": ">=1.8.3+kotlin.1.7.10",
-    "fabric-api": ">=0.61.0+1.19.2",
-    "silk-all": "1.9.2",
+    "fabric-api": ">=0.58.0+1.19",
+    "silk-all": ">=1.9.2",
     "minecraft": ">=1.19"
   },
   "entrypoints": {

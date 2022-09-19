@@ -48,6 +48,10 @@ dependencies {
     modImplementation("net.silkmc:silk-commands:$silkVersion")
 }
 
+runClient{
+    
+}
+
 tasks {
     processResources {
         val modId: String by project
