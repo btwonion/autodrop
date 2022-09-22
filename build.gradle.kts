@@ -32,6 +32,7 @@ val fabricAPIVersion: String by project
 val fabricLanguageKotlinVersion: String by project
 val configLibVersion: String by project
 val silkVersion: String by project
+val modMenuVersion: String by project
 
 dependencies {
     minecraft("com.mojang:minecraft:$minecraftVersion")
@@ -46,6 +47,8 @@ dependencies {
 
     modImplementation("net.silkmc:silk-core:$silkVersion")
     modImplementation("net.silkmc:silk-commands:$silkVersion")
+
+    modApi("com.terraformersmc:modmenu:$modMenuVersion")
 }
 
 tasks {

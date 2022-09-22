@@ -12,7 +12,7 @@
       "name": "btwonion"
     }
   ],
-  "contributors": ["btwonion"],
+  "contributors": [],
   "license": ["GNU General Public License v3.0"],
   "version": "${version}",
   "environment": "client",
@@ -22,15 +22,28 @@
     "silk-all": ">=1.9.2",
     "minecraft": ">=1.19.2"
   },
+  "suggests": {
+    "modmenu": "*"
+  },
   "entrypoints": {
     "client": [
       {
         "adapter": "kotlin",
         "value": "dev.nyon.simpleautodrop.MainKt::initClient"
       }
+    ],
+    "modmenu" : [
+      "dev.nyon.simpleautodrop.config.ModMenuImpl"
     ]
   },
   "mixins": [
     "simpleautodrop.mixins.json"
-  ]
+  ],
+  "custom": {
+    "modmenu" : {
+      "links": {
+        "modmenu.discord": "https://discord.gg/pmHTtZnMd3"
+      }
+    }
+  }
 }
