@@ -2,6 +2,10 @@ package dev.nyon.simpleautodrop
 
 import com.mojang.blaze3d.platform.InputConstants
 import dev.nyon.simpleautodrop.config.*
+import dev.nyon.simpleautodrop.screen.ConfigScreen
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper
 import net.minecraft.client.KeyMapping
 import net.minecraft.client.Minecraft
@@ -13,11 +17,18 @@ import net.minecraft.world.item.Items
 import net.silkmc.silk.core.text.literalText
 import org.lwjgl.glfw.GLFW
 
+val modScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
 object SimpleAutoDrop {
 
     private val toggleKeyBind = KeyBindingHelper.registerKeyBinding(
         KeyMapping(
             "Toggle AutoDrop", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_J, "SimpleAutoDrop"
+        )
+    )
+
+    private val menuKeyBind = KeyBindingHelper.registerKeyBinding(
+        KeyMapping(
+            "Open GUI", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_O, "SimpleAutoDrop"
         )
     )
 
@@ -39,6 +50,9 @@ object SimpleAutoDrop {
             client.player?.sendSystemMessage(literalText("You ${if (settings.enabled) "enabled" else "disabled"} auto drop!") {
                 color = 0x1A631F
             })
+        }
+        while (menuKeyBind.consumeClick()) {
+            client.setScreen(ConfigScreen(null))
         }
     }
 
