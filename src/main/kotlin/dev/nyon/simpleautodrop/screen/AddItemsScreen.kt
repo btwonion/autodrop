@@ -17,24 +17,31 @@ import net.minecraft.core.Registry
 import net.minecraft.world.item.Item
 import net.silkmc.silk.core.text.literalText
 
-class AddItemsScreen(private val previous: Screen, archive: String, private val configScreen: ConfigScreen) :
-    Screen(literalText("Add item")) {
+class AddItemsScreen(
+    private val previous: Screen, private val archive: String, private val configScreen: ConfigScreen
+) : Screen(literalText("Add item")) {
 
-    private val nameInput = EditBox(
-        Minecraft.getInstance().font, 380, 130, 200, 20, literalText("Enter new archive name here...")
-    )
-
-    private val itemList = ItemList(archive, 800, 330, 180, 510, 24, 80)
+    private lateinit var nameInput: EditBox
+    private lateinit var itemList: ItemList
 
     override fun init() {
+        initWidgets()
+
         nameInput.setResponder {
             itemList.refreshEntries(it)
         }
         addRenderableWidget(itemList)
         addRenderableWidget(nameInput)
-        addRenderableWidget(Button(380, 75, 200, 20, literalText("Done")) {
-            onClose()
-        })
+        addRenderableWidget(
+            Button(
+                (this.width / 2) - this.width / 8,
+                (this.height / 16) * 3,
+                this.width / 4,
+                20,
+                literalText("Done")
+            ) {
+                onClose()
+            })
     }
 
     override fun onClose() {
@@ -50,8 +57,25 @@ class AddItemsScreen(private val previous: Screen, archive: String, private val 
         renderDirtBackground(1)
         super.render(matrices, mouseX, mouseY, delta)
         GuiComponent.drawCenteredString(
-            matrices, Minecraft.getInstance().font, literalText("Enter item name"), 477, 100, 0x80FFFFFF.toInt()
+            matrices,
+            Minecraft.getInstance().font,
+            literalText("Enter item name"),
+            this.width / 2,
+            this.height / 16,
+            0x80FFFFFF.toInt()
         )
+    }
+
+    private fun initWidgets() {
+        nameInput = EditBox(
+            Minecraft.getInstance().font,
+            (this.width / 2) - this.width / 8,
+            this.height / 8,
+            this.width / 4,
+            20,
+            literalText("Enter new archive name here...")
+        )
+        itemList = ItemList(archive, this.width, (this.height / 4) * 3, this.height / 4, this.height, 24, 0)
     }
 
     inner class ItemEntry(private val item: Item, private val archive: String) :

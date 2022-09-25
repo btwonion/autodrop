@@ -8,6 +8,7 @@ import net.minecraft.client.gui.GuiComponent
 import net.minecraft.client.gui.components.ObjectSelectionList
 import net.minecraft.network.chat.Component
 import net.silkmc.silk.core.text.literalText
+import kotlin.streams.toList
 
 class ArchiveEntry(private val archive: String, private val configScreen: ConfigScreen) :
     ObjectSelectionList.Entry<ArchiveEntry>() {
@@ -28,7 +29,11 @@ class ArchiveEntry(private val archive: String, private val configScreen: Config
         )
 
         if (settings.currentArchive == archive) Minecraft.getInstance().font.draw(
-            matrices, literalText("enabled"), x + 100.toFloat(), y + 6.5F, 0x991D5941.toInt()
+            matrices,
+            literalText("enabled"),
+            x + (archive.chars().toList().size * 10).toFloat(),
+            y + 6.5F,
+            0x991D5941.toInt()
         )
 
         if (configScreen.currentArchive == archive) {
@@ -48,7 +53,7 @@ class ArchiveEntry(private val archive: String, private val configScreen: Config
         configScreen.currentArchive = archive
         configScreen.archiveEntryListWidget.archive = archive
         configScreen.archiveEntryListWidget.refreshEntries()
-        configScreen.addItemToArchiveButton.active = true
+        configScreen.addItemsToArchiveButton.active = true
         configScreen.archiveListWidget.handleMouseClick(archive)
         return true
     }

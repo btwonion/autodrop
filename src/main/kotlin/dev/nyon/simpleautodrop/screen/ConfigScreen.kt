@@ -14,46 +14,24 @@ class ConfigScreen(private val previousScreen: Screen?) : Screen(literalText("Si
 
     var currentArchive: String = ""
 
-    val archiveEntryListWidget = ArchiveEntryListWidget(
-        700, 230, 470, 10, 480, 24, currentArchive
-    )
-    val addItemToArchiveButton = Button(500, 482, 200, 20, literalText("Add items")) {
-        minecraft?.setScreen(null)
-        minecraft?.setScreen(AddItemsScreen(this, currentArchive, this))
-    }
-
-    val archiveListWidget = ArchiveListWidget(205, 5, 440, 10, 450, 24, this)
-    val deleteButton = Button(5, 458, 100, 20, literalText("Delete")) {
-        if (!it.active) return@Button
-        if (currentArchive == "") return@Button
-        settings.items.remove(currentArchive)
-        itemIds.remove(currentArchive)
-        saveConfig()
-        currentArchive = ""
-        it.active = false
-        archiveEntryListWidget.refreshEntries()
-        archiveListWidget.refreshEntries()
-        addItemToArchiveButton.active = false
-    }
-    private val createArchiveButton = Button(108, 458, 100, 20, literalText("Create archive")) {
-        minecraft?.setScreen(null)
-        minecraft?.setScreen(CreateArchiveScreen(this, this))
-    }
-
-    private val doneButton = Button(5, 480, 205, 20, literalText("Done")) {
-        saveConfig()
-        minecraft?.setScreen(previousScreen)
-    }
+    lateinit var archiveEntryListWidget: ArchiveEntryListWidget
+    lateinit var addItemsToArchiveButton: Button
+    lateinit var archiveListWidget: ArchiveListWidget
+    lateinit var deleteButton: Button
+    private lateinit var createArchiveButton: Button
+    private lateinit var doneButton: Button
 
     override fun init() {
+        initWidgets()
+
         addRenderableWidget(archiveEntryListWidget)
         addRenderableWidget(archiveListWidget)
         addRenderableWidget(deleteButton)
         addRenderableWidget(doneButton)
         addRenderableWidget(createArchiveButton)
-        addRenderableWidget(addItemToArchiveButton)
+        addRenderableWidget(addItemsToArchiveButton)
 
-        addItemToArchiveButton.active = false
+        addItemsToArchiveButton.active = false
         deleteButton.active = false
     }
 
@@ -64,5 +42,56 @@ class ConfigScreen(private val previousScreen: Screen?) : Screen(literalText("Si
 
     override fun onClose() {
         minecraft?.setScreen(previousScreen)
+    }
+
+    private fun initWidgets() {
+        archiveEntryListWidget = ArchiveEntryListWidget(
+            (this.width / 4) * 3 - 15,
+            (this.width / 4) + 10,
+            (this.height / 24) * 23 - 15,
+            10,
+            (this.height / 24) * 23 - 5,
+            24,
+            currentArchive
+        )
+        addItemsToArchiveButton = Button(
+            ((this.width / 4) + 10) + (archiveEntryListWidget.rowWidth / 2) - this.width / 8,
+            (this.height / 24) * 23,
+            this.width / 4,
+            20,
+            literalText("Add items")
+        ) {
+            minecraft?.setScreen(null)
+            minecraft?.setScreen(AddItemsScreen(this, currentArchive, this))
+        }
+        archiveListWidget =
+            ArchiveListWidget(this.width / 4, 5, (this.height / 24) * 21 - 10, 10, ((this.height / 24) * 21), 24, this)
+        deleteButton = Button(
+            5,
+            (this.height / 24) * 22,
+            (this.width / 8) - 2,
+            20,
+            literalText("Delete") { color = 0x99620401.toInt() }) {
+            if (!it.active) return@Button
+            if (currentArchive == "") return@Button
+            settings.items.remove(currentArchive)
+            itemIds.remove(currentArchive)
+            saveConfig()
+            currentArchive = ""
+            it.active = false
+            archiveEntryListWidget.refreshEntries()
+            archiveListWidget.refreshEntries()
+            addItemsToArchiveButton.active = false
+        }
+        createArchiveButton = Button(
+            5 + ((this.width / 8) - 2) + 2, (this.height / 24) * 22, (this.width / 8), 20, literalText("Create archive")
+        ) {
+            minecraft?.setScreen(null)
+            minecraft?.setScreen(CreateArchiveScreen(this, this))
+        }
+        doneButton = Button(5, (this.height / 24) * 23, this.width / 4, 20, literalText("Done")) {
+            saveConfig()
+            minecraft?.setScreen(previousScreen)
+        }
     }
 }
