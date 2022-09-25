@@ -3,6 +3,7 @@ package dev.nyon.simpleautodrop.config
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonObject
 import net.fabricmc.loader.api.FabricLoader
 import java.io.File
 
@@ -19,5 +20,9 @@ fun saveConfig() {
 
 fun loadConfig() {
     if (config.readText().isEmpty()) saveConfig()
+    else {
+        val element = json.parseToJsonElement(config.readText())
+        if (element.jsonObject["currentArchive"] != null) saveConfig()
+    }
     settings = json.decodeFromString(config.readText())
 }

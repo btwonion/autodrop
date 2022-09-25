@@ -1,7 +1,7 @@
 package dev.nyon.simpleautodrop.screen.archiveEntry
 
 import com.mojang.blaze3d.vertex.PoseStack
-import dev.nyon.simpleautodrop.config.itemIds
+import dev.nyon.simpleautodrop.config.reloadCachedIds
 import dev.nyon.simpleautodrop.config.saveConfig
 import dev.nyon.simpleautodrop.config.settings
 import net.minecraft.client.Minecraft
@@ -21,7 +21,7 @@ class ArchiveEntryWidget(private val item: Item, private val list: ArchiveEntryL
 
     private val removeButton = Button(0, 0, 50, 20, literalText("Remove")) {
         settings.items[list.archive]?.remove(item)
-        itemIds[list.archive]?.remove(Item.getId(item))
+        reloadCachedIds()
         saveConfig()
         list.refreshEntries()
     }

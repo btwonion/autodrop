@@ -1,8 +1,10 @@
 package dev.nyon.simpleautodrop.config
 
 import com.mojang.brigadier.context.CommandContext
+import dev.nyon.simpleautodrop.screen.ConfigScreen
 import dev.nyon.simpleautodrop.util.ItemSerializer
 import kotlinx.serialization.Serializable
+import net.minecraft.client.Minecraft
 import net.minecraft.commands.arguments.item.ItemInput
 import net.minecraft.world.item.Item
 import net.silkmc.silk.commands.ClientCommandSourceStack
@@ -10,18 +12,22 @@ import net.silkmc.silk.commands.clientCommand
 import net.silkmc.silk.commands.player
 import net.silkmc.silk.core.text.literalText
 
-var settings: SimpleAutoDropSettings = SimpleAutoDropSettings(true, hashMapOf(), null)
-var itemIds: MutableMap<String, MutableList<Int>> = mutableMapOf()
+var settings: SimpleAutoDropSettings = SimpleAutoDropSettings(true, hashMapOf(), mutableListOf())
+var itemIds = mutableListOf<Int>()
+
+fun reloadCachedIds() {
+    itemIds.clear()
+    settings.currentArchives.forEach { archive -> settings.items[archive]?.forEach { itemIds += Item.getId(it) } }
+}
 
 @Serializable
 data class SimpleAutoDropSettings(
     var enabled: Boolean,
     var items: HashMap<String, MutableList<@Serializable(with = ItemSerializer::class) Item>>,
-    var currentArchive: String?
+    var currentArchives: MutableList<String>
 )
 
 val autoDropCommand = clientCommand("autodrop") {
-
     literal("list") {
         runs {
             if (settings.items.isEmpty()) {
@@ -59,7 +65,7 @@ val autoDropCommand = clientCommand("autodrop") {
                     }
                     settings.items[archive]?.add(item)
                     saveConfig()
-                    itemIds[archive]?.add(Item.getId(item))
+                    reloadCachedIds()
                     source.player.sendSystemMessage(literalText("This item was enabled for this archive!") {
                         color = 0x1A631F
                     })
@@ -81,7 +87,7 @@ val autoDropCommand = clientCommand("autodrop") {
                     }
                     settings.items[archive]?.remove(item)
                     saveConfig()
-                    itemIds[archive]?.remove(Item.getId(item))
+                    reloadCachedIds()
                     source.player.sendSystemMessage(literalText("This item was disabled for this archive!") {
                         color = 0x1A631F
                     })
@@ -120,9 +126,8 @@ val autoDropCommand = clientCommand("autodrop") {
                     return@runs
                 }
                 settings.items[archive] = mutableListOf()
-                settings.currentArchive = archive
+                settings.currentArchives += archive
                 saveConfig()
-                itemIds[archive] = mutableListOf()
                 source.player.sendSystemMessage(literalText("The archive $archive was created successfully!") {
                     color = 0x1A631F
                 })
@@ -134,9 +139,8 @@ val autoDropCommand = clientCommand("autodrop") {
                 val archive = archiveArg()
                 if (!archiveCheck(archive)) return@runs
                 settings.items.remove(archive)
-                itemIds.remove(archive)
                 saveConfig()
-                if (settings.currentArchive == archive) settings.currentArchive = null
+                if (settings.currentArchives.contains(archive)) settings.currentArchives -= archive
                 source.player.sendSystemMessage(literalText("The archive $archive was deleted successfully!") {
                     color = 0x1A631F
                 })
@@ -147,20 +151,26 @@ val autoDropCommand = clientCommand("autodrop") {
             runs {
                 val archive = archiveArg()
                 if (!archiveCheck(archive)) return@runs
-                if (settings.currentArchive == archive) {
-                    source.player.sendSystemMessage(literalText("You already have enabled this archive!") {
+                if (settings.currentArchives.contains(archive)) {
+                    source.player.sendSystemMessage(literalText("You disabled this archive!") {
                         color = 0x1A631F
                     })
+                    settings.currentArchives -= archive
+                    reloadCachedIds()
                     return@runs
                 }
-                val oldArchive = settings.currentArchive
-                settings.currentArchive = archive
+                val oldArchive = settings.currentArchives
+                settings.currentArchives += archive
                 saveConfig()
-                source.player.sendSystemMessage(literalText("You enabled $archive${if (oldArchive != null) " and disabled $oldArchive" else ""}!") {
+                reloadCachedIds()
+                source.player.sendSystemMessage(literalText("You enabled $archive${" and disabled $oldArchive"}!") {
                     color = 0x1A631F0
                 })
             }
         }
+    }
+    runs {
+        Minecraft.getInstance().setScreen(ConfigScreen(null))
     }
 }
 

@@ -1,7 +1,7 @@
 package dev.nyon.simpleautodrop.screen
 
 import com.mojang.blaze3d.vertex.PoseStack
-import dev.nyon.simpleautodrop.config.itemIds
+import dev.nyon.simpleautodrop.config.reloadCachedIds
 import dev.nyon.simpleautodrop.config.saveConfig
 import dev.nyon.simpleautodrop.config.settings
 import dev.nyon.simpleautodrop.screen.archiveEntry.ItemIconWidget
@@ -32,16 +32,11 @@ class AddItemsScreen(
         }
         addRenderableWidget(itemList)
         addRenderableWidget(nameInput)
-        addRenderableWidget(
-            Button(
-                (this.width / 2) - this.width / 8,
-                (this.height / 16) * 3,
-                this.width / 4,
-                20,
-                literalText("Done")
-            ) {
-                onClose()
-            })
+        addRenderableWidget(Button(
+            (this.width / 2) - this.width / 8, (this.height / 16) * 3, this.width / 4, 20, literalText("Done")
+        ) {
+            onClose()
+        })
     }
 
     override fun onClose() {
@@ -83,7 +78,7 @@ class AddItemsScreen(
 
         private val addButton = Button(0, 0, 50, 20, literalText("Add")) {
             settings.items[archive]?.add(item)
-            itemIds[archive]?.add(Item.getId(item))
+            reloadCachedIds()
             itemList.refreshEntries(nameInput.value)
             saveConfig()
         }
@@ -145,7 +140,12 @@ class AddItemsScreen(
 
         fun refreshEntries(input: String) {
             clearEntries()
-            if (input.isEmpty()) return
+            if (input.isEmpty()) {
+                Registry.ITEM.filter { settings.items[archive]?.contains(it) == false }
+                    .forEach { addEntry(ItemEntry(it, archive)) }
+                scrollAmount = 0.0
+                return
+            }
 
             Registry.ITEM.filter {
                 Item.getId(it).toString().startsWith(input, true) || Item.getId(it).toString()

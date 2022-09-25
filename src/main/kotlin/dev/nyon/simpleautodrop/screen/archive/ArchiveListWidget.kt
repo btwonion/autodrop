@@ -54,8 +54,10 @@ class ArchiveListWidget(
 
     var lastClick: Pair<String, Long> = "" to System.currentTimeMillis()
     fun handleMouseClick(archive: String) {
-        if (lastClick.first == archive && System.currentTimeMillis() - lastClick.second < 250) settings.currentArchive =
-            archive
+        if (lastClick.first == archive && System.currentTimeMillis() - lastClick.second < 250) {
+            if (!settings.currentArchives.contains(archive)) settings.currentArchives += archive
+            else settings.currentArchives -= archive
+        }
         lastClick = archive to System.currentTimeMillis()
     }
 

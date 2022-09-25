@@ -1,7 +1,7 @@
 package dev.nyon.simpleautodrop.screen
 
 import com.mojang.blaze3d.vertex.PoseStack
-import dev.nyon.simpleautodrop.config.itemIds
+import dev.nyon.simpleautodrop.config.reloadCachedIds
 import dev.nyon.simpleautodrop.config.saveConfig
 import dev.nyon.simpleautodrop.config.settings
 import dev.nyon.simpleautodrop.screen.archive.ArchiveListWidget
@@ -75,7 +75,7 @@ class ConfigScreen(private val previousScreen: Screen?) : Screen(literalText("Si
             if (!it.active) return@Button
             if (currentArchive == "") return@Button
             settings.items.remove(currentArchive)
-            itemIds.remove(currentArchive)
+            reloadCachedIds()
             saveConfig()
             currentArchive = ""
             it.active = false

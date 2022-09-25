@@ -3,9 +3,6 @@ package dev.nyon.simpleautodrop
 import com.mojang.blaze3d.platform.InputConstants
 import dev.nyon.simpleautodrop.config.*
 import dev.nyon.simpleautodrop.screen.ConfigScreen
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper
 import net.minecraft.client.KeyMapping
 import net.minecraft.client.Minecraft
@@ -17,7 +14,6 @@ import net.minecraft.world.item.Items
 import net.silkmc.silk.core.text.literalText
 import org.lwjgl.glfw.GLFW
 
-val modScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
 object SimpleAutoDrop {
 
     private val toggleKeyBind = KeyBindingHelper.registerKeyBinding(
@@ -38,9 +34,7 @@ object SimpleAutoDrop {
         autoDropCommand
 
         loadConfig()
-        settings.items.forEach { (key, value) ->
-            itemIds[key] = value.map { Item.getId(it) }.toMutableList()
-        }
+        reloadCachedIds()
     }
 
     fun tick(client: Minecraft) {
@@ -58,12 +52,12 @@ object SimpleAutoDrop {
 
     fun onTake() {
         if (!settings.enabled) return
-        if (settings.currentArchive == null) return
+        if (settings.currentArchives.isEmpty()) return
         val minecraft = Minecraft.getInstance()
         val player = minecraft.player ?: return
         val screen = InventoryScreen(player)
         screen.menu.slots.forEachIndexed { i, slot ->
-            if (slot.item.item == Items.AIR || itemIds[settings.currentArchive]?.contains(Item.getId(slot.item.item)) == false || !slot.hasItem()) return@forEachIndexed
+            if (slot.item.item == Items.AIR || !itemIds.contains(Item.getId(slot.item.item)) || !slot.hasItem()) return@forEachIndexed
             minecraft.gameMode?.handleInventoryMouseClick(
                 screen.menu.containerId, i, 1, ClickType.THROW, player
             )

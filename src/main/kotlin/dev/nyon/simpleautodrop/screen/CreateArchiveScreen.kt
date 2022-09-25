@@ -1,7 +1,7 @@
 package dev.nyon.simpleautodrop.screen
 
 import com.mojang.blaze3d.vertex.PoseStack
-import dev.nyon.simpleautodrop.config.itemIds
+import dev.nyon.simpleautodrop.config.reloadCachedIds
 import dev.nyon.simpleautodrop.config.saveConfig
 import dev.nyon.simpleautodrop.config.settings
 import net.minecraft.client.Minecraft
@@ -60,7 +60,7 @@ class CreateArchiveScreen(private val previous: Screen, private val configScreen
             if (!it.isActive) return@Button
             val newArchive = nameInput.value
             settings.items[newArchive] = mutableListOf()
-            itemIds[newArchive] = mutableListOf()
+            reloadCachedIds()
             saveConfig()
             onClose()
             configScreen.archiveListWidget.refreshEntries()

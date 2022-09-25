@@ -28,10 +28,10 @@ class ArchiveEntry(private val archive: String, private val configScreen: Config
             matrices, x - 1, y + entryHeight + 1, x + entryWidth - 5, y - 1, 0x90000000.toInt()
         )
 
-        if (settings.currentArchive == archive) Minecraft.getInstance().font.draw(
+        if (settings.currentArchives.contains(archive)) Minecraft.getInstance().font.draw(
             matrices,
             literalText("enabled"),
-            x + (archive.chars().toList().size * 10).toFloat(),
+            (x + entryWidth) - ("enabled".chars().toList().size * 10).toFloat(),
             y + 6.5F,
             0x991D5941.toInt()
         )
