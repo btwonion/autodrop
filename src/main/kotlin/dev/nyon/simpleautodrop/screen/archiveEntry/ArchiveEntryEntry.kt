@@ -1,4 +1,4 @@
-package dev.nyon.simpleautodrop.screen
+package dev.nyon.simpleautodrop.screen.archiveEntry
 
 import com.mojang.blaze3d.vertex.PoseStack
 import dev.nyon.simpleautodrop.config.itemIds
@@ -16,7 +16,7 @@ import net.minecraft.world.item.Item
 import net.silkmc.silk.core.item.itemStack
 import net.silkmc.silk.core.text.literalText
 
-class ArchiveEntryWidget(val item: Item, val list: ArchiveListWidget) :
+class ArchiveEntryWidget(private val item: Item, private val list: ArchiveEntryListWidget) :
     ContainerObjectSelectionList.Entry<ArchiveEntryWidget>() {
 
     private val removeButton = Button(0, 0, 50, 20, literalText("Remove")) {
