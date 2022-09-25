@@ -38,7 +38,7 @@ val modMenuVersion: String by project
 dependencies {
     minecraft("com.mojang:minecraft:$minecraftVersion")
     mappings(loom.layered {
-        addLayer(quiltMappings.mappings("org.quiltmc:quilt-mappings:$quiltMappingsVersion"))
+        //addLayer(quiltMappings.mappings("org.quiltmc:quilt-mappings:$quiltMappingsVersion"))
         officialMojangMappings()
     })
     modImplementation("net.fabricmc:fabric-loader:$fabricLoaderVersion")
