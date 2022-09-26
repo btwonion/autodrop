@@ -143,7 +143,7 @@ class AddItemsScreen(
             if (input.isEmpty()) {
                 Registry.ITEM.filter { settings.items[archive]?.contains(it) == false }
                     .forEach { addEntry(ItemEntry(it, archive)) }
-                scrollAmount = 0.0
+                if (scrollReset) scrollAmount = 0.0
                 return
             }
 
