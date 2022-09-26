@@ -79,7 +79,7 @@ class AddItemsScreen(
         private val addButton = Button(0, 0, 50, 20, literalText("Add")) {
             settings.items[archive]?.add(item)
             reloadCachedIds()
-            itemList.refreshEntries(nameInput.value)
+            itemList.refreshEntries(nameInput.value, false)
             saveConfig()
         }
 
@@ -138,7 +138,7 @@ class AddItemsScreen(
             super.render(matrices, mouseX, mouseY, delta)
         }
 
-        fun refreshEntries(input: String) {
+        fun refreshEntries(input: String, scrollReset: Boolean = true) {
             clearEntries()
             if (input.isEmpty()) {
                 Registry.ITEM.filter { settings.items[archive]?.contains(it) == false }
@@ -156,7 +156,7 @@ class AddItemsScreen(
                 ) || it.description.string.contains(input, true) || Registry.ITEM.getKey(it).toString().contains(input)
             }.filter { settings.items[archive]?.contains(it) == false }.forEach { addEntry(ItemEntry(it, archive)) }
 
-            scrollAmount = 0.0
+            if (scrollReset) scrollAmount = 0.0
         }
     }
 }
