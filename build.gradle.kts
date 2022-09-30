@@ -2,20 +2,20 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.7.10"
-    kotlin("plugin.serialization") version "1.7.10"
+    kotlin("jvm") version "1.7.20"
+    kotlin("plugin.serialization") version "1.7.20"
     id("fabric-loom") version "1.0-SNAPSHOT"
     id("io.github.juuxel.loom-quiltflower") version "1.7.3"
     id("org.quiltmc.quilt-mappings-on-loom") version "4.2.1"
 
-    id("com.modrinth.minotaur") version "2.4.+"
-    id("com.github.breadmoirai.github-release") version "2.+"
+    id("com.modrinth.minotaur") version "2.4.4"
+    id("com.github.breadmoirai.github-release") version "2.4.1"
     `maven-publish`
     signing
 }
 
 group = "dev.nyon"
-version = "1.2.3"
+version = "1.2.4"
 val authors = listOf("btwonion")
 val githubRepo: String by project
 
