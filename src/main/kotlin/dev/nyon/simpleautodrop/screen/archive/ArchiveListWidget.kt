@@ -1,6 +1,7 @@
 package dev.nyon.simpleautodrop.screen.archive
 
 import com.mojang.blaze3d.vertex.PoseStack
+import dev.nyon.simpleautodrop.config.reloadCachedIds
 import dev.nyon.simpleautodrop.config.settings
 import dev.nyon.simpleautodrop.screen.ConfigScreen
 import net.minecraft.client.Minecraft
@@ -57,6 +58,7 @@ class ArchiveListWidget(
         if (lastClick.first == archive && System.currentTimeMillis() - lastClick.second < 250) {
             if (!settings.currentArchives.contains(archive)) settings.currentArchives += archive
             else settings.currentArchives -= archive
+            reloadCachedIds()
         }
         lastClick = archive to System.currentTimeMillis()
     }
