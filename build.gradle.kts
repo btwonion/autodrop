@@ -13,7 +13,7 @@ plugins {
 }
 
 group = "dev.nyon"
-version = "1.2.5"
+version = "1.2.6"
 val authors = listOf("btwonion")
 val githubRepo = "btwonion/SimpleAutoDrop"
 
