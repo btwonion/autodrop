@@ -10,51 +10,39 @@ plugins {
 
     id("com.modrinth.minotaur") version "2.4.4"
     id("com.github.breadmoirai.github-release") version "2.4.1"
-    `maven-publish`
-    signing
 }
 
 group = "dev.nyon"
 version = "1.2.5"
 val authors = listOf("btwonion")
-val githubRepo: String by project
+val githubRepo = "btwonion/SimpleAutoDrop"
 
 repositories {
     mavenCentral()
-    maven("https://maven.isxander.dev/releases")
     maven("https://maven.terraformersmc.com")
 }
 
-val minecraftVersion: String by project
-val quiltMappingsVersion: String by project
-val fabricLoaderVersion: String by project
-val fabricAPIVersion: String by project
-val fabricLanguageKotlinVersion: String by project
-val configLibVersion: String by project
-val silkVersion: String by project
-val modMenuVersion: String by project
-
 dependencies {
-    minecraft("com.mojang:minecraft:$minecraftVersion")
+    minecraft("com.mojang:minecraft:1.19.2")
     mappings(loom.layered {
-        //addLayer(quiltMappings.mappings("org.quiltmc:quilt-mappings:$quiltMappingsVersion"))
+        //addLayer(quiltMappings.mappings("org.quiltmc:quilt-mappings:1.19.2+build.21:v2"))
         officialMojangMappings()
     })
-    modImplementation("net.fabricmc:fabric-loader:$fabricLoaderVersion")
-    modImplementation("net.fabricmc.fabric-api:fabric-api:$fabricAPIVersion")
-    modImplementation("net.fabricmc:fabric-language-kotlin:$fabricLanguageKotlinVersion")
+    modImplementation("net.fabricmc:fabric-loader:0.14.10")
+    modImplementation("net.fabricmc.fabric-api:fabric-api:0.64.0+1.19.2")
+    modImplementation("net.fabricmc:fabric-language-kotlin:1.8.5+kotlin.1.7.20")
 
-    modImplementation("net.silkmc:silk-core:$silkVersion")
-    modImplementation("net.silkmc:silk-commands:$silkVersion")
+    modImplementation("net.silkmc:silk-core:1.9.2")
+    modImplementation("net.silkmc:silk-commands:1.9.2")
 
-    modApi("com.terraformersmc:modmenu:$modMenuVersion")
+    modApi("com.terraformersmc:modmenu:4.0.6")
 }
 
 tasks {
     processResources {
-        val modId: String by project
-        val modName: String by project
-        val modDescription: String by project
+        val modId = "autodrop"
+        val modName = "SimpleAutoDrop"
+        val modDescription = "Mod to automatically drop items from your inventory"
 
         inputs.property("id", modId)
         inputs.property("group", project.group)
@@ -82,24 +70,13 @@ tasks {
         dependsOn("modrinthSyncBody")
         dependsOn("githubRelease")
     }
-
-    register<Copy>("copyToModsFolder") {
-        group = "mod"
-
-        dependsOn("build")
-
-        from("${project.buildDir}/libs/${project.name}-$version.jar")
-        into("/home/onion/.minecraft/mods/")
-    }
-
 }
 val changelogText =
     file("changelogs/${project.version}.md").takeIf { it.exists() }?.readText() ?: "No changelog provided."
 
-val modrinthID: String by project
 modrinth {
     token.set(findProperty("modrinth.token")?.toString())
-    projectId.set(modrinthID)
+    projectId.set("lg17V3i3")
     versionNumber.set("${project.version}")
     versionType.set("release")
     uploadFile.set(tasks["remapJar"])
@@ -125,50 +102,7 @@ githubRelease {
     releaseAssets(tasks["remapJar"].outputs.files)
 }
 
-publishing {
-    publications {
-        register<MavenPublication>(project.name) {
-            from(components["java"])
-
-            this.groupId = project.group.toString()
-            this.artifactId = project.name
-            this.version = rootProject.version.toString()
-
-            pom {
-                name.set(project.name)
-                description.set(project.description)
-
-                developers {
-                    authors.forEach {
-                        developer {
-                            name.set(it)
-                        }
-                    }
-                }
-
-                licenses {
-                    license {
-                        name.set("GNU General Public License 3")
-                        url.set("https://www.gnu.org/licenses/gpl-3.0.txt")
-                    }
-                }
-
-                url.set("https://github.com/${githubRepo}")
-
-                scm {
-                    connection.set("scm:git:git://github.com/${githubRepo}.git")
-                    url.set("https://github.com/${githubRepo}/tree/main")
-                }
-            }
-        }
-    }
-}
-
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "17"
     kotlinOptions.freeCompilerArgs += "-Xskip-prerelease-check"
-}
-
-signing {
-    sign(publishing.publications)
 }
