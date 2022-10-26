@@ -4,15 +4,16 @@ import com.mojang.blaze3d.vertex.PoseStack
 import dev.nyon.simpleautodrop.config.reloadCachedIds
 import dev.nyon.simpleautodrop.config.saveConfig
 import dev.nyon.simpleautodrop.config.settings
+import dev.nyon.simpleautodrop.util.button
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiComponent
 import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.components.EditBox
 import net.minecraft.client.gui.screens.Screen
-import net.silkmc.silk.core.text.literalText
+import net.minecraft.network.chat.Component
 
 class CreateArchiveScreen(private val previous: Screen, private val configScreen: ConfigScreen) :
-    Screen(literalText("Create archive")) {
+    Screen(Component.literal("Create archive")) {
 
     private lateinit var nameInput: EditBox
     private lateinit var nameInputSuccess: Button
@@ -22,7 +23,7 @@ class CreateArchiveScreen(private val previous: Screen, private val configScreen
         GuiComponent.drawCenteredString(
             matrices,
             Minecraft.getInstance().font,
-            literalText("Enter archive name"),
+            Component.literal("Enter archive name"),
             this.width / 2,
             this.height / 8,
             0x80FFFFFF.toInt()
@@ -52,18 +53,21 @@ class CreateArchiveScreen(private val previous: Screen, private val configScreen
             this.height / 4,
             this.width / 4,
             20,
-            literalText("Enter new archive name here...")
+            Component.literal("Enter new archive name here...")
         )
-        nameInputSuccess = Button(
-            (this.width / 2) - (this.width / 8), (this.height / 8) * 5, this.width / 4, 20, literalText("Confirm")
-        ) {
-            if (!it.isActive) return@Button
-            val newArchive = nameInput.value
-            settings.items[newArchive] = mutableListOf()
-            reloadCachedIds()
-            saveConfig()
-            onClose()
-            configScreen.archiveListWidget.refreshEntries()
-        }
+        nameInputSuccess = button((this.width / 2) - (this.width / 8),
+            (this.height / 8) * 5,
+            this.width / 4,
+            20,
+            Component.literal("Confirm"),
+            {
+                if (!it.isActive) return@button
+                val newArchive = nameInput.value
+                settings.items[newArchive] = mutableListOf()
+                reloadCachedIds()
+                saveConfig()
+                onClose()
+                configScreen.archiveListWidget.refreshEntries()
+            })
     }
 }

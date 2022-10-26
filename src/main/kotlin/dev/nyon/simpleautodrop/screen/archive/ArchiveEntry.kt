@@ -7,7 +7,6 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiComponent
 import net.minecraft.client.gui.components.ObjectSelectionList
 import net.minecraft.network.chat.Component
-import net.silkmc.silk.core.text.literalText
 import kotlin.streams.toList
 
 class ArchiveEntry(private val archive: String, private val configScreen: ConfigScreen) :
@@ -30,7 +29,7 @@ class ArchiveEntry(private val archive: String, private val configScreen: Config
 
         if (settings.currentArchives.contains(archive)) Minecraft.getInstance().font.draw(
             matrices,
-            literalText("enabled"),
+            Component.literal("enabled"),
             (x + entryWidth) - ("enabled".chars().toList().size * 10).toFloat(),
             y + 6.5F,
             0x991D5941.toInt()
@@ -44,7 +43,7 @@ class ArchiveEntry(private val archive: String, private val configScreen: Config
         }
 
         Minecraft.getInstance().font.draw(
-            matrices, literalText(archive), x + 5.toFloat(), y + 6.5F, 0x99FFFFFF.toInt()
+            matrices, Component.literal(archive), x + 5.toFloat(), y + 6.5F, 0x99FFFFFF.toInt()
         )
     }
 
@@ -58,7 +57,7 @@ class ArchiveEntry(private val archive: String, private val configScreen: Config
         return true
     }
 
-    override fun getNarration(): Component = literalText(archive)
+    override fun getNarration(): Component = Component.literal(archive)
 }
 
 private fun PoseStack.line(x1: Int, y1: Int, x2: Int, y2: Int) =

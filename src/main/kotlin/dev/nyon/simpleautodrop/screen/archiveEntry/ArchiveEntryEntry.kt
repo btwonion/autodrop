@@ -4,27 +4,27 @@ import com.mojang.blaze3d.vertex.PoseStack
 import dev.nyon.simpleautodrop.config.reloadCachedIds
 import dev.nyon.simpleautodrop.config.saveConfig
 import dev.nyon.simpleautodrop.config.settings
+import dev.nyon.simpleautodrop.util.button
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiComponent
-import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.components.ContainerObjectSelectionList
-import net.minecraft.client.gui.components.Widget
+import net.minecraft.client.gui.components.Renderable
 import net.minecraft.client.gui.components.events.GuiEventListener
 import net.minecraft.client.gui.narration.NarratableEntry
 import net.minecraft.client.gui.narration.NarrationElementOutput
+import net.minecraft.network.chat.Component
 import net.minecraft.world.item.Item
-import net.silkmc.silk.core.item.itemStack
-import net.silkmc.silk.core.text.literalText
+import net.minecraft.world.item.ItemStack
 
 class ArchiveEntryWidget(private val item: Item, private val list: ArchiveEntryListWidget) :
     ContainerObjectSelectionList.Entry<ArchiveEntryWidget>() {
 
-    private val removeButton = Button(0, 0, 50, 20, literalText("Remove")) {
+    private val removeButton = button(0, 0, 50, 20, Component.literal("Remove"), {
         settings.items[list.archive]?.remove(item)
         reloadCachedIds()
         saveConfig()
         list.refreshEntries()
-    }
+    })
 
     override fun render(
         matrices: PoseStack,
@@ -50,7 +50,7 @@ class ArchiveEntryWidget(private val item: Item, private val list: ArchiveEntryL
         ItemIconWidget(item).render(matrices, x + 2, y + 2, tickDelta)
 
         minecraft.font.draw(
-            matrices, literalText(item.description.string), x + 30.toFloat(), y + 6.toFloat(), 0x80FFFFFF.toInt()
+            matrices, Component.literal(item.description.string), x + 30.toFloat(), y + 6.toFloat(), 0x80FFFFFF.toInt()
         )
     }
 
@@ -60,12 +60,12 @@ class ArchiveEntryWidget(private val item: Item, private val list: ArchiveEntryL
 }
 
 
-class ItemIconWidget(val item: Item) : Widget, GuiEventListener, GuiComponent(), NarratableEntry {
+class ItemIconWidget(private val item: Item) : Renderable, GuiEventListener, GuiComponent(), NarratableEntry {
 
     override fun render(poseStack: PoseStack, i: Int, j: Int, f: Float) {
         val minecraft = Minecraft.getInstance()
         val itemRenderer = minecraft.itemRenderer
-        val itemStack = itemStack(item) {}
+        val itemStack = ItemStack(item, 1)
 
         this.blitOffset = 100
         itemRenderer.blitOffset = 100.0f

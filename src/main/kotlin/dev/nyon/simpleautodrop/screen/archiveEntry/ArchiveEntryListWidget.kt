@@ -6,7 +6,7 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiComponent
 import net.minecraft.client.gui.components.ContainerObjectSelectionList
 import net.minecraft.client.gui.narration.NarrationElementOutput
-import net.silkmc.silk.core.text.literalText
+import net.minecraft.network.chat.Component
 
 class ArchiveEntryListWidget(
     private val _width: Int,
@@ -30,7 +30,7 @@ class ArchiveEntryListWidget(
             GuiComponent.drawCenteredString(
                 matrices,
                 minecraft.font,
-                literalText("No archive selected"),
+                Component.literal("No archive selected"),
                 _left + (_width / 2),
                 _top + (_height / 2),
                 0x80FFFFFF.toInt()

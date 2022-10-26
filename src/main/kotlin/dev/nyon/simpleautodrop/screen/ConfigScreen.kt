@@ -6,11 +6,13 @@ import dev.nyon.simpleautodrop.config.saveConfig
 import dev.nyon.simpleautodrop.config.settings
 import dev.nyon.simpleautodrop.screen.archive.ArchiveListWidget
 import dev.nyon.simpleautodrop.screen.archiveEntry.ArchiveEntryListWidget
+import dev.nyon.simpleautodrop.util.button
 import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.screens.Screen
-import net.silkmc.silk.core.text.literalText
+import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.Style
 
-class ConfigScreen(private val previousScreen: Screen?) : Screen(literalText("SimpleAutoDrop")) {
+class ConfigScreen(private val previousScreen: Screen?) : Screen(Component.literal("SimpleAutoDrop")) {
 
     var currentArchive: String = ""
 
@@ -54,44 +56,47 @@ class ConfigScreen(private val previousScreen: Screen?) : Screen(literalText("Si
             24,
             currentArchive
         )
-        addItemsToArchiveButton = Button(
-            ((this.width / 4) + 10) + (archiveEntryListWidget.rowWidth / 2) - this.width / 8,
-            (this.height / 24) * 23,
-            this.width / 4,
-            20,
-            literalText("Add items")
-        ) {
-            minecraft?.setScreen(null)
-            minecraft?.setScreen(AddItemsScreen(this, currentArchive, this))
-        }
+        addItemsToArchiveButton =
+            button(((this.width / 4) + 10) + (archiveEntryListWidget.rowWidth / 2) - this.width / 8,
+                (this.height / 24) * 23,
+                this.width / 4,
+                20,
+                Component.literal("Add items"),
+                {
+                    minecraft?.setScreen(null)
+                    minecraft?.setScreen(AddItemsScreen(this, currentArchive, this))
+                })
         archiveListWidget =
             ArchiveListWidget(this.width / 4, 5, (this.height / 24) * 21 - 10, 10, ((this.height / 24) * 21), 24, this)
-        deleteButton = Button(
-            5,
+        deleteButton = button(5,
             (this.height / 24) * 22,
             (this.width / 8) - 2,
             20,
-            literalText("Delete") { color = 0x99620401.toInt() }) {
-            if (!it.active) return@Button
-            if (currentArchive == "") return@Button
-            settings.items.remove(currentArchive)
-            reloadCachedIds()
-            saveConfig()
-            currentArchive = ""
-            it.active = false
-            archiveEntryListWidget.refreshEntries()
-            archiveListWidget.refreshEntries()
-            addItemsToArchiveButton.active = false
-        }
-        createArchiveButton = Button(
-            5 + ((this.width / 8) - 2) + 2, (this.height / 24) * 22, (this.width / 8), 20, literalText("Create archive")
-        ) {
-            minecraft?.setScreen(null)
-            minecraft?.setScreen(CreateArchiveScreen(this, this))
-        }
-        doneButton = Button(5, (this.height / 24) * 23, this.width / 4, 20, literalText("Done")) {
+            Component.literal("Delete").withStyle(Style.EMPTY.withColor(0x99620401.toInt())),
+            {
+                if (!it.active) return@button
+                if (currentArchive == "") return@button
+                settings.items.remove(currentArchive)
+                reloadCachedIds()
+                saveConfig()
+                currentArchive = ""
+                it.active = false
+                archiveEntryListWidget.refreshEntries()
+                archiveListWidget.refreshEntries()
+                addItemsToArchiveButton.active = false
+            })
+        createArchiveButton = button(5 + ((this.width / 8) - 2) + 2,
+            (this.height / 24) * 22,
+            (this.width / 8),
+            20,
+            Component.literal("Create archive"),
+            {
+                minecraft?.setScreen(null)
+                minecraft?.setScreen(CreateArchiveScreen(this, this))
+            })
+        doneButton = button(5, (this.height / 24) * 23, this.width / 4, 20, Component.literal("Done"), {
             saveConfig()
             minecraft?.setScreen(previousScreen)
-        }
+        })
     }
 }

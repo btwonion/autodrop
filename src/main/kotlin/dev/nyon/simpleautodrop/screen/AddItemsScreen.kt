@@ -5,21 +5,22 @@ import dev.nyon.simpleautodrop.config.reloadCachedIds
 import dev.nyon.simpleautodrop.config.saveConfig
 import dev.nyon.simpleautodrop.config.settings
 import dev.nyon.simpleautodrop.screen.archiveEntry.ItemIconWidget
+import dev.nyon.simpleautodrop.util.button
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiComponent
-import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.components.ContainerObjectSelectionList
 import net.minecraft.client.gui.components.EditBox
 import net.minecraft.client.gui.components.events.GuiEventListener
 import net.minecraft.client.gui.narration.NarratableEntry
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.core.Registry
+import net.minecraft.network.chat.Component
 import net.minecraft.world.item.Item
-import net.silkmc.silk.core.text.literalText
+import net.minecraft.world.item.Items
 
 class AddItemsScreen(
     private val previous: Screen, private val archive: String, private val configScreen: ConfigScreen
-) : Screen(literalText("Add item")) {
+) : Screen(Component.literal("Add item")) {
 
     private lateinit var nameInput: EditBox
     private lateinit var itemList: ItemList
@@ -32,11 +33,16 @@ class AddItemsScreen(
         }
         addRenderableWidget(itemList)
         addRenderableWidget(nameInput)
-        addRenderableWidget(Button(
-            (this.width / 2) - this.width / 8, (this.height / 16) * 3, this.width / 4, 20, literalText("Done")
-        ) {
-            onClose()
-        })
+        addRenderableWidget(
+            button((this.width / 2) - this.width / 8,
+                (this.height / 16) * 3,
+                this.width / 4,
+                20,
+                Component.literal("Done"),
+                {
+                    onClose()
+                })
+        )
     }
 
     override fun onClose() {
@@ -54,7 +60,7 @@ class AddItemsScreen(
         GuiComponent.drawCenteredString(
             matrices,
             Minecraft.getInstance().font,
-            literalText("Enter item name"),
+            Component.literal("Enter item name"),
             this.width / 2,
             this.height / 16,
             0x80FFFFFF.toInt()
@@ -68,7 +74,7 @@ class AddItemsScreen(
             this.height / 8,
             this.width / 4,
             20,
-            literalText("Enter new archive name here...")
+            Component.literal("Enter new archive name here...")
         )
         itemList = ItemList(archive, this.width, (this.height / 4) * 3, this.height / 4, this.height, 24, 0)
     }
@@ -76,12 +82,12 @@ class AddItemsScreen(
     inner class ItemEntry(private val item: Item, private val archive: String) :
         ContainerObjectSelectionList.Entry<ItemEntry>() {
 
-        private val addButton = Button(0, 0, 50, 20, literalText("Add")) {
+        private val addButton = button(0, 0, 50, 20, Component.literal("Add"), {
             settings.items[archive]?.add(item)
             reloadCachedIds()
             itemList.refreshEntries(nameInput.value, false)
             saveConfig()
-        }
+        })
 
         override fun render(
             matrices: PoseStack,
@@ -107,7 +113,11 @@ class AddItemsScreen(
             ItemIconWidget(item).render(matrices, x + 2, y + 2, tickDelta)
 
             minecraft.font.draw(
-                matrices, literalText(item.description.string), x + 30.toFloat(), y + 6.toFloat(), 0x80FFFFFF.toInt()
+                matrices,
+                Component.literal(item.description.string),
+                x + 30.toFloat(),
+                y + 6.toFloat(),
+                0x80FFFFFF.toInt()
             )
         }
 
@@ -131,7 +141,12 @@ class AddItemsScreen(
         override fun render(matrices: PoseStack, mouseX: Int, mouseY: Int, delta: Float) {
             if (itemCount == 0) {
                 GuiComponent.drawCenteredString(
-                    matrices, minecraft.font, literalText("No items found"), x0 + (width / 2), 250, 0x80FFFFFF.toInt()
+                    matrices,
+                    minecraft.font,
+                    Component.literal("No items found"),
+                    x0 + (width / 2),
+                    250,
+                    0x80FFFFFF.toInt()
                 )
                 return
             }
@@ -141,7 +156,7 @@ class AddItemsScreen(
         fun refreshEntries(input: String, scrollReset: Boolean = true) {
             clearEntries()
             if (input.isEmpty()) {
-                Registry.ITEM.filter { settings.items[archive]?.contains(it) == false }
+                Registry.ITEM.filter { settings.items[archive]?.contains(it) == false && it != Items.AIR }
                     .forEach { addEntry(ItemEntry(it, archive)) }
                 if (scrollReset) scrollAmount = 0.0
                 return

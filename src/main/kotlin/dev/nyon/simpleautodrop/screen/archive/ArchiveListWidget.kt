@@ -7,7 +7,7 @@ import dev.nyon.simpleautodrop.screen.ConfigScreen
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiComponent
 import net.minecraft.client.gui.components.ObjectSelectionList
-import net.silkmc.silk.core.text.literalText
+import net.minecraft.network.chat.Component
 
 class ArchiveListWidget(
     private val _width: Int,
@@ -30,8 +30,7 @@ class ArchiveListWidget(
         if (settings.items.isEmpty()) {
             GuiComponent.drawCenteredString(
                 matrices,
-                minecraft.font,
-                literalText("No existing archives"),
+                minecraft.font, Component.literal("No existing archives"),
                 _left + (_width / 2),
                 _top + (_height / 2),
                 0x80FFFFFF.toInt()
@@ -53,7 +52,7 @@ class ArchiveListWidget(
         }
     }
 
-    var lastClick: Pair<String, Long> = "" to System.currentTimeMillis()
+    private var lastClick: Pair<String, Long> = "" to System.currentTimeMillis()
     fun handleMouseClick(archive: String) {
         if (lastClick.first == archive && System.currentTimeMillis() - lastClick.second < 250) {
             if (!settings.currentArchives.contains(archive)) settings.currentArchives += archive
