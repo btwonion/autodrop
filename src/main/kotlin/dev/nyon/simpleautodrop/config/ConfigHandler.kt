@@ -17,6 +17,7 @@ private val json = Json { prettyPrint = true }
 fun saveConfig() {
     config.writeText(json.encodeToString(settings))
 }
+
 fun loadConfig() {
     if (config.readText().isEmpty()) saveConfig()
     else {

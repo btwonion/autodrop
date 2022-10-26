@@ -9,7 +9,6 @@ import kotlinx.serialization.encoding.Encoder
 import net.minecraft.world.item.Item
 
 class ItemSerializer : KSerializer<Item> {
-
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("item", PrimitiveKind.INT)
 
     override fun serialize(encoder: Encoder, value: Item) {
