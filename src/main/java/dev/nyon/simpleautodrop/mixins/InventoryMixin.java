@@ -19,7 +19,6 @@ public class InventoryMixin {
     @Final
     public Player player;
 
-    @SuppressWarnings("SpellCheckingInspection")
     @Inject(method = "add(ILnet/minecraft/world/item/ItemStack;)Z", at = @At(value = "RETURN"))
     public void onTake(int i, ItemStack itemStack, CallbackInfoReturnable<Boolean> cir) {
         if (!player.getInventory().equals((Inventory) (Object) this)) return;
