@@ -18,9 +18,8 @@
   "environment": "client",
   "depends": {
     "fabric-language-kotlin": ">=1.8.5+kotlin.1.7.20",
-    "fabric-api": ">=0.65.0+1.19.3",
-    "silk-all": ">=1.9.2",
-    "minecraft": ">=1.19.3-alpha.22.42.a"
+    "fabric-api": ">=0.65.1+1.19.3",
+    "minecraft": ">=1.19.3-alpha.22.43.a"
   },
   "suggests": {
     "modmenu": "*"

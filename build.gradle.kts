@@ -13,7 +13,7 @@ plugins {
 }
 
 group = "dev.nyon"
-version = "1.3.0"
+version = "1.3.1"
 val authors = listOf("btwonion")
 val githubRepo = "btwonion/SimpleAutoDrop"
 
@@ -23,17 +23,14 @@ repositories {
 }
 
 dependencies {
-    minecraft("com.mojang:minecraft:22w42a")
+    minecraft("com.mojang:minecraft:22w43a")
     mappings(loom.layered {
-        //addLayer(quiltMappings.mappings("org.quiltmc:quilt-mappings:22w42a+build.5:v2"))
+        //addLayer(quiltMappings.mappings("org.quiltmc:quilt-mappings:22w43a+build.4:v2"))
         officialMojangMappings()
     })
     modImplementation("net.fabricmc:fabric-loader:0.14.10")
-    modImplementation("net.fabricmc.fabric-api:fabric-api:0.65.0+1.19.3")
+    modImplementation("net.fabricmc.fabric-api:fabric-api:0.65.1+1.19.3")
     modImplementation("net.fabricmc:fabric-language-kotlin:1.8.5+kotlin.1.7.20")
-
-    modImplementation("net.silkmc:silk-core:1.9.2")
-    modImplementation("net.silkmc:silk-commands:1.9.2")
 
     modApi("com.terraformersmc:modmenu:4.0.6")
 }
@@ -51,7 +48,7 @@ tasks {
         inputs.property("version", project.version)
         inputs.property("github", githubRepo)
 
-        filesMatching(listOf("fabric.mod.json", "quilt.mod.json")) {
+        filesMatching("fabric.mod.json") {
             expand(
                 "id" to modId,
                 "group" to project.group,
