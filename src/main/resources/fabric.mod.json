@@ -18,11 +18,8 @@
   "environment": "client",
   "depends": {
     "fabric-language-kotlin": ">=1.8.5+kotlin.1.7.20",
-    "fabric-api": ">=0.65.1+1.19.3",
-    "minecraft": ">=1.19.3-alpha.22.43.a"
-  },
-  "suggests": {
-    "modmenu": "*"
+    "fabric-api": ">=0.65.3+1.19.3",
+    "minecraft": ">=1.19.3-alpha.22.44.a"
   },
   "entrypoints": {
     "client": [
@@ -30,9 +27,6 @@
         "adapter": "kotlin",
         "value": "dev.nyon.simpleautodrop.MainKt::initClient"
       }
-    ],
-    "modmenu" : [
-      "dev.nyon.simpleautodrop.config.ModMenuImpl"
     ]
   },
   "mixins": [
