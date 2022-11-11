@@ -13,7 +13,7 @@ import net.minecraft.client.gui.components.EditBox
 import net.minecraft.client.gui.components.events.GuiEventListener
 import net.minecraft.client.gui.narration.NarratableEntry
 import net.minecraft.client.gui.screens.Screen
-import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.core.Registry
 import net.minecraft.network.chat.Component
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.Items
@@ -156,19 +156,19 @@ class AddItemsScreen(
         fun refreshEntries(input: String, scrollReset: Boolean = true) {
             clearEntries()
             if (input.isEmpty()) {
-                BuiltInRegistries.ITEM.filter { settings.items[archive]?.contains(it) == false && it != Items.AIR }
+                Registry.ITEM.filter { settings.items[archive]?.contains(it) == false && it != Items.AIR }
                     .forEach { addEntry(ItemEntry(it, archive)) }
                 if (scrollReset) scrollAmount = 0.0
                 return
             }
 
-            BuiltInRegistries.ITEM.filter {
+            Registry.ITEM.filter {
                 Item.getId(it).toString().startsWith(input, true) || Item.getId(it).toString()
                     .contains(input, true) || it.description.string.startsWith(
                     input, true
                 ) || it.description.string.equals(
                     input, true
-                ) || it.description.string.contains(input, true) || BuiltInRegistries.ITEM.getKey(it).toString().contains(input)
+                ) || it.description.string.contains(input, true) || Registry.ITEM.getKey(it).toString().contains(input)
             }.filter { settings.items[archive]?.contains(it) == false }.forEach { addEntry(ItemEntry(it, archive)) }
 
             if (scrollReset) scrollAmount = 0.0
