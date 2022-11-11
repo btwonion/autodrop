@@ -13,7 +13,7 @@ plugins {
 }
 
 group = "dev.nyon"
-version = "1.3.2"
+version = "1.3.3"
 val authors = listOf("btwonion")
 val githubRepo = "btwonion/SimpleAutoDrop"
 
@@ -23,14 +23,14 @@ repositories {
 }
 
 dependencies {
-    minecraft("com.mojang:minecraft:22w44a")
+    minecraft("com.mojang:minecraft:22w45a")
     mappings(loom.layered {
-        //addLayer(quiltMappings.mappings("org.quiltmc:quilt-mappings:22w44a+build.4:v2"))
+        //addLayer(quiltMappings.mappings("org.quiltmc:quilt-mappings:22w45a+build.2:v2"))
         officialMojangMappings()
     })
     modImplementation("net.fabricmc:fabric-loader:0.14.10")
-    modImplementation("net.fabricmc.fabric-api:fabric-api:0.65.3+1.19.3")
-    modImplementation("net.fabricmc:fabric-language-kotlin:1.8.5+kotlin.1.7.20")
+    modImplementation("net.fabricmc.fabric-api:fabric-api:0.66.1+1.19.3")
+    modImplementation("net.fabricmc:fabric-language-kotlin:1.8.6+kotlin.1.7.21")
 }
 
 tasks {
@@ -75,7 +75,7 @@ modrinth {
     versionNumber.set("${project.version}")
     versionType.set("release")
     uploadFile.set(tasks["remapJar"])
-    gameVersions.set(listOf("22w44a"))
+    gameVersions.set(listOf("22w45a"))
     loaders.set(listOf("fabric", "quilt"))
     dependencies {
         required.project("fabric-api")
