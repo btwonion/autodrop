@@ -40,10 +40,10 @@ object SimpleAutoDrop {
         while (toggleKeyBind.consumeClick()) {
             settings.enabled = !settings.enabled
             saveConfig()
-            client.player?.sendSystemMessage(
-                Component.literal("You ${if (settings.enabled) "enabled" else "disabled"} auto drop!").withStyle(
-                    Style.EMPTY.withColor(0x1A631F)
-                )
+            client.gui.setOverlayMessage(
+                Component.literal("SimpleAutoDrop ${if (settings.enabled) "enabled" else "disabled"}").withStyle(
+                    Style.EMPTY.withColor(0xF99147)
+                ), false
             )
         }
         while (menuKeyBind.consumeClick()) {
