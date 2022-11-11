@@ -63,7 +63,6 @@ tasks {
         group = "mod"
 
         dependsOn("modrinth")
-        dependsOn("modrinthSyncBody")
         dependsOn("githubRelease")
     }
 }

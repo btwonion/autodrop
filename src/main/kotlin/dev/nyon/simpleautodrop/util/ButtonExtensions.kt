@@ -9,5 +9,5 @@ fun button(
     k: Int,
     l: Int,
     name: Component,
-    onClick: (Button) -> Unit,
+    onClick: (Button) -> Unit
 ) = object : Button(i, j, k, l, name, onClick, { Component.empty() }) {}
