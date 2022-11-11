@@ -59,15 +59,15 @@ class CreateArchiveScreen(private val previous: Screen, private val configScreen
             (this.height / 8) * 5,
             this.width / 4,
             20,
-            Component.literal("Confirm"),
-            {
-                if (!it.isActive) return@button
-                val newArchive = nameInput.value
-                settings.items[newArchive] = mutableListOf()
-                reloadCachedIds()
-                saveConfig()
-                onClose()
-                configScreen.archiveListWidget.refreshEntries()
-            })
+            Component.literal("Confirm")
+        ) {
+            if (!it.isActive) return@button
+            val newArchive = nameInput.value
+            settings.items[newArchive] = mutableListOf()
+            reloadCachedIds()
+            saveConfig()
+            onClose()
+            configScreen.archiveListWidget.refreshEntries()
+        }
     }
 }

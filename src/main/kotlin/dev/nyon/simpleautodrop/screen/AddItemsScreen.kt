@@ -13,7 +13,7 @@ import net.minecraft.client.gui.components.EditBox
 import net.minecraft.client.gui.components.events.GuiEventListener
 import net.minecraft.client.gui.narration.NarratableEntry
 import net.minecraft.client.gui.screens.Screen
-import net.minecraft.core.Registry
+import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.chat.Component
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.Items
@@ -38,10 +38,10 @@ class AddItemsScreen(
                 (this.height / 16) * 3,
                 this.width / 4,
                 20,
-                Component.literal("Done"),
-                {
-                    onClose()
-                })
+                Component.literal("Done")
+            ) {
+                onClose()
+            }
         )
     }
 
@@ -82,12 +82,12 @@ class AddItemsScreen(
     inner class ItemEntry(private val item: Item, private val archive: String) :
         ContainerObjectSelectionList.Entry<ItemEntry>() {
 
-        private val addButton = button(0, 0, 50, 20, Component.literal("Add"), {
+        private val addButton = button(0, 0, 50, 20, Component.literal("Add")) {
             settings.items[archive]?.add(item)
             reloadCachedIds()
             itemList.refreshEntries(nameInput.value, false)
             saveConfig()
-        })
+        }
 
         override fun render(
             matrices: PoseStack,
@@ -156,19 +156,19 @@ class AddItemsScreen(
         fun refreshEntries(input: String, scrollReset: Boolean = true) {
             clearEntries()
             if (input.isEmpty()) {
-                Registry.ITEM.filter { settings.items[archive]?.contains(it) == false && it != Items.AIR }
+                BuiltInRegistries.ITEM.filter { settings.items[archive]?.contains(it) == false && it != Items.AIR }
                     .forEach { addEntry(ItemEntry(it, archive)) }
                 if (scrollReset) scrollAmount = 0.0
                 return
             }
 
-            Registry.ITEM.filter {
+            BuiltInRegistries.ITEM.filter {
                 Item.getId(it).toString().startsWith(input, true) || Item.getId(it).toString()
                     .contains(input, true) || it.description.string.startsWith(
                     input, true
                 ) || it.description.string.equals(
                     input, true
-                ) || it.description.string.contains(input, true) || Registry.ITEM.getKey(it).toString().contains(input)
+                ) || it.description.string.contains(input, true) || BuiltInRegistries.ITEM.getKey(it).toString().contains(input)
             }.filter { settings.items[archive]?.contains(it) == false }.forEach { addEntry(ItemEntry(it, archive)) }
 
             if (scrollReset) scrollAmount = 0.0

@@ -19,12 +19,12 @@ import net.minecraft.world.item.ItemStack
 class ArchiveEntryWidget(private val item: Item, private val list: ArchiveEntryListWidget) :
     ContainerObjectSelectionList.Entry<ArchiveEntryWidget>() {
 
-    private val removeButton = button(0, 0, 50, 20, Component.literal("Remove"), {
+    private val removeButton = button(0, 0, 50, 20, Component.literal("Remove")) {
         settings.items[list.archive]?.remove(item)
         reloadCachedIds()
         saveConfig()
         list.refreshEntries()
-    })
+    }
 
     override fun render(
         matrices: PoseStack,
