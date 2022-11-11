@@ -13,7 +13,8 @@ plugins {
 }
 
 group = "dev.nyon"
-version = "1.3.3"
+val majorVersion = "1.3.3"
+version = "$majorVersion-22w45a"
 val authors = listOf("btwonion")
 val githubRepo = "btwonion/SimpleAutoDrop"
 
@@ -67,7 +68,7 @@ tasks {
     }
 }
 val changelogText =
-    file("changelogs/${project.version}.md").takeIf { it.exists() }?.readText() ?: "No changelog provided."
+    file("changelogs/$majorVersion.md").takeIf { it.exists() }?.readText() ?: "No changelog provided."
 
 modrinth {
     token.set(findProperty("modrinth.token")?.toString())
@@ -94,6 +95,7 @@ githubRelease {
     tagName("v${project.version}")
     body(changelogText)
     releaseAssets(tasks["remapJar"].outputs.files)
+    targetCommitish("snapshot")
 }
 
 tasks.withType<KotlinCompile> {
