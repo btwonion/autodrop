@@ -2,10 +2,10 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.7.21"
-    kotlin("plugin.serialization") version "1.7.21"
+    kotlin("jvm") version "1.7.22"
+    kotlin("plugin.serialization") version "1.7.22"
     id("fabric-loom") version "1.0-SNAPSHOT"
-    id("io.github.juuxel.loom-quiltflower") version "1.7.4"
+    id("io.github.juuxel.loom-quiltflower") version "1.8.0"
     id("org.quiltmc.quilt-mappings-on-loom") version "4.2.1"
 
     id("com.modrinth.minotaur") version "2.4.4"
@@ -29,9 +29,9 @@ dependencies {
         //addLayer(quiltMappings.mappings("org.quiltmc:quilt-mappings:1.19.2+build.21:v2"))
         officialMojangMappings()
     })
-    modImplementation("net.fabricmc:fabric-loader:0.14.10")
-    modImplementation("net.fabricmc.fabric-api:fabric-api:0.66.0+1.19.2")
-    modImplementation("net.fabricmc:fabric-language-kotlin:1.8.6+kotlin.1.7.21")
+    modImplementation("net.fabricmc:fabric-loader:0.14.11")
+    modImplementation("net.fabricmc.fabric-api:fabric-api:0.68.0+1.19.2")
+    modImplementation("net.fabricmc:fabric-language-kotlin:1.8.7+kotlin.1.7.22")
 }
 
 tasks {
