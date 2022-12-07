@@ -64,6 +64,7 @@ tasks {
 
         dependsOn("modrinth")
         dependsOn("githubRelease")
+        dependsOn("modrinthSyncBody")
     }
 }
 val changelogText =
