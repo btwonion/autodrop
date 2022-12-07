@@ -76,7 +76,7 @@ modrinth {
     versionNumber.set("${project.version}")
     versionType.set("release")
     uploadFile.set(tasks["remapJar"])
-    gameVersions.set(listOf("1.19.3-rc1", "1.19.3-rc2"))
+    gameVersions.set(listOf("1.19.3"))
     loaders.set(listOf("fabric", "quilt"))
     dependencies {
         required.project("fabric-api")
@@ -95,7 +95,7 @@ githubRelease {
     tagName("v${project.version}")
     body(changelogText)
     releaseAssets(tasks["remapJar"].outputs.files)
-    targetCommitish("snapshot")
+    targetCommitish("main")
 }
 
 tasks.withType<KotlinCompile> {
