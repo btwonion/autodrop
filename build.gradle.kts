@@ -14,7 +14,7 @@ plugins {
 
 group = "dev.nyon"
 val majorVersion = "1.3.3"
-version = "$majorVersion-1.19.3-rc2"
+version = "$majorVersion-1.19.3"
 val authors = listOf("btwonion")
 val githubRepo = "btwonion/SimpleAutoDrop"
 
@@ -24,9 +24,9 @@ repositories {
 }
 
 dependencies {
-    minecraft("com.mojang:minecraft:1.19.3-rc1")
+    minecraft("com.mojang:minecraft:1.19.3")
     mappings(loom.layered {
-        //addLayer(quiltMappings.mappings("org.quiltmc:quilt-mappings:1.19.3-rc1+build.4:v2"))
+        //addLayer(quiltMappings.mappings("org.quiltmc:quilt-mappings:1.19.3+build.1:v2"))
         officialMojangMappings()
     })
     modImplementation("net.fabricmc:fabric-loader:0.14.11")
