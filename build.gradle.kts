@@ -14,7 +14,7 @@ plugins {
 
 group = "dev.nyon"
 val majorVersion = "1.3.3"
-version = "$majorVersion-1.19.2"
+version = "$majorVersion-1.19.3"
 val authors = listOf("btwonion")
 val githubRepo = "btwonion/SimpleAutoDrop"
 
@@ -24,13 +24,13 @@ repositories {
 }
 
 dependencies {
-    minecraft("com.mojang:minecraft:1.19.2")
+    minecraft("com.mojang:minecraft:1.19.3")
     mappings(loom.layered {
-        //addLayer(quiltMappings.mappings("org.quiltmc:quilt-mappings:1.19.2+build.21:v2"))
+        //addLayer(quiltMappings.mappings("org.quiltmc:quilt-mappings:1.19.3+build.1:v2"))
         officialMojangMappings()
     })
     modImplementation("net.fabricmc:fabric-loader:0.14.11")
-    modImplementation("net.fabricmc.fabric-api:fabric-api:0.68.0+1.19.2")
+    modImplementation("net.fabricmc.fabric-api:fabric-api:0.68.1+1.19.3")
     modImplementation("net.fabricmc:fabric-language-kotlin:1.8.7+kotlin.1.7.22")
 }
 
@@ -63,12 +63,11 @@ tasks {
         group = "publishing"
 
         dependsOn("modrinth")
-        dependsOn("modrinthSyncBody")
         dependsOn("githubRelease")
     }
 }
 val changelogText =
-    file("changelogs/${project.version}.md").takeIf { it.exists() }?.readText() ?: "No changelog provided."
+    file("changelogs/$majorVersion.md").takeIf { it.exists() }?.readText() ?: "No changelog provided."
 
 modrinth {
     token.set(findProperty("modrinth.token")?.toString())
@@ -76,7 +75,7 @@ modrinth {
     versionNumber.set("${project.version}")
     versionType.set("release")
     uploadFile.set(tasks["remapJar"])
-    gameVersions.set(listOf("1.19.2"))
+    gameVersions.set(listOf("1.19.3-rc1", "1.19.3-rc2"))
     loaders.set(listOf("fabric", "quilt"))
     dependencies {
         required.project("fabric-api")
@@ -95,6 +94,7 @@ githubRelease {
     tagName("v${project.version}")
     body(changelogText)
     releaseAssets(tasks["remapJar"].outputs.files)
+    targetCommitish("snapshot")
 }
 
 tasks.withType<KotlinCompile> {

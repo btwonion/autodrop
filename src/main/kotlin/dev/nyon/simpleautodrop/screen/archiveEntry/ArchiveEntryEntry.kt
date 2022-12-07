@@ -8,7 +8,7 @@ import dev.nyon.simpleautodrop.util.button
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiComponent
 import net.minecraft.client.gui.components.ContainerObjectSelectionList
-import net.minecraft.client.gui.components.Widget
+import net.minecraft.client.gui.components.Renderable
 import net.minecraft.client.gui.components.events.GuiEventListener
 import net.minecraft.client.gui.narration.NarratableEntry
 import net.minecraft.client.gui.narration.NarrationElementOutput
@@ -60,7 +60,7 @@ class ArchiveEntryWidget(private val item: Item, private val list: ArchiveEntryL
 }
 
 
-class ItemIconWidget(private val item: Item) : Widget, GuiEventListener, GuiComponent(), NarratableEntry {
+class ItemIconWidget(private val item: Item) : Renderable, GuiEventListener, GuiComponent(), NarratableEntry {
 
     override fun render(poseStack: PoseStack, i: Int, j: Int, f: Float) {
         val minecraft = Minecraft.getInstance()
