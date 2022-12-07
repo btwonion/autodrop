@@ -75,7 +75,7 @@ modrinth {
     versionNumber.set("${project.version}")
     versionType.set("release")
     uploadFile.set(tasks["remapJar"])
-    gameVersions.set(listOf("1.19.3"))
+    gameVersions.set(listOf("1.19.3-rc1", "1.19.3-rc2"))
     loaders.set(listOf("fabric", "quilt"))
     dependencies {
         required.project("fabric-api")
