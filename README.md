@@ -5,7 +5,6 @@ inventory if they are blacklisted. You can disable it easily by pressing a hotke
 ## Managing items
 - use the configuration section in the modmenu integration
 - press the keybind for the gui (`default: o`)
-- alternatively: use the /autodrop command
 
 ### Other
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/I3I8F1WX4)
