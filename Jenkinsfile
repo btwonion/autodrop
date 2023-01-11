@@ -1,3 +1,5 @@
-agent {
-    docker { image 'gradle:jdk17'}
+pipeline {
+    agent {
+        docker { image 'gradle:jdk17'}
+    }
 }
