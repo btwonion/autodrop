@@ -1,6 +1,8 @@
 pipeline {
     agent {
-        docker { image 'gradle:jdk17'}
+        docker {
+            image 'gradle:jdk17'
+        }
     }
 
     stages {
