@@ -6,7 +6,6 @@ plugins {
     kotlin("plugin.serialization") version "1.8.0"
     id("fabric-loom") version "1.0-SNAPSHOT"
     id("io.github.juuxel.loom-quiltflower") version "1.8.0"
-    id("org.quiltmc.quilt-mappings-on-loom") version "4.2.3"
 
     id("com.modrinth.minotaur") version "2.6.0"
     id("com.github.breadmoirai.github-release") version "2.4.1"
@@ -21,12 +20,13 @@ val githubRepo = "btwonion/SimpleAutoDrop"
 repositories {
     mavenCentral()
     maven("https://maven.terraformersmc.com")
+    maven("https://maven.parchmentmc.org")
 }
 
 dependencies {
     minecraft("com.mojang:minecraft:1.19.3")
     mappings(loom.layered {
-        //addLayer(quiltMappings.mappings("org.quiltmc:quilt-mappings:1.19.3+build.1:v2"))
+        parchment("org.parchmentmc.data:parchment-1.19.3:2022.12.18@zip")
         officialMojangMappings()
     })
     modImplementation("net.fabricmc:fabric-loader:0.14.12")
@@ -94,6 +94,7 @@ githubRelease {
     repo(split[1])
     tagName("v${project.version}")
     body(changelogText)
+    overwrite(true)
     releaseAssets(tasks["remapJar"].outputs.files)
     targetCommitish("main")
 }
