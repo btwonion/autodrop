@@ -2,18 +2,18 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.7.22"
-    kotlin("plugin.serialization") version "1.7.22"
+    kotlin("jvm") version "1.8.0"
+    kotlin("plugin.serialization") version "1.8.0"
     id("fabric-loom") version "1.0-SNAPSHOT"
     id("io.github.juuxel.loom-quiltflower") version "1.8.0"
-    id("org.quiltmc.quilt-mappings-on-loom") version "4.2.1"
+    id("org.quiltmc.quilt-mappings-on-loom") version "4.2.3"
 
-    id("com.modrinth.minotaur") version "2.4.4"
+    id("com.modrinth.minotaur") version "2.6.0"
     id("com.github.breadmoirai.github-release") version "2.4.1"
 }
 
 group = "dev.nyon"
-val majorVersion = "1.3.3"
+val majorVersion = "1.3.4"
 version = "$majorVersion-1.19.3"
 val authors = listOf("btwonion")
 val githubRepo = "btwonion/SimpleAutoDrop"
@@ -29,9 +29,9 @@ dependencies {
         //addLayer(quiltMappings.mappings("org.quiltmc:quilt-mappings:1.19.3+build.1:v2"))
         officialMojangMappings()
     })
-    modImplementation("net.fabricmc:fabric-loader:0.14.11")
-    modImplementation("net.fabricmc.fabric-api:fabric-api:0.68.1+1.19.3")
-    modImplementation("net.fabricmc:fabric-language-kotlin:1.8.7+kotlin.1.7.22")
+    modImplementation("net.fabricmc:fabric-loader:0.14.12")
+    modImplementation("net.fabricmc.fabric-api:fabric-api:0.72.0+1.19.3")
+    modImplementation("net.fabricmc:fabric-language-kotlin:1.9.0+kotlin.1.8.0")
 }
 
 tasks {
