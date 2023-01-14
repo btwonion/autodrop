@@ -11,7 +11,8 @@ pipeline {
                 try {
                     sh 'chmod +x gradlew'
                     sh 'gradle build'
-                } catch {
+                } 
+                catch {
                     sh 'gradle clean build --refresh-dependencies'
                 }
             }
