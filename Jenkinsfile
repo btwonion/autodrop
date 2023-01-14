@@ -12,7 +12,7 @@ pipeline {
                     sh 'chmod +x gradlew'
                     sh 'gradle build'
                 } 
-                catch (Exception e) {
+                catch (err) {
                     sh 'gradle clean build --refresh-dependencies'
                 }
             }
