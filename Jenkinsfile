@@ -9,7 +9,7 @@ pipeline {
         stage('Build') {
             steps {
                 sh 'chmod +x gradlew'
-                sh './gradlew build'
+                sh 'gradle build'
             }
         }
 
@@ -21,7 +21,7 @@ pipeline {
             }
 
             steps {
-                sh './gradlew clean build --refresh-dependencies'
+                sh 'gradle clean build --refresh-dependencies'
             }
         }
     }
