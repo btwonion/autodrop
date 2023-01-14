@@ -8,20 +8,12 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh 'chmod +x gradlew'
-                sh 'gradle build'
-            }
-        }
-
-        stage('Rebuild with dependency reload') {
-            when {
-                expression {
-                    currentBuild.result == 'FAILED'
+                try {
+                    sh 'chmod +x gradlew'
+                    sh 'gradle build'
+                } catch {
+                    sh 'gradle clean build --refresh-dependencies'
                 }
-            }
-
-            steps {
-                sh 'gradle clean build --refresh-dependencies'
             }
         }
     }
