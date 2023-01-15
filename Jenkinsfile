@@ -2,6 +2,7 @@ pipeline {
     agent {
         docker {
             image 'gradle:jdk17'
+            args '-v /var/cache/gradle:/tmp/gradle-user-home:rw'
         }
     }
 
