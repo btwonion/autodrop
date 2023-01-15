@@ -14,7 +14,9 @@ pipeline {
                 }
             }
             catch (e) {
-                sh 'gradle clean build --refresh-dependencies'
+                steps {
+                    sh 'gradle clean build --refresh-dependencies'
+                }
             }
         }
     }
