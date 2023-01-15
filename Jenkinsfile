@@ -5,16 +5,16 @@ pipeline {
         }
     }
 
-    stages {
-        try {
+    try {
+        stages {
             stage('Build') {
                 steps {
                     sh 'chmod +x gradlew'
                     sh 'gradle build'
                 }
             }
-        } catch (all) {
-            sh 'gradle clean build --refresh-dependencies'
         }
+    } catch (all) {
+        sh 'gradle clean build --refresh-dependencies'
     }
 }
