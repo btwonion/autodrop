@@ -51,7 +51,9 @@ class ArchiveEntryListWidget(
     fun refreshEntries() {
         clearEntries()
 
-        settings.items[archive]?.sortedBy { it.description.string }?.forEach {
+
+
+        settings.archives.first { it.name == archive }.items.sortedBy { it.description.string }.forEach {
             addEntry(ArchiveEntryWidget(it, this@ArchiveEntryListWidget))
         }
     }

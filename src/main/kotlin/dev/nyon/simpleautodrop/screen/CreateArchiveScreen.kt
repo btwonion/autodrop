@@ -1,6 +1,7 @@
 package dev.nyon.simpleautodrop.screen
 
 import com.mojang.blaze3d.vertex.PoseStack
+import dev.nyon.simpleautodrop.config.Archive
 import dev.nyon.simpleautodrop.config.reloadCachedIds
 import dev.nyon.simpleautodrop.config.saveConfig
 import dev.nyon.simpleautodrop.config.settings
@@ -34,9 +35,9 @@ class CreateArchiveScreen(private val previous: Screen, private val configScreen
     override fun init() {
         initWidgets()
 
-        nameInput.value = "Archive ${settings.items.size}"
+        nameInput.value = "Archive ${settings.archives.size}"
         nameInput.setResponder {
-            nameInputSuccess.active = !settings.items.containsKey(it)
+            nameInputSuccess.active = settings.archives.find { archive -> archive.name == it } != null
         }
         addRenderableWidget(nameInput)
         addRenderableWidget(nameInputSuccess)
@@ -55,15 +56,14 @@ class CreateArchiveScreen(private val previous: Screen, private val configScreen
             20,
             Component.literal("Enter new archive name here...")
         )
-        nameInputSuccess = button((this.width / 2) - (this.width / 8),
-            (this.height / 8) * 5,
-            this.width / 4,
-            20,
-            Component.literal("Confirm")
+        nameInputSuccess = button(
+            (this.width / 2) - (this.width / 8), (this.height / 8) * 5, this.width / 4, 20, Component.literal("Confirm")
         ) {
             if (!it.isActive) return@button
             val newArchive = nameInput.value
-            settings.items[newArchive] = mutableListOf()
+            val archive = Archive(newArchive, mutableListOf(), mutableListOf())
+            settings.archives += archive
+            settings.activeArchives += archive.name
             reloadCachedIds()
             saveConfig()
             onClose()

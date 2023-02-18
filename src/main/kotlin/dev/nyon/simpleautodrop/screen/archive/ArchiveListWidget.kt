@@ -27,10 +27,11 @@ class ArchiveListWidget(
     }
 
     override fun render(matrices: PoseStack, mouseX: Int, mouseY: Int, delta: Float) {
-        if (settings.items.isEmpty()) {
+        if (settings.archives.isEmpty()) {
             GuiComponent.drawCenteredString(
                 matrices,
-                minecraft.font, Component.literal("No existing archives"),
+                minecraft.font,
+                Component.literal("No existing archives"),
                 _left + (_width / 2),
                 _top + (_height / 2),
                 0x80FFFFFF.toInt()
@@ -47,16 +48,16 @@ class ArchiveListWidget(
     fun refreshEntries() {
         clearEntries()
 
-        settings.items.forEach {
-            addEntry(ArchiveEntry(it.key, configScreen))
+        settings.archives.forEach {
+            addEntry(ArchiveEntry(it.name, configScreen))
         }
     }
 
     private var lastClick: Pair<String, Long> = "" to System.currentTimeMillis()
     fun handleMouseClick(archive: String) {
         if (lastClick.first == archive && System.currentTimeMillis() - lastClick.second < 250) {
-            if (!settings.currentArchives.contains(archive)) settings.currentArchives += archive
-            else settings.currentArchives -= archive
+            if (!settings.activeArchives.contains(archive)) settings.activeArchives += archive
+            else settings.activeArchives -= archive
             reloadCachedIds()
         }
         lastClick = archive to System.currentTimeMillis()

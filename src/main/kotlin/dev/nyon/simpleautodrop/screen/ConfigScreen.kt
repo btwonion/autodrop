@@ -56,36 +56,38 @@ class ConfigScreen(private val previousScreen: Screen?) : Screen(Component.liter
             24,
             currentArchive
         )
-        addItemsToArchiveButton =
-            button(((this.width / 4) + 10) + (archiveEntryListWidget.rowWidth / 2) - this.width / 8,
-                (this.height / 24) * 23,
-                this.width / 4,
-                20,
-                Component.literal("Add items")
-            ) {
-                minecraft?.setScreen(null)
-                minecraft?.setScreen(AddItemsScreen(this, currentArchive, this))
-            }
+        addItemsToArchiveButton = button(
+            ((this.width / 4) + 10) + (archiveEntryListWidget.rowWidth / 2) - this.width / 8,
+            (this.height / 24) * 23,
+            this.width / 4,
+            20,
+            Component.literal("Add items")
+        ) {
+            minecraft?.setScreen(null)
+            minecraft?.setScreen(AddItemsScreen(this, currentArchive, this))
+        }
         archiveListWidget =
             ArchiveListWidget(this.width / 4, 5, (this.height / 24) * 21 - 10, 10, ((this.height / 24) * 21), 24, this)
-        deleteButton = button(5,
+        deleteButton = button(
+            5,
             (this.height / 24) * 22,
             (this.width / 8) - 2,
             20,
             Component.literal("Delete").withStyle(Style.EMPTY.withColor(0x99620401.toInt()))
-        ) {
-            if (!it.active) return@button
+        ) { button ->
+            if (!button.active) return@button
             if (currentArchive == "") return@button
-            settings.items.remove(currentArchive)
+            settings.archives.removeIf { it.name == currentArchive }
             reloadCachedIds()
             saveConfig()
             currentArchive = ""
-            it.active = false
+            button.active = false
             archiveEntryListWidget.refreshEntries()
             archiveListWidget.refreshEntries()
             addItemsToArchiveButton.active = false
         }
-        createArchiveButton = button(5 + ((this.width / 8) - 2) + 2,
+        createArchiveButton = button(
+            5 + ((this.width / 8) - 2) + 2,
             (this.height / 24) * 22,
             (this.width / 8),
             20,

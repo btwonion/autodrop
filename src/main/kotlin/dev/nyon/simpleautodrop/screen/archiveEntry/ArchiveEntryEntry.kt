@@ -20,7 +20,7 @@ class ArchiveEntryWidget(private val item: Item, private val list: ArchiveEntryL
     ContainerObjectSelectionList.Entry<ArchiveEntryWidget>() {
 
     private val removeButton = button(0, 0, 50, 20, Component.literal("Remove")) {
-        settings.items[list.archive]?.remove(item)
+        settings.archives.first { it.name == list.archive }.items.remove(item)
         reloadCachedIds()
         saveConfig()
         list.refreshEntries()

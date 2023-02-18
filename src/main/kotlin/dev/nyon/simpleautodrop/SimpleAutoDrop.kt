@@ -53,7 +53,7 @@ object SimpleAutoDrop {
 
     fun onTake() {
         if (!settings.enabled) return
-        if (settings.currentArchives.isEmpty()) return
+        if (settings.activeArchives.isEmpty()) return
         val minecraft = Minecraft.getInstance()
         val player = minecraft.player ?: return
         val screen = InventoryScreen(player)

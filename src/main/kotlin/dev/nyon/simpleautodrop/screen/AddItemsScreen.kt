@@ -33,16 +33,11 @@ class AddItemsScreen(
         }
         addRenderableWidget(itemList)
         addRenderableWidget(nameInput)
-        addRenderableWidget(
-            button((this.width / 2) - this.width / 8,
-                (this.height / 16) * 3,
-                this.width / 4,
-                20,
-                Component.literal("Done")
-            ) {
-                onClose()
-            }
-        )
+        addRenderableWidget(button(
+            (this.width / 2) - this.width / 8, (this.height / 16) * 3, this.width / 4, 20, Component.literal("Done")
+        ) {
+            onClose()
+        })
     }
 
     override fun onClose() {
@@ -83,7 +78,7 @@ class AddItemsScreen(
         ContainerObjectSelectionList.Entry<ItemEntry>() {
 
         private val addButton = button(0, 0, 50, 20, Component.literal("Add")) {
-            settings.items[archive]?.add(item)
+            settings.archives.first { it.name == archive }.items.add(item)
             reloadCachedIds()
             itemList.refreshEntries(nameInput.value, false)
             saveConfig()
@@ -156,7 +151,7 @@ class AddItemsScreen(
         fun refreshEntries(input: String, scrollReset: Boolean = true) {
             clearEntries()
             if (input.isEmpty()) {
-                BuiltInRegistries.ITEM.filter { settings.items[archive]?.contains(it) == false && it != Items.AIR }
+                BuiltInRegistries.ITEM.filter { item -> !settings.archives.first { it.name == archive }.items.contains(item) && item != Items.AIR }
                     .forEach { addEntry(ItemEntry(it, archive)) }
                 if (scrollReset) scrollAmount = 0.0
                 return
@@ -168,8 +163,10 @@ class AddItemsScreen(
                     input, true
                 ) || it.description.string.equals(
                     input, true
-                ) || it.description.string.contains(input, true) || BuiltInRegistries.ITEM.getKey(it).toString().contains(input)
-            }.filter { settings.items[archive]?.contains(it) == false }.forEach { addEntry(ItemEntry(it, archive)) }
+                ) || it.description.string.contains(input, true) || BuiltInRegistries.ITEM.getKey(it).toString()
+                    .contains(input)
+            }.filter { item -> !settings.archives.first { it.name == archive }.items.contains(item) }
+                .forEach { addEntry(ItemEntry(it, archive)) }
 
             if (scrollReset) scrollAmount = 0.0
         }
