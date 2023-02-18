@@ -17,15 +17,24 @@
   "version": "${version}",
   "environment": "client",
   "depends": {
-    "fabric-language-kotlin": ">=1.9.0+kotlin.1.8.0",
-    "fabric-api": ">=0.72.0+1.19.3",
+    "fabric-language-kotlin": ">=1.9.1+kotlin.1.8.10",
+    "fabric-api": ">=0.74.0+1.19.3",
     "minecraft": ">=1.19.3"
+  },
+  "suggests": {
+    "modmenu": "5.0.2"
   },
   "entrypoints": {
     "client": [
       {
         "adapter": "kotlin",
         "value": "dev.nyon.simpleautodrop.MainKt::initClient"
+      }
+    ],
+    "modmenu": [
+      {
+        "adapter": "kotlin",
+        "value":"de.nyon.simpleautodrop.config.ModMenuImpl"
       }
     ]
   },
