@@ -34,7 +34,7 @@
     "modmenu": [
       {
         "adapter": "kotlin",
-        "value":"de.nyon.simpleautodrop.config.ModMenuImpl"
+        "value":"dev.nyon.simpleautodrop.config.ModMenuImpl"
       }
     ]
   },
