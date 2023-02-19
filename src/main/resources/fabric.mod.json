@@ -12,6 +12,7 @@
       "name": "btwonion"
     }
   ],
+  "icon": "assets/autodrop/icon/icon.png",
   "contributors": [],
   "license": ["GNU General Public License v3.0"],
   "version": "${version}",
