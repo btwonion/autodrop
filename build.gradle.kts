@@ -66,9 +66,9 @@ tasks {
     register("releaseMod") {
         group = "publishing"
 
+        dependsOn("modrinthSyncBody")
         dependsOn("modrinth")
         dependsOn("githubRelease")
-        dependsOn("modrinthSyncBody")
         dependsOn("publish")
     }
 }
@@ -86,6 +86,7 @@ modrinth {
     dependencies {
         required.project("fabric-api")
         required.project("fabric-language-kotlin")
+        optional.project("modmenu")
     }
     changelog.set(changelogText)
     syncBodyFrom.set(file("README.md").readText())
