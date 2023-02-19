@@ -9,6 +9,8 @@ plugins {
 
     id("com.modrinth.minotaur") version "2.7.2"
     id("com.github.breadmoirai.github-release") version "2.4.1"
+
+    `maven-publish`
 }
 
 group = "dev.nyon"
@@ -67,6 +69,7 @@ tasks {
         dependsOn("modrinth")
         dependsOn("githubRelease")
         dependsOn("modrinthSyncBody")
+        dependsOn("publish")
     }
 }
 val changelogText =
@@ -104,4 +107,29 @@ githubRelease {
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "17"
     kotlinOptions.freeCompilerArgs += "-Xskip-prerelease-check"
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "nyon"
+            url = uri("https://repo.nyon.dev/releases")
+            credentials(PasswordCredentials::class)
+            authentication {
+                create<BasicAuthentication>("basic")
+            }
+        }
+    }
+    publications {
+        create<MavenPublication>("maven") {
+            groupId = "dev.nyon"
+            artifactId = "autodrop"
+            version = project.version.toString()
+            from(components["java"])
+        }
+    }
+}
+
+java {
+    withSourcesJar()
 }
