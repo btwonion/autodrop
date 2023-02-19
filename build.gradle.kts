@@ -32,6 +32,7 @@ dependencies {
     modImplementation("net.fabricmc:fabric-loader:0.14.14")
     modImplementation("net.fabricmc.fabric-api:fabric-api:0.74.0+1.19.3")
     modImplementation("net.fabricmc:fabric-language-kotlin:1.9.1+kotlin.1.8.10")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
     modApi("com.terraformersmc:modmenu:5.0.2")
 }
 
