@@ -1,43 +1,60 @@
 package dev.nyon.simpleautodrop.screen
 
+import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.vertex.PoseStack
 import dev.nyon.simpleautodrop.config.Archive
 import dev.nyon.simpleautodrop.config.reloadArchiveProperties
 import dev.nyon.simpleautodrop.config.saveConfig
-import dev.nyon.simpleautodrop.config.settings
 import dev.nyon.simpleautodrop.util.button
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiComponent
 import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.components.EditBox
 import net.minecraft.client.gui.screens.Screen
+import net.minecraft.client.renderer.GameRenderer
 import net.minecraft.network.chat.Component
+import net.minecraft.resources.ResourceLocation
 
-class CreateArchiveScreen(private val previous: Screen, private val configScreen: ConfigScreen) :
-    Screen(Component.literal("Create archive")) {
+class SetLockedSlotsScreen(private val previous: Screen, private val archive: Archive) :
+    Screen(Component.literal("Set locked slots")) {
 
     private lateinit var nameInput: EditBox
     private lateinit var nameInputSuccess: Button
 
+    private val imageWidth = 253
+    private val imageHeight = 256
     override fun render(matrices: PoseStack, mouseX: Int, mouseY: Int, delta: Float) {
         renderDirtBackground(1)
         GuiComponent.drawCenteredString(
             matrices,
             Minecraft.getInstance().font,
-            Component.literal("Enter archive name"),
+            Component.literal("Set locked slots"),
             this.width / 2,
             this.height / 8,
             0x80FFFFFF.toInt()
         )
+
+        RenderSystem.setShader { GameRenderer.getPositionTexShader() }
+        RenderSystem.setShaderTexture(0, ResourceLocation("autodrop", "image/inventory-slots.png"))
+        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f)
+        RenderSystem.enableBlend()
+        RenderSystem.defaultBlendFunc()
+        RenderSystem.enableDepthTest()
+        blit(matrices, this.width / 2 - imageWidth / 2, this.height / 4 + 75, 0, 0, imageWidth, imageHeight)
         super.render(matrices, mouseX, mouseY, delta)
     }
 
     override fun init() {
         initWidgets()
 
-        nameInput.value = "Archive ${settings.archives.size}"
+        nameInput.value = archive.lockedSlots.joinToString(separator = ",") {
+            it.toString()
+        }
         nameInput.setResponder {
-            nameInputSuccess.active = settings.archives.find { archive -> archive.name == it } == null
+            val list = it.split(',').toMutableList().also { list ->
+                list.removeIf { s -> s.isEmpty() }
+            }
+            nameInputSuccess.active = list.none { s -> s.toIntOrNull() == null }
         }
         addRenderableWidget(nameInput)
         addRenderableWidget(nameInputSuccess)
@@ -54,20 +71,17 @@ class CreateArchiveScreen(private val previous: Screen, private val configScreen
             this.height / 4,
             this.width / 4,
             20,
-            Component.literal("Enter new archive name here...")
+            Component.literal("Enter slots you would like to lock (separated by commas)")
         )
         nameInputSuccess = button(
-            (this.width / 2) - (this.width / 8), (this.height / 8) * 5, this.width / 4, 20, Component.literal("Confirm")
+            (this.width / 2) - (this.width / 8), this.height / 4 + 35, this.width / 4, 20, Component.literal("Confirm")
         ) {
             if (!it.isActive) return@button
-            val newArchive = nameInput.value
-            val archive = Archive(newArchive, mutableListOf(), mutableListOf())
-            settings.archives += archive
-            settings.activeArchives += archive.name
+            archive.lockedSlots = nameInput.value.split(",").map { number -> number.toInt() }.toMutableList()
             reloadArchiveProperties()
             saveConfig()
             onClose()
-            configScreen.archiveListWidget.refreshEntries()
         }
     }
+
 }

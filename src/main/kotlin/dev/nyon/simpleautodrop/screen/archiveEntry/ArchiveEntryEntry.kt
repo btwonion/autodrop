@@ -1,7 +1,7 @@
 package dev.nyon.simpleautodrop.screen.archiveEntry
 
 import com.mojang.blaze3d.vertex.PoseStack
-import dev.nyon.simpleautodrop.config.reloadCachedIds
+import dev.nyon.simpleautodrop.config.reloadArchiveProperties
 import dev.nyon.simpleautodrop.config.saveConfig
 import dev.nyon.simpleautodrop.config.settings
 import dev.nyon.simpleautodrop.util.button
@@ -21,7 +21,7 @@ class ArchiveEntryWidget(private val item: Item, private val list: ArchiveEntryL
 
     private val removeButton = button(0, 0, 50, 20, Component.literal("Remove")) {
         settings.archives.first { it.name == list.archive }.items.remove(item)
-        reloadCachedIds()
+        reloadArchiveProperties()
         saveConfig()
         list.refreshEntries()
     }

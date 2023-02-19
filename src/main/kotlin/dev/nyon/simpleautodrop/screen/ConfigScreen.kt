@@ -1,7 +1,7 @@
 package dev.nyon.simpleautodrop.screen
 
 import com.mojang.blaze3d.vertex.PoseStack
-import dev.nyon.simpleautodrop.config.reloadCachedIds
+import dev.nyon.simpleautodrop.config.reloadArchiveProperties
 import dev.nyon.simpleautodrop.config.saveConfig
 import dev.nyon.simpleautodrop.config.settings
 import dev.nyon.simpleautodrop.screen.archive.ArchiveListWidget
@@ -18,6 +18,7 @@ class ConfigScreen(private val previousScreen: Screen?) : Screen(Component.liter
 
     lateinit var archiveEntryListWidget: ArchiveEntryListWidget
     lateinit var addItemsToArchiveButton: Button
+    lateinit var setLockedSlotsButton: Button
     lateinit var archiveListWidget: ArchiveListWidget
     lateinit var deleteButton: Button
     private lateinit var createArchiveButton: Button
@@ -32,8 +33,10 @@ class ConfigScreen(private val previousScreen: Screen?) : Screen(Component.liter
         addRenderableWidget(doneButton)
         addRenderableWidget(createArchiveButton)
         addRenderableWidget(addItemsToArchiveButton)
+        addRenderableWidget(setLockedSlotsButton)
 
         addItemsToArchiveButton.active = false
+        setLockedSlotsButton.active = false
         deleteButton.active = false
     }
 
@@ -57,7 +60,7 @@ class ConfigScreen(private val previousScreen: Screen?) : Screen(Component.liter
             currentArchive
         )
         addItemsToArchiveButton = button(
-            ((this.width / 4) + 10) + (archiveEntryListWidget.rowWidth / 2) - this.width / 8,
+            (this.width / 4) + 10 + archiveEntryListWidget.rowWidth / 2 + 5,
             (this.height / 24) * 23,
             this.width / 4,
             20,
@@ -65,6 +68,18 @@ class ConfigScreen(private val previousScreen: Screen?) : Screen(Component.liter
         ) {
             minecraft?.setScreen(null)
             minecraft?.setScreen(AddItemsScreen(this, currentArchive, this))
+        }
+        setLockedSlotsButton = button(
+            (this.width / 4) + 10 + (archiveEntryListWidget.rowWidth / 2) - 5 - (this.width / 4),
+            (this.height / 24) * 23,
+            this.width / 4,
+            20,
+            Component.literal("Set locked slots")
+        ) {
+            minecraft?.setScreen(null)
+            minecraft?.setScreen(
+                SetLockedSlotsScreen(this, settings.archives.first { archive -> archive.name == currentArchive })
+            )
         }
         archiveListWidget =
             ArchiveListWidget(this.width / 4, 5, (this.height / 24) * 21 - 10, 10, ((this.height / 24) * 21), 24, this)
@@ -78,13 +93,14 @@ class ConfigScreen(private val previousScreen: Screen?) : Screen(Component.liter
             if (!button.active) return@button
             if (currentArchive == "") return@button
             settings.archives.removeIf { it.name == currentArchive }
-            reloadCachedIds()
+            reloadArchiveProperties()
             saveConfig()
             currentArchive = ""
             button.active = false
             archiveEntryListWidget.refreshEntries()
             archiveListWidget.refreshEntries()
             addItemsToArchiveButton.active = false
+            setLockedSlotsButton.active = false
         }
         createArchiveButton = button(
             5 + ((this.width / 8) - 2) + 2,

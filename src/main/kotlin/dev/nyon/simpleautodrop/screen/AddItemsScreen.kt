@@ -1,7 +1,7 @@
 package dev.nyon.simpleautodrop.screen
 
 import com.mojang.blaze3d.vertex.PoseStack
-import dev.nyon.simpleautodrop.config.reloadCachedIds
+import dev.nyon.simpleautodrop.config.reloadArchiveProperties
 import dev.nyon.simpleautodrop.config.saveConfig
 import dev.nyon.simpleautodrop.config.settings
 import dev.nyon.simpleautodrop.screen.archiveEntry.ItemIconWidget
@@ -79,7 +79,7 @@ class AddItemsScreen(
 
         private val addButton = button(0, 0, 50, 20, Component.literal("Add")) {
             settings.archives.first { it.name == archive }.items.add(item)
-            reloadCachedIds()
+            reloadArchiveProperties()
             itemList.refreshEntries(nameInput.value, false)
             saveConfig()
         }

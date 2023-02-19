@@ -53,6 +53,7 @@ class ArchiveEntry(private val archive: String, private val configScreen: Config
         configScreen.archiveEntryListWidget.archive = archive
         configScreen.archiveEntryListWidget.refreshEntries()
         configScreen.addItemsToArchiveButton.active = true
+        configScreen.setLockedSlotsButton.active = true
         configScreen.archiveListWidget.handleMouseClick(archive)
         return true
     }
