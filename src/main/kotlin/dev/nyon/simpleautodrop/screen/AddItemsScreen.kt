@@ -78,7 +78,7 @@ class AddItemsScreen(
         ContainerObjectSelectionList.Entry<ItemEntry>() {
 
         private val addButton = button(0, 0, 50, 20, Component.literal("Add")) {
-            settings.archives.first { it.name == archive }.items.add(item)
+            settings.archives.first { it.name == archive }.items.add(BuiltInRegistries.ITEM.getKey(item))
             reloadArchiveProperties()
             itemList.refreshEntries(nameInput.value, false)
             saveConfig()
@@ -151,8 +151,11 @@ class AddItemsScreen(
         fun refreshEntries(input: String, scrollReset: Boolean = true) {
             clearEntries()
             if (input.isEmpty()) {
-                BuiltInRegistries.ITEM.filter { item -> !settings.archives.first { it.name == archive }.items.contains(item) && item != Items.AIR }
-                    .forEach { addEntry(ItemEntry(it, archive)) }
+                BuiltInRegistries.ITEM.filter { item ->
+                    !settings.archives.first { it.name == archive }.items.contains(
+                        BuiltInRegistries.ITEM.getKey(item)
+                    ) && item != Items.AIR
+                }.sortedBy { it.description.string }.forEach { addEntry(ItemEntry(it, archive)) }
                 if (scrollReset) scrollAmount = 0.0
                 return
             }
@@ -165,8 +168,11 @@ class AddItemsScreen(
                     input, true
                 ) || it.description.string.contains(input, true) || BuiltInRegistries.ITEM.getKey(it).toString()
                     .contains(input)
-            }.filter { item -> !settings.archives.first { it.name == archive }.items.contains(item) }
-                .forEach { addEntry(ItemEntry(it, archive)) }
+            }.filter { item ->
+                !settings.archives.first { it.name == archive }.items.contains(
+                    BuiltInRegistries.ITEM.getKey(item)
+                )
+            }.forEach { addEntry(ItemEntry(it, archive)) }
 
             if (scrollReset) scrollAmount = 0.0
         }

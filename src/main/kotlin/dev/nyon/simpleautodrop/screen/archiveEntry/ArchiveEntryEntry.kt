@@ -12,15 +12,18 @@ import net.minecraft.client.gui.components.Renderable
 import net.minecraft.client.gui.components.events.GuiEventListener
 import net.minecraft.client.gui.narration.NarratableEntry
 import net.minecraft.client.gui.narration.NarrationElementOutput
+import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.chat.Component
+import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.Items
 
-class ArchiveEntryWidget(private val item: Item, private val list: ArchiveEntryListWidget) :
+class ArchiveEntryWidget(private val itemLocation: ResourceLocation, private val list: ArchiveEntryListWidget) :
     ContainerObjectSelectionList.Entry<ArchiveEntryWidget>() {
 
     private val removeButton = button(0, 0, 50, 20, Component.literal("Remove")) {
-        settings.archives.first { it.name == list.archive }.items.remove(item)
+        settings.archives.first { it.name == list.archive }.items.remove(itemLocation)
         reloadArchiveProperties()
         saveConfig()
         list.refreshEntries()
@@ -39,6 +42,11 @@ class ArchiveEntryWidget(private val item: Item, private val list: ArchiveEntryL
         tickDelta: Float
     ) {
         val minecraft = Minecraft.getInstance()
+        val item: Item? = kotlin.run {
+            val rawItem = BuiltInRegistries.ITEM.get(itemLocation)
+            if (rawItem == Items.AIR) return@run null
+            else return@run rawItem
+        }
         if (hovered) {
             GuiComponent.fill(matrices, x - 1, y + entryHeight + 1, x + entryWidth - 5, y - 1, 0x90000000.toInt())
 
@@ -47,10 +55,10 @@ class ArchiveEntryWidget(private val item: Item, private val list: ArchiveEntryL
             removeButton.render(matrices, mouseX, mouseY, tickDelta)
         }
 
-        ItemIconWidget(item).render(matrices, x + 2, y + 2, tickDelta)
+        if (item != null) ItemIconWidget(item).render(matrices, x + 2, y + 2, tickDelta)
 
         minecraft.font.draw(
-            matrices, Component.literal(item.description.string), x + 30.toFloat(), y + 6.toFloat(), 0x80FFFFFF.toInt()
+            matrices, Component.literal(item?.description?.string ?: itemLocation.toString()), x + 30.toFloat(), y + 6.toFloat(), 0x80FFFFFF.toInt()
         )
     }
 

@@ -1,7 +1,7 @@
 package dev.nyon.simpleautodrop.screen
 
 import com.mojang.blaze3d.vertex.PoseStack
-import dev.nyon.simpleautodrop.config.Archive
+import dev.nyon.simpleautodrop.config.models.ArchiveV2
 import dev.nyon.simpleautodrop.config.reloadArchiveProperties
 import dev.nyon.simpleautodrop.config.saveConfig
 import dev.nyon.simpleautodrop.config.settings
@@ -61,7 +61,7 @@ class CreateArchiveScreen(private val previous: Screen, private val configScreen
         ) {
             if (!it.isActive) return@button
             val newArchive = nameInput.value
-            val archive = Archive(newArchive, mutableListOf(), mutableListOf())
+            val archive = ArchiveV2(newArchive, mutableListOf(), mutableListOf())
             settings.archives += archive
             settings.activeArchives += archive.name
             reloadArchiveProperties()

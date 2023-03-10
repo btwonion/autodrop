@@ -2,7 +2,7 @@ package dev.nyon.simpleautodrop.screen
 
 import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.vertex.PoseStack
-import dev.nyon.simpleautodrop.config.Archive
+import dev.nyon.simpleautodrop.config.models.ArchiveV2
 import dev.nyon.simpleautodrop.config.reloadArchiveProperties
 import dev.nyon.simpleautodrop.config.saveConfig
 import dev.nyon.simpleautodrop.util.button
@@ -15,7 +15,7 @@ import net.minecraft.client.renderer.GameRenderer
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 
-class SetLockedSlotsScreen(private val previous: Screen, private val archive: Archive) :
+class SetLockedSlotsScreen(private val previous: Screen, private val archive: ArchiveV2) :
     Screen(Component.literal("Set locked slots")) {
 
     private lateinit var nameInput: EditBox

@@ -1,6 +1,5 @@
 package dev.nyon.simpleautodrop.config.models
 
-import dev.nyon.simpleautodrop.config.Archive
 import dev.nyon.simpleautodrop.util.ItemSerializer
 import kotlinx.serialization.Serializable
 import net.minecraft.world.item.Item

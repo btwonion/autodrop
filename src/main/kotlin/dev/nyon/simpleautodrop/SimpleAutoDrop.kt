@@ -11,10 +11,10 @@ import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper
 import net.minecraft.client.KeyMapping
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.screens.inventory.InventoryScreen
+import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
 import net.minecraft.world.inventory.ClickType
-import net.minecraft.world.item.Item
 import net.minecraft.world.item.Items
 import org.lwjgl.glfw.GLFW
 import kotlin.time.Duration.Companion.milliseconds
@@ -72,7 +72,7 @@ object SimpleAutoDrop {
             val screen = InventoryScreen(player)
             screen.menu.slots.forEachIndexed { _, slot ->
                 if (blockedSlots.contains(slot.index)) return@forEachIndexed
-                if (slot.item.item == Items.AIR || !itemIds.contains(Item.getId(slot.item.item)) || !slot.hasItem()) return@forEachIndexed
+                if (slot.item.item == Items.AIR || !itemIds.contains(BuiltInRegistries.ITEM.getKey(slot.item.item).toString()) || !slot.hasItem()) return@forEachIndexed
                 minecraft.gameMode?.handleInventoryMouseClick(
                     screen.menu.containerId, slot.index, 1, ClickType.THROW, player
                 )
