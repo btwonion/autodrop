@@ -41,7 +41,7 @@ class ConfigScreen(private val previousScreen: Screen?) : Screen(Component.liter
     }
 
     override fun render(poseStack: PoseStack, i: Int, j: Int, f: Float) {
-        renderDirtBackground(1)
+        renderDirtBackground(poseStack)
         super.render(poseStack, i, j, f)
     }
 

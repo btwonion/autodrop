@@ -13,7 +13,6 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.screens.inventory.InventoryScreen
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
-import net.minecraft.world.InteractionHand
 import net.minecraft.world.inventory.ClickType
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.Items

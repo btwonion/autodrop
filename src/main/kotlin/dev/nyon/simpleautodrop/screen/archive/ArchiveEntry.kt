@@ -35,13 +35,6 @@ class ArchiveEntry(private val archive: String, private val configScreen: Config
             0x991D5941.toInt()
         )
 
-        if (configScreen.currentArchive == archive) {
-            matrices.line(x - 1, y - 1, x + entryWidth - 5, y)
-            matrices.line(x - 1, y + entryHeight + 1, x + entryWidth - 5, y + entryHeight)
-            matrices.line(x - 1, y - 1, x, y + entryHeight + 1)
-            matrices.line(x + entryWidth - 5, y - 1, x + entryWidth - 4, y + entryHeight + 1)
-        }
-
         Minecraft.getInstance().font.draw(
             matrices, Component.literal(archive), x + 5.toFloat(), y + 6.5F, 0x99FFFFFF.toInt()
         )

@@ -7,7 +7,7 @@ plugins {
     id("fabric-loom") version "1.1-SNAPSHOT"
     id("io.github.juuxel.loom-quiltflower") version "1.8.0"
 
-    id("com.modrinth.minotaur") version "2.7.2"
+    id("com.modrinth.minotaur") version "2.7.4"
     id("com.github.breadmoirai.github-release") version "2.4.1"
 
     `maven-publish`
@@ -15,7 +15,7 @@ plugins {
 
 group = "dev.nyon"
 val majorVersion = "1.4.0"
-version = "$majorVersion-1.19.3"
+version = "$majorVersion-1.19.4"
 val authors = listOf("btwonion")
 val githubRepo = "btwonion/SimpleAutoDrop"
 
@@ -26,16 +26,16 @@ repositories {
 }
 
 dependencies {
-    minecraft("com.mojang:minecraft:1.19.3")
+    minecraft("com.mojang:minecraft:1.19.4-rc2")
     mappings(loom.layered {
         parchment("org.parchmentmc.data:parchment-1.19.3:2023.02.05@zip")
         officialMojangMappings()
     })
-    modImplementation("net.fabricmc:fabric-loader:0.14.14")
-    modImplementation("net.fabricmc.fabric-api:fabric-api:0.74.0+1.19.3")
+    modImplementation("net.fabricmc:fabric-loader:0.14.17")
+    modImplementation("net.fabricmc.fabric-api:fabric-api:0.75.3+1.19.4")
     modImplementation("net.fabricmc:fabric-language-kotlin:1.9.1+kotlin.1.8.10")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
-    modApi("com.terraformersmc:modmenu:5.0.2")
+    //modApi("com.terraformersmc:modmenu:5.0.2")
 }
 
 tasks {
@@ -81,7 +81,7 @@ modrinth {
     versionNumber.set("${project.version}")
     versionType.set("release")
     uploadFile.set(tasks["remapJar"])
-    gameVersions.set(listOf("1.19.3"))
+    gameVersions.set(listOf("1.19.4-rc2"))
     loaders.set(listOf("fabric", "quilt"))
     dependencies {
         required.project("fabric-api")

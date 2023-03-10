@@ -67,16 +67,16 @@ class ItemIconWidget(private val item: Item) : Renderable, GuiEventListener, Gui
         val itemRenderer = minecraft.itemRenderer
         val itemStack = ItemStack(item, 1)
 
-        this.blitOffset = 100
-        itemRenderer.blitOffset = 100.0f
-        itemRenderer.renderGuiItem(itemStack, i, j)
-        itemRenderer.renderGuiItemDecorations(minecraft.font, itemStack, i, j)
-        itemRenderer.blitOffset = 0.0f
-        this.blitOffset = 0
+        itemRenderer.renderGuiItem(poseStack, itemStack, i, j)
+        itemRenderer.renderGuiItemDecorations(poseStack, minecraft.font, itemStack, i, j)
     }
 
 
     override fun updateNarration(narrationElementOutput: NarrationElementOutput) {}
 
     override fun narrationPriority(): NarratableEntry.NarrationPriority = NarratableEntry.NarrationPriority.NONE
+
+    override fun setFocused(bl: Boolean) {}
+
+    override fun isFocused(): Boolean = false
 }

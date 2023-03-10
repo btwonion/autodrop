@@ -50,7 +50,7 @@ class AddItemsScreen(
     }
 
     override fun render(matrices: PoseStack, mouseX: Int, mouseY: Int, delta: Float) {
-        renderDirtBackground(1)
+        renderDirtBackground(matrices)
         super.render(matrices, mouseX, mouseY, delta)
         GuiComponent.drawCenteredString(
             matrices,

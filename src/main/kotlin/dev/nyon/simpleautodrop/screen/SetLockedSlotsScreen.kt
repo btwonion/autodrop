@@ -24,7 +24,7 @@ class SetLockedSlotsScreen(private val previous: Screen, private val archive: Ar
     private val imageWidth = 253
     private val imageHeight = 256
     override fun render(matrices: PoseStack, mouseX: Int, mouseY: Int, delta: Float) {
-        renderDirtBackground(1)
+        renderDirtBackground(matrices)
         GuiComponent.drawCenteredString(
             matrices,
             Minecraft.getInstance().font,
