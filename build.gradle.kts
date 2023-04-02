@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "1.8.10"
-    kotlin("plugin.serialization") version "1.8.10"
+    kotlin("plugin.serialization") version "1.8.20"
     id("fabric-loom") version "1.1-SNAPSHOT"
     id("io.github.juuxel.loom-quiltflower") version "1.8.0"
 
@@ -26,14 +26,14 @@ repositories {
 }
 
 dependencies {
-    minecraft("com.mojang:minecraft:1.19.4-rc2")
+    minecraft("com.mojang:minecraft:1.19.4")
     mappings(loom.layered {
-        parchment("org.parchmentmc.data:parchment-1.19.3:2023.02.05@zip")
+        parchment("org.parchmentmc.data:parchment-1.19.3:2023.03.12@zip")
         officialMojangMappings()
     })
-    modImplementation("net.fabricmc:fabric-loader:0.14.17")
-    modImplementation("net.fabricmc.fabric-api:fabric-api:0.75.3+1.19.4")
-    modImplementation("net.fabricmc:fabric-language-kotlin:1.9.1+kotlin.1.8.10")
+    modImplementation("net.fabricmc:fabric-loader:0.14.19")
+    modImplementation("net.fabricmc.fabric-api:fabric-api:0.76.0+1.19.4")
+    modImplementation("net.fabricmc:fabric-language-kotlin:1.9.3+kotlin.1.8.20")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
     //modApi("com.terraformersmc:modmenu:5.0.2")
 }
