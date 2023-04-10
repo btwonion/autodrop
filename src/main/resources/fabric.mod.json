@@ -19,7 +19,7 @@
   "environment": "client",
   "depends": {
     "fabric-language-kotlin": ">=1.9.3+kotlin.1.8.20",
-    "fabric-api": ">=0.76.0+1.19.4",
+    "fabric-api": ">=0.77.0+1.19.4",
     "minecraft": ">=1.19.4"
   },
   "suggests": {
