@@ -81,4 +81,8 @@ object SimpleAutoDrop {
             jobWaiting = false
         }
     }
+
+    override fun onInitializeClient() {
+        mcDispatcher = Minecraft.getInstance().asCoroutineDispatcher()
+    }
 }
