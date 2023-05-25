@@ -34,13 +34,6 @@ object SimpleAutoDrop : ClientModInitializer {
         )
     )
 
-    fun init() {
-        toggleKeyBind
-
-        loadConfig()
-        reloadArchiveProperties()
-    }
-
     fun tick(client: Minecraft) {
         while (toggleKeyBind.consumeClick()) {
             settings.enabled = !settings.enabled
