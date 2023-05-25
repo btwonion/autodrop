@@ -14,7 +14,7 @@ plugins {
 }
 
 group = "dev.nyon"
-val majorVersion = "1.5.2"
+val majorVersion = "1.5.3"
 val mcVersion = "1.19.4"
 version = "$majorVersion-$mcVersion"
 val authors = listOf("btwonion")
