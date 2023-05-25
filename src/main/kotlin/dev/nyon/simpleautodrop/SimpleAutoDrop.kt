@@ -13,11 +13,12 @@ import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
 import net.minecraft.world.inventory.ClickType
-import net.minecraft.world.item.Items
 import org.lwjgl.glfw.GLFW
 import kotlin.time.Duration.Companion.milliseconds
 
 lateinit var mcDispatcher: CoroutineDispatcher
+lateinit var mcScope: CoroutineScope
+lateinit var minecraft: Minecraft
 
 object SimpleAutoDrop : ClientModInitializer {
 
@@ -59,21 +60,20 @@ object SimpleAutoDrop : ClientModInitializer {
     fun onTake() = runBlocking {
         if (!settings.enabled) return@runBlocking
         if (settings.activeArchives.isEmpty()) return@runBlocking
-        val minecraft = Minecraft.getInstance()
         val player = minecraft.player ?: return@runBlocking
         if (jobWaiting) return@runBlocking
         jobWaiting = true
 
-        launch(mcDispatcher) {
+        mcScope.launch {
             delay(200.milliseconds)
 
             val screen = InventoryScreen(player)
-            screen.menu.slots.forEachIndexed { _, slot ->
-                if (blockedSlots.contains(slot.index)) return@forEachIndexed
-                if (slot.item.item == Items.AIR || !itemIds.contains(
-                        BuiltInRegistries.ITEM.getKey(slot.item.item).toString()
-                    ) || !slot.hasItem()
-                ) return@forEachIndexed
+            screen.menu.slots.filter {
+                it.hasItem()
+                        && !blockedSlots.contains(it.index)
+                        && it.hasItem()
+                        && !itemIds.contains(BuiltInRegistries.ITEM.getKey(it.item.item).toString())
+            }.forEachIndexed { _, slot ->
                 minecraft.gameMode?.handleInventoryMouseClick(
                     screen.menu.containerId, slot.index, 1, ClickType.THROW, player
                 )
@@ -84,6 +84,11 @@ object SimpleAutoDrop : ClientModInitializer {
     }
 
     override fun onInitializeClient() {
-        mcDispatcher = Minecraft.getInstance().asCoroutineDispatcher()
+        minecraft = Minecraft.getInstance()
+        mcDispatcher = minecraft.asCoroutineDispatcher()
+        mcScope = CoroutineScope(SupervisorJob() + mcDispatcher)
+
+        loadConfig()
+        reloadArchiveProperties()
     }
 }
