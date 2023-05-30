@@ -5,6 +5,7 @@ inventory if they are blacklisted. You can disable it easily by pressing a hotke
 ## Managing items
 - use the configuration section in the modmenu integration
 - press the keybind for the gui (`default: o`)
+- archives can be toggled by double-clicking the archive in the gui
 
 ### Other
 ⚠️ The development version is always the latest stable release of minecraft. 
