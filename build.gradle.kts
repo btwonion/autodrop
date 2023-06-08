@@ -2,8 +2,8 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.8.21"
-    kotlin("plugin.serialization") version "1.8.21"
+    kotlin("jvm") version "1.8.22"
+    kotlin("plugin.serialization") version "1.8.22"
     id("fabric-loom") version "1.2-SNAPSHOT"
     id("io.github.juuxel.loom-quiltflower") version "1.8.0"
 
@@ -15,7 +15,7 @@ plugins {
 
 group = "dev.nyon"
 val majorVersion = "1.5.3"
-val mcVersion = "1.19.4"
+val mcVersion = "1.20"
 version = "$majorVersion-$mcVersion"
 val authors = listOf("btwonion")
 val githubRepo = "btwonion/SimpleAutoDrop"
@@ -32,11 +32,11 @@ dependencies {
         parchment("org.parchmentmc.data:parchment-1.19.3:2023.03.12@zip")
         officialMojangMappings()
     })
-    modImplementation("net.fabricmc:fabric-loader:0.14.20")
-    modImplementation("net.fabricmc.fabric-api:fabric-api:0.81.1+$mcVersion")
+    modImplementation("net.fabricmc:fabric-loader:0.14.21")
+    modImplementation("net.fabricmc.fabric-api:fabric-api:0.83.0+$mcVersion")
     modImplementation("net.fabricmc:fabric-language-kotlin:1.9.4+kotlin.1.8.21")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
-    modApi("com.terraformersmc:modmenu:6.2.0")
+    modApi("com.terraformersmc:modmenu:7.0.0")
 }
 
 tasks {
@@ -46,7 +46,6 @@ tasks {
         val modDescription = "Mod to automatically drop items from your inventory"
 
         inputs.property("id", modId)
-        inputs.property("group", project.group)
         inputs.property("name", modName)
         inputs.property("description", modDescription)
         inputs.property("version", project.version)
@@ -55,7 +54,6 @@ tasks {
         filesMatching("fabric.mod.json") {
             expand(
                 "id" to modId,
-                "group" to project.group,
                 "name" to modName,
                 "description" to modDescription,
                 "version" to project.version,
@@ -74,7 +72,7 @@ tasks {
     }
 }
 val changelogText =
-    file("changelogs/$majorVersion.md").takeIf { it.exists() }?.readText() ?: "No changelog provided."
+    file("changelogs/$version.md").takeIf { it.exists() }?.readText() ?: "No changelog provided."
 
 modrinth {
     token.set(findProperty("modrinth.token")?.toString())
