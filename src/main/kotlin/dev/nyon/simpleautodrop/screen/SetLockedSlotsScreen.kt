@@ -1,13 +1,12 @@
 package dev.nyon.simpleautodrop.screen
 
 import com.mojang.blaze3d.systems.RenderSystem
-import com.mojang.blaze3d.vertex.PoseStack
 import dev.nyon.simpleautodrop.config.models.ArchiveV2
 import dev.nyon.simpleautodrop.config.reloadArchiveProperties
 import dev.nyon.simpleautodrop.config.saveConfig
 import dev.nyon.simpleautodrop.util.button
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.GuiComponent
+import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.components.EditBox
 import net.minecraft.client.gui.screens.Screen
@@ -23,10 +22,10 @@ class SetLockedSlotsScreen(private val previous: Screen, private val archive: Ar
 
     private val imageWidth = 253
     private val imageHeight = 256
-    override fun render(matrices: PoseStack, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun render(matrices: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         renderDirtBackground(matrices)
-        GuiComponent.drawCenteredString(
-            matrices,
+
+        matrices.drawCenteredString(
             Minecraft.getInstance().font,
             Component.literal("Set locked slots"),
             this.width / 2,
@@ -34,13 +33,15 @@ class SetLockedSlotsScreen(private val previous: Screen, private val archive: Ar
             0x80FFFFFF.toInt()
         )
 
+        val location = ResourceLocation("autodrop", "image/inventory-slots.png")
+
         RenderSystem.setShader { GameRenderer.getPositionTexShader() }
-        RenderSystem.setShaderTexture(0, ResourceLocation("autodrop", "image/inventory-slots.png"))
+        RenderSystem.setShaderTexture(0, location)
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f)
         RenderSystem.enableBlend()
         RenderSystem.defaultBlendFunc()
         RenderSystem.enableDepthTest()
-        blit(matrices, this.width / 2 - imageWidth / 2, this.height / 4 + 75, 0, 0, imageWidth, imageHeight)
+        matrices.blit(location, this.width / 2 - imageWidth / 2, this.height / 4 + 75, 0, 0, imageWidth, imageHeight)
         super.render(matrices, mouseX, mouseY, delta)
     }
 

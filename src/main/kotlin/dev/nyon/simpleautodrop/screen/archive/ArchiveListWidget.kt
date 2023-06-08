@@ -1,11 +1,10 @@
 package dev.nyon.simpleautodrop.screen.archive
 
-import com.mojang.blaze3d.vertex.PoseStack
 import dev.nyon.simpleautodrop.config.reloadArchiveProperties
 import dev.nyon.simpleautodrop.config.settings
 import dev.nyon.simpleautodrop.screen.ConfigScreen
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.GuiComponent
+import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.ObjectSelectionList
 import net.minecraft.network.chat.Component
 
@@ -26,10 +25,9 @@ class ArchiveListWidget(
         setLeftPos(_left)
     }
 
-    override fun render(matrices: PoseStack, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun render(matrices: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         if (settings.archives.isEmpty()) {
-            GuiComponent.drawCenteredString(
-                matrices,
+            matrices.drawCenteredString(
                 minecraft.font,
                 Component.literal("No existing archives"),
                 _left + (_width / 2),

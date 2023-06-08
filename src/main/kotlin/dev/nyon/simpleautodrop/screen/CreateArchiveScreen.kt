@@ -1,13 +1,12 @@
 package dev.nyon.simpleautodrop.screen
 
-import com.mojang.blaze3d.vertex.PoseStack
 import dev.nyon.simpleautodrop.config.models.ArchiveV2
 import dev.nyon.simpleautodrop.config.reloadArchiveProperties
 import dev.nyon.simpleautodrop.config.saveConfig
 import dev.nyon.simpleautodrop.config.settings
 import dev.nyon.simpleautodrop.util.button
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.GuiComponent
+import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.components.EditBox
 import net.minecraft.client.gui.screens.Screen
@@ -19,10 +18,9 @@ class CreateArchiveScreen(private val previous: Screen, private val configScreen
     private lateinit var nameInput: EditBox
     private lateinit var nameInputSuccess: Button
 
-    override fun render(matrices: PoseStack, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun render(matrices: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         renderDirtBackground(matrices)
-        GuiComponent.drawCenteredString(
-            matrices,
+        matrices.drawCenteredString(
             Minecraft.getInstance().font,
             Component.literal("Enter archive name"),
             this.width / 2,

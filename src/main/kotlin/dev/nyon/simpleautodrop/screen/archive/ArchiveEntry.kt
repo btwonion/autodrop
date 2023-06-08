@@ -1,10 +1,9 @@
 package dev.nyon.simpleautodrop.screen.archive
 
-import com.mojang.blaze3d.vertex.PoseStack
 import dev.nyon.simpleautodrop.config.settings
+import dev.nyon.simpleautodrop.minecraft
 import dev.nyon.simpleautodrop.screen.ConfigScreen
-import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.GuiComponent
+import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.ObjectSelectionList
 import net.minecraft.network.chat.Component
 import kotlin.streams.toList
@@ -12,7 +11,7 @@ import kotlin.streams.toList
 class ArchiveEntry(private val archive: String, private val configScreen: ConfigScreen) :
     ObjectSelectionList.Entry<ArchiveEntry>() {
     override fun render(
-        matrices: PoseStack,
+        matrices: GuiGraphics,
         index: Int,
         y: Int,
         x: Int,
@@ -23,20 +22,26 @@ class ArchiveEntry(private val archive: String, private val configScreen: Config
         hovered: Boolean,
         tickDelta: Float
     ) {
-        if (hovered) GuiComponent.fill(
-            matrices, x - 1, y + entryHeight + 1, x + entryWidth - 5, y - 1, 0x90000000.toInt()
+        if (hovered) matrices.fill(
+            x - 1, y + entryHeight + 1, x + entryWidth - 5, y - 1, 0x90000000.toInt()
         )
 
-        if (settings.activeArchives.contains(archive)) Minecraft.getInstance().font.draw(
-            matrices,
+        if (settings.activeArchives.contains(archive)) matrices.drawString(
+            minecraft.font,
             Component.literal("enabled"),
-            (x + entryWidth) - ("enabled".chars().toList().size * 10).toFloat(),
-            y + 6.5F,
-            0x991D5941.toInt()
+            (x + entryWidth) - ("enabled".chars().toList().size * 10),
+            (y + 6.5).toInt(),
+            0x991D5941.toInt(),
+            false
         )
 
-        Minecraft.getInstance().font.draw(
-            matrices, Component.literal(archive), x + 5.toFloat(), y + 6.5F, 0x99FFFFFF.toInt()
+        matrices.drawString(
+            minecraft.font,
+            Component.literal(archive),
+            x + 5,
+            (y + 6.5).toInt(),
+            0x99FFFFFF.toInt(),
+            false
         )
     }
 
@@ -53,6 +58,3 @@ class ArchiveEntry(private val archive: String, private val configScreen: Config
 
     override fun getNarration(): Component = Component.literal(archive)
 }
-
-private fun PoseStack.line(x1: Int, y1: Int, x2: Int, y2: Int) =
-    GuiComponent.fill(this, x1, y1, x2, y2, 0x99FFFFFF.toInt())

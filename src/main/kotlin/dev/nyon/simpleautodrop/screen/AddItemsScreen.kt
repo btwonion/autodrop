@@ -1,13 +1,12 @@
 package dev.nyon.simpleautodrop.screen
 
-import com.mojang.blaze3d.vertex.PoseStack
 import dev.nyon.simpleautodrop.config.reloadArchiveProperties
 import dev.nyon.simpleautodrop.config.saveConfig
 import dev.nyon.simpleautodrop.config.settings
 import dev.nyon.simpleautodrop.screen.archiveEntry.ItemIconWidget
 import dev.nyon.simpleautodrop.util.button
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.GuiComponent
+import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.ContainerObjectSelectionList
 import net.minecraft.client.gui.components.EditBox
 import net.minecraft.client.gui.components.events.GuiEventListener
@@ -49,11 +48,10 @@ class AddItemsScreen(
         nameInput.tick()
     }
 
-    override fun render(matrices: PoseStack, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun render(matrices: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         renderDirtBackground(matrices)
         super.render(matrices, mouseX, mouseY, delta)
-        GuiComponent.drawCenteredString(
-            matrices,
+        matrices.drawCenteredString(
             Minecraft.getInstance().font,
             Component.literal("Enter item name"),
             this.width / 2,
@@ -85,7 +83,7 @@ class AddItemsScreen(
         }
 
         override fun render(
-            matrices: PoseStack,
+            matrices: GuiGraphics,
             index: Int,
             y: Int,
             x: Int,
@@ -98,7 +96,7 @@ class AddItemsScreen(
         ) {
             val minecraft = Minecraft.getInstance()
             if (hovered) {
-                GuiComponent.fill(matrices, x - 1, y + entryHeight + 1, x + entryWidth - 5, y - 1, 0x90000000.toInt())
+                matrices.fill(x - 1, y + entryHeight + 1, x + entryWidth - 5, y - 1, 0x90000000.toInt())
 
                 addButton.x = x + entryWidth - 60
                 addButton.y = y
@@ -107,12 +105,13 @@ class AddItemsScreen(
 
             ItemIconWidget(item).render(matrices, x + 2, y + 2, tickDelta)
 
-            minecraft.font.draw(
-                matrices,
+            matrices.drawString(
+                minecraft.font,
                 Component.literal(item.description.string),
-                x + 30.toFloat(),
-                y + 6.toFloat(),
-                0x80FFFFFF.toInt()
+                x + 30,
+                y + 6,
+                0x80FFFFFF.toInt(),
+                false
             )
         }
 
@@ -133,10 +132,9 @@ class AddItemsScreen(
 
         override fun getRowWidth(): Int = width - 40
 
-        override fun render(matrices: PoseStack, mouseX: Int, mouseY: Int, delta: Float) {
+        override fun render(matrices: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
             if (itemCount == 0) {
-                GuiComponent.drawCenteredString(
-                    matrices,
+                matrices.drawCenteredString(
                     minecraft.font,
                     Component.literal("No items found"),
                     x0 + (width / 2),
