@@ -1,9 +1,8 @@
 package dev.nyon.simpleautodrop.screen.archiveEntry
 
-import com.mojang.blaze3d.vertex.PoseStack
 import dev.nyon.simpleautodrop.config.settings
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.GuiComponent
+import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.ContainerObjectSelectionList
 import net.minecraft.client.gui.narration.NarrationElementOutput
 import net.minecraft.network.chat.Component
@@ -25,10 +24,9 @@ class ArchiveEntryListWidget(
         setLeftPos(_left)
     }
 
-    override fun render(matrices: PoseStack, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun render(matrices: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         if (archive == "") {
-            GuiComponent.drawCenteredString(
-                matrices,
+            matrices.drawCenteredString(
                 minecraft.font,
                 Component.literal("No archive selected"),
                 _left + (_width / 2),

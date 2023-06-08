@@ -1,12 +1,11 @@
 package dev.nyon.simpleautodrop.screen.archiveEntry
 
-import com.mojang.blaze3d.vertex.PoseStack
 import dev.nyon.simpleautodrop.config.reloadArchiveProperties
 import dev.nyon.simpleautodrop.config.saveConfig
 import dev.nyon.simpleautodrop.config.settings
 import dev.nyon.simpleautodrop.util.button
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.GuiComponent
+import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.ContainerObjectSelectionList
 import net.minecraft.client.gui.components.Renderable
 import net.minecraft.client.gui.components.events.GuiEventListener
@@ -30,7 +29,7 @@ class ArchiveEntryWidget(private val itemLocation: ResourceLocation, private val
     }
 
     override fun render(
-        matrices: PoseStack,
+        matrices: GuiGraphics,
         index: Int,
         y: Int,
         x: Int,
@@ -48,7 +47,7 @@ class ArchiveEntryWidget(private val itemLocation: ResourceLocation, private val
             else return@run rawItem
         }
         if (hovered) {
-            GuiComponent.fill(matrices, x - 1, y + entryHeight + 1, x + entryWidth - 5, y - 1, 0x90000000.toInt())
+            matrices.fill(x - 1, y + entryHeight + 1, x + entryWidth - 5, y - 1, 0x90000000.toInt())
 
             removeButton.x = x + entryWidth - 60
             removeButton.y = y
@@ -57,8 +56,13 @@ class ArchiveEntryWidget(private val itemLocation: ResourceLocation, private val
 
         if (item != null) ItemIconWidget(item).render(matrices, x + 2, y + 2, tickDelta)
 
-        minecraft.font.draw(
-            matrices, Component.literal(item?.description?.string ?: itemLocation.toString()), x + 30.toFloat(), y + 6.toFloat(), 0x80FFFFFF.toInt()
+        matrices.drawString(
+            minecraft.font,
+            Component.literal(item?.description?.string ?: itemLocation.toString()),
+            x + 30,
+            y + 6,
+            0x80FFFFFF.toInt(),
+            false
         )
     }
 
@@ -68,15 +72,14 @@ class ArchiveEntryWidget(private val itemLocation: ResourceLocation, private val
 }
 
 
-class ItemIconWidget(private val item: Item) : Renderable, GuiEventListener, GuiComponent(), NarratableEntry {
+class ItemIconWidget(private val item: Item) : Renderable, GuiEventListener, NarratableEntry {
 
-    override fun render(poseStack: PoseStack, i: Int, j: Int, f: Float) {
+    override fun render(matrices: GuiGraphics, i: Int, j: Int, f: Float) {
         val minecraft = Minecraft.getInstance()
-        val itemRenderer = minecraft.itemRenderer
         val itemStack = ItemStack(item, 1)
 
-        itemRenderer.renderGuiItem(poseStack, itemStack, i, j)
-        itemRenderer.renderGuiItemDecorations(poseStack, minecraft.font, itemStack, i, j)
+        matrices.renderItem(itemStack, i, j)
+        matrices.renderItemDecorations(minecraft.font, itemStack, i, j)
     }
 
 

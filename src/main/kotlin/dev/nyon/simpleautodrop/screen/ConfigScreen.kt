@@ -1,12 +1,12 @@
 package dev.nyon.simpleautodrop.screen
 
-import com.mojang.blaze3d.vertex.PoseStack
 import dev.nyon.simpleautodrop.config.reloadArchiveProperties
 import dev.nyon.simpleautodrop.config.saveConfig
 import dev.nyon.simpleautodrop.config.settings
 import dev.nyon.simpleautodrop.screen.archive.ArchiveListWidget
 import dev.nyon.simpleautodrop.screen.archiveEntry.ArchiveEntryListWidget
 import dev.nyon.simpleautodrop.util.button
+import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.Component
@@ -40,9 +40,9 @@ class ConfigScreen(private val previousScreen: Screen?) : Screen(Component.liter
         deleteButton.active = false
     }
 
-    override fun render(poseStack: PoseStack, i: Int, j: Int, f: Float) {
-        renderDirtBackground(poseStack)
-        super.render(poseStack, i, j, f)
+    override fun render(matrices: GuiGraphics, i: Int, j: Int, f: Float) {
+        renderDirtBackground(matrices)
+        super.render(matrices, i, j, f)
     }
 
     override fun onClose() {
