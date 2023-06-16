@@ -1,10 +1,10 @@
-package dev.nyon.simpleautodrop.screen
+package dev.nyon.autodrop.screen
 
-import dev.nyon.simpleautodrop.config.models.ArchiveV2
-import dev.nyon.simpleautodrop.config.reloadArchiveProperties
-import dev.nyon.simpleautodrop.config.saveConfig
-import dev.nyon.simpleautodrop.config.settings
-import dev.nyon.simpleautodrop.util.button
+import dev.nyon.autodrop.config.models.Archive
+import dev.nyon.autodrop.config.reloadArchiveProperties
+import dev.nyon.autodrop.config.saveConfig
+import dev.nyon.autodrop.config.settings
+import dev.nyon.autodrop.util.button
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.Button
@@ -59,7 +59,7 @@ class CreateArchiveScreen(private val previous: Screen, private val configScreen
         ) {
             if (!it.isActive) return@button
             val newArchive = nameInput.value
-            val archive = ArchiveV2(newArchive, mutableListOf(), mutableListOf())
+            val archive = Archive(newArchive, mutableListOf(), mutableListOf())
             settings.archives += archive
             settings.activeArchives += archive.name
             reloadArchiveProperties()

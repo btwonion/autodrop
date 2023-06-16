@@ -1,10 +1,10 @@
-package dev.nyon.simpleautodrop.screen
+package dev.nyon.autodrop.screen
 
 import com.mojang.blaze3d.systems.RenderSystem
-import dev.nyon.simpleautodrop.config.models.ArchiveV2
-import dev.nyon.simpleautodrop.config.reloadArchiveProperties
-import dev.nyon.simpleautodrop.config.saveConfig
-import dev.nyon.simpleautodrop.util.button
+import dev.nyon.autodrop.config.models.Archive
+import dev.nyon.autodrop.config.reloadArchiveProperties
+import dev.nyon.autodrop.config.saveConfig
+import dev.nyon.autodrop.util.button
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.Button
@@ -14,7 +14,7 @@ import net.minecraft.client.renderer.GameRenderer
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 
-class SetLockedSlotsScreen(private val previous: Screen, private val archive: ArchiveV2) :
+class SetLockedSlotsScreen(private val previous: Screen, private val archive: Archive) :
     Screen(Component.literal("Set locked slots")) {
 
     private lateinit var nameInput: EditBox
@@ -74,11 +74,14 @@ class SetLockedSlotsScreen(private val previous: Screen, private val archive: Ar
             20,
             Component.literal("Enter slots you would like to lock (separated by commas)")
         )
+
         nameInputSuccess = button(
             (this.width / 2) - (this.width / 8), this.height / 4 + 35, this.width / 4, 20, Component.literal("Confirm")
         ) {
             if (!it.isActive) return@button
-            archive.lockedSlots = nameInput.value.split(",").map { number -> number.toInt() }.toMutableList()
+            val numbers = if (nameInput.value == "") listOf() else nameInput.value.split(',')
+            archive.lockedSlots =
+                if (numbers.isEmpty()) mutableListOf() else numbers.map { number -> number.toInt() }.toMutableList()
             reloadArchiveProperties()
             saveConfig()
             onClose()

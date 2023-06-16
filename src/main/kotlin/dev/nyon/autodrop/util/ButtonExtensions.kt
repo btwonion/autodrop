@@ -1,4 +1,4 @@
-package dev.nyon.simpleautodrop.util
+package dev.nyon.autodrop.util
 
 import net.minecraft.client.gui.components.Button
 import net.minecraft.network.chat.Component

@@ -1,6 +1,6 @@
-package dev.nyon.simpleautodrop.mixins;
+package dev.nyon.autodrop.mixins;
 
-import dev.nyon.simpleautodrop.SimpleAutoDrop;
+import dev.nyon.autodrop.AutoDrop;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -22,12 +22,12 @@ public class InventoryMixin {
     @Inject(method = "add(ILnet/minecraft/world/item/ItemStack;)Z", at = @At(value = "RETURN"))
     public void onTake(int i, ItemStack itemStack, CallbackInfoReturnable<Boolean> cir) {
         if (!player.getInventory().equals((Inventory) (Object) this)) return;
-        SimpleAutoDrop.INSTANCE.onTake();
+        AutoDrop.INSTANCE.onTake();
     }
 
     @Inject(method = "setItem", at = @At(value = "RETURN"))
     public void onTake(int i, ItemStack itemStack, CallbackInfo ci) {
         if (!player.getInventory().equals((Inventory) (Object) this)) return;
-        SimpleAutoDrop.INSTANCE.onTake();
+        AutoDrop.INSTANCE.onTake();
     }
 }
