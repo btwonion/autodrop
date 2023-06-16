@@ -9,7 +9,6 @@ import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper
 import net.minecraft.client.KeyMapping
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.screens.inventory.InventoryScreen
-import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
 import net.minecraft.world.inventory.ClickType
@@ -65,7 +64,7 @@ object SimpleAutoDrop : ClientModInitializer {
                 it.hasItem()
                         && !blockedSlots.contains(it.index)
                         && it.hasItem()
-                        && !itemIds.contains(BuiltInRegistries.ITEM.getKey(it.item.item).toString())
+                        && currentItems.contains(it.item.item)
             }.forEachIndexed { _, slot ->
                 minecraft.gameMode?.handleInventoryMouseClick(
                     screen.menu.containerId, slot.index, 1, ClickType.THROW, player

@@ -5,11 +5,12 @@ import dev.nyon.simpleautodrop.config.models.ConfigV1
 import dev.nyon.simpleautodrop.config.models.ConfigV2
 import dev.nyon.simpleautodrop.config.models.ConfigV3
 import kotlinx.serialization.InternalSerializationApi
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.serializer
 import net.fabricmc.loader.api.FabricLoader
+import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.world.item.Item
 import java.io.File
 
 private val config = run {
@@ -24,15 +25,15 @@ private val json = Json {
 
 private val configs: List<Config<*>> = listOf(ConfigV3(), ConfigV2(), ConfigV1())
 var settings: ConfigV3 = ConfigV3()
-var itemIds = mutableListOf<String>()
+var currentItems = mutableListOf<Item>()
 var blockedSlots = mutableListOf<Int>()
 
 fun reloadArchiveProperties() {
-    itemIds.clear()
+    currentItems.clear()
     blockedSlots.clear()
     settings.activeArchives.forEach { archiveName ->
         val archive = settings.archives.first { it.name == archiveName }
-        itemIds += archive.items.map { it.toString() }
+        currentItems += archive.items.map { BuiltInRegistries.ITEM.get(it) }
         blockedSlots += archive.lockedSlots
     }
 }
