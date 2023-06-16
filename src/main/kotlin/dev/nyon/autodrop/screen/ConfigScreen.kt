@@ -1,18 +1,18 @@
-package dev.nyon.simpleautodrop.screen
+package dev.nyon.autodrop.screen
 
-import dev.nyon.simpleautodrop.config.reloadArchiveProperties
-import dev.nyon.simpleautodrop.config.saveConfig
-import dev.nyon.simpleautodrop.config.settings
-import dev.nyon.simpleautodrop.screen.archive.ArchiveListWidget
-import dev.nyon.simpleautodrop.screen.archiveEntry.ArchiveEntryListWidget
-import dev.nyon.simpleautodrop.util.button
+import dev.nyon.autodrop.config.reloadArchiveProperties
+import dev.nyon.autodrop.config.saveConfig
+import dev.nyon.autodrop.config.settings
+import dev.nyon.autodrop.screen.archive.ArchiveListWidget
+import dev.nyon.autodrop.screen.archiveEntry.ArchiveEntryListWidget
+import dev.nyon.autodrop.util.button
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
 
-class ConfigScreen(private val previousScreen: Screen?) : Screen(Component.literal("SimpleAutoDrop")) {
+class ConfigScreen(private val previousScreen: Screen?) : Screen(Component.literal("autodrop")) {
 
     var currentArchive: String = ""
 

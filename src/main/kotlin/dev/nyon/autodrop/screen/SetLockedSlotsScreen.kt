@@ -1,10 +1,10 @@
-package dev.nyon.simpleautodrop.screen
+package dev.nyon.autodrop.screen
 
 import com.mojang.blaze3d.systems.RenderSystem
-import dev.nyon.simpleautodrop.config.models.ArchiveV2
-import dev.nyon.simpleautodrop.config.reloadArchiveProperties
-import dev.nyon.simpleautodrop.config.saveConfig
-import dev.nyon.simpleautodrop.util.button
+import dev.nyon.autodrop.config.models.Archive
+import dev.nyon.autodrop.config.reloadArchiveProperties
+import dev.nyon.autodrop.config.saveConfig
+import dev.nyon.autodrop.util.button
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.Button
@@ -14,7 +14,7 @@ import net.minecraft.client.renderer.GameRenderer
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 
-class SetLockedSlotsScreen(private val previous: Screen, private val archive: ArchiveV2) :
+class SetLockedSlotsScreen(private val previous: Screen, private val archive: Archive) :
     Screen(Component.literal("Set locked slots")) {
 
     private lateinit var nameInput: EditBox

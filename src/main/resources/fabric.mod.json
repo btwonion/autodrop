@@ -4,8 +4,8 @@
   "name": "${name}",
   "description": "${description}",
   "contact": {
-    "issues": "https://github.com/btwonion/SimpleAutoDrop/issues",
-    "sources": "https://github.com/btwonion/SimpleAutoDrop"
+    "issues": "https://github.com/btwonion/autodrop/issues",
+    "sources": "https://github.com/btwonion/autodrop"
   },
   "authors": [
     {
@@ -29,18 +29,18 @@
     "client": [
       {
         "adapter": "kotlin",
-        "value": "dev.nyon.simpleautodrop.SimpleAutoDrop"
+        "value": "dev.nyon.autodrop.AutoDrop"
       }
     ],
     "modmenu": [
       {
         "adapter": "kotlin",
-        "value":"dev.nyon.simpleautodrop.config.ModMenuImpl"
+        "value":"dev.nyon.autodrop.config.ModMenuImpl"
       }
     ]
   },
   "mixins": [
-    "simpleautodrop.mixins.json"
+    "autodrop.mixins.json"
   ],
   "custom": {
     "modmenu" : {

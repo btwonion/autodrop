@@ -1,6 +1,6 @@
-package dev.nyon.simpleautodrop.screen.archiveEntry
+package dev.nyon.autodrop.screen.archiveEntry
 
-import dev.nyon.simpleautodrop.config.settings
+import dev.nyon.autodrop.config.settings
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.ContainerObjectSelectionList

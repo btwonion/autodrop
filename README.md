@@ -1,4 +1,4 @@
-# SimpleAutoDrop
+# autodrop
 This mod provides a function to automatically drop items from the
 inventory if they are blacklisted. You can disable it easily by pressing a hotkey (`default: j`).
 

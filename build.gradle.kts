@@ -35,15 +35,15 @@ dependencies {
     })
     modImplementation("net.fabricmc:fabric-loader:0.14.21")
     modImplementation("net.fabricmc.fabric-api:fabric-api:0.83.0+$mcVersion")
-    modImplementation("net.fabricmc:fabric-language-kotlin:1.9.4+kotlin.1.8.21")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
+    modImplementation("net.fabricmc:fabric-language-kotlin:1.9.5+kotlin.1.8.22")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1")
     modApi("com.terraformersmc:modmenu:7.0.0")
 }
 
 tasks {
     processResources {
         val modId = "autodrop"
-        val modName = "SimpleAutoDrop"
+        val modName = "autodrop"
         val modDescription = "Mod to automatically drop items from your inventory"
 
         inputs.property("id", modId)

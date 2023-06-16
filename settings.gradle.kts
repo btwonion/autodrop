@@ -1,4 +1,4 @@
-rootProject.name = "SimpleAutoDrop"
+rootProject.name = "autodrop"
 
 pluginManagement {
     repositories {
