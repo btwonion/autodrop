@@ -38,6 +38,8 @@ class ConfigScreen(private val previousScreen: Screen?) : Screen(Component.liter
         addItemsToArchiveButton.active = false
         setLockedSlotsButton.active = false
         deleteButton.active = false
+
+        settings.archives.firstOrNull()?.also { currentArchive = it.name }
     }
 
     override fun render(matrices: GuiGraphics, i: Int, j: Int, f: Float) {
