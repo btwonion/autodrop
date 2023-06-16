@@ -1,24 +1,25 @@
 @file:Suppress("SpellCheckingInspection")
+
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "1.8.22"
     kotlin("plugin.serialization") version "1.8.22"
     id("fabric-loom") version "1.2-SNAPSHOT"
-    id("io.github.juuxel.loom-quiltflower") version "1.8.0"
+    id("io.github.juuxel.loom-quiltflower") version "1.9.0"
 
-    id("com.modrinth.minotaur") version "2.7.5"
+    id("com.modrinth.minotaur") version "2.8.1"
     id("com.github.breadmoirai.github-release") version "2.4.1"
 
     `maven-publish`
 }
 
 group = "dev.nyon"
-val majorVersion = "1.5.3"
+val majorVersion = "1.5.4"
 val mcVersion = "1.20"
 version = "$majorVersion-$mcVersion"
 val authors = listOf("btwonion")
-val githubRepo = "btwonion/SimpleAutoDrop"
+val githubRepo = "btwonion/autodrop"
 
 repositories {
     mavenCentral()
@@ -71,8 +72,12 @@ tasks {
         dependsOn("publish")
     }
 }
-val changelogText =
-    file("changelogs/$version.md").takeIf { it.exists() }?.readText() ?: "No changelog provided."
+
+val majorVersionText = file("changelogs/$majorVersion.md").takeIf { it.exists() }?.readText() ?: error("No changelog provided!")
+val changelogText = buildString {
+    append(majorVersionText)
+    file("changelogs/$version.md").takeIf { it.exists() }?.readText()?.also { append(it) }
+}
 
 modrinth {
     token.set(findProperty("modrinth.token")?.toString())
