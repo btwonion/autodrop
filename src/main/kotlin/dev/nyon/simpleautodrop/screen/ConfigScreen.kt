@@ -93,6 +93,7 @@ class ConfigScreen(private val previousScreen: Screen?) : Screen(Component.liter
             if (!button.active) return@button
             if (currentArchive == "") return@button
             settings.archives.removeIf { it.name == currentArchive }
+            settings.activeArchives.removeIf { it == currentArchive }
             reloadArchiveProperties()
             saveConfig()
             currentArchive = ""
