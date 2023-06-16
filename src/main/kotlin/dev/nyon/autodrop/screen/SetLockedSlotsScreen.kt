@@ -74,11 +74,14 @@ class SetLockedSlotsScreen(private val previous: Screen, private val archive: Ar
             20,
             Component.literal("Enter slots you would like to lock (separated by commas)")
         )
+
         nameInputSuccess = button(
             (this.width / 2) - (this.width / 8), this.height / 4 + 35, this.width / 4, 20, Component.literal("Confirm")
         ) {
             if (!it.isActive) return@button
-            archive.lockedSlots = nameInput.value.split(",").map { number -> number.toInt() }.toMutableList()
+            val numbers = if (nameInput.value == "") listOf() else nameInput.value.split(',')
+            archive.lockedSlots =
+                if (numbers.isEmpty()) mutableListOf() else numbers.map { number -> number.toInt() }.toMutableList()
             reloadArchiveProperties()
             saveConfig()
             onClose()
