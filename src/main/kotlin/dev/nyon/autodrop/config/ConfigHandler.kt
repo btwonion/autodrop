@@ -16,6 +16,7 @@ private val config = run {
 private val json = Json {
     prettyPrint = true
     encodeDefaults = true
+    ignoreUnknownKeys = true
 }
 
 var settings: Config = Config()

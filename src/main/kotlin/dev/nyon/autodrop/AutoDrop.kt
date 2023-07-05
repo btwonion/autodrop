@@ -57,7 +57,7 @@ object AutoDrop : ClientModInitializer {
         jobWaiting = true
 
         mcScope.launch {
-            delay(200.milliseconds)
+            delay(settings.dropDelay.milliseconds)
 
             val screen = InventoryScreen(player)
             screen.menu.slots.filter {
