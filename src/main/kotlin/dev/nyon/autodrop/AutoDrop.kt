@@ -61,10 +61,7 @@ object AutoDrop : ClientModInitializer {
 
             val screen = InventoryScreen(player)
             screen.menu.slots.filter {
-                it.hasItem()
-                        && !blockedSlots.contains(it.index)
-                        && it.hasItem()
-                        && currentItems.contains(it.item.item)
+                it.hasItem() && !blockedSlots.contains(it.index) && currentItems.contains(it.item.item)
             }.forEachIndexed { _, slot ->
                 minecraft.gameMode?.handleInventoryMouseClick(
                     screen.menu.containerId, slot.index, 1, ClickType.THROW, player
