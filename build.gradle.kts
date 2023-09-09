@@ -138,3 +138,7 @@ publishing {
 java {
     withSourcesJar()
 }
+
+signing {
+    sign(publishing.publications)
+}
