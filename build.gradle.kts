@@ -3,8 +3,8 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.8.22"
-    kotlin("plugin.serialization") version "1.8.22"
+    kotlin("jvm") version "1.9.10"
+    kotlin("plugin.serialization") version "1.9.10"
     id("fabric-loom") version "1.3-SNAPSHOT"
     id("io.github.juuxel.loom-quiltflower") version "1.9.0"
 
@@ -12,11 +12,12 @@ plugins {
     id("com.github.breadmoirai.github-release") version "2.4.1"
 
     `maven-publish`
+    signing
 }
 
 group = "dev.nyon"
 val majorVersion = "1.6.0"
-val mcVersion = "1.20"
+val mcVersion = "1.20.1"
 version = "$majorVersion-$mcVersion"
 val authors = listOf("btwonion")
 val githubRepo = "btwonion/autodrop"
@@ -30,13 +31,12 @@ repositories {
 dependencies {
     minecraft("com.mojang:minecraft:$mcVersion")
     mappings(loom.layered {
-        parchment("org.parchmentmc.data:parchment-1.20.1:2023.07.02@zip")
+        parchment("org.parchmentmc.data:parchment-$mcVersion:2023.09.03@zip")
         officialMojangMappings()
     })
-    modImplementation("net.fabricmc:fabric-loader:0.14.21")
-    modImplementation("net.fabricmc.fabric-api:fabric-api:0.83.0+$mcVersion")
-    modImplementation("net.fabricmc:fabric-language-kotlin:1.9.6+kotlin.1.8.22")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1")
+    modImplementation("net.fabricmc:fabric-loader:0.14.22")
+    modImplementation("net.fabricmc.fabric-api:fabric-api:0.88.1+$mcVersion")
+    modImplementation("net.fabricmc:fabric-language-kotlin:1.10.10+kotlin.1.9.10")
     modApi("com.terraformersmc:modmenu:7.0.0")
 }
 
