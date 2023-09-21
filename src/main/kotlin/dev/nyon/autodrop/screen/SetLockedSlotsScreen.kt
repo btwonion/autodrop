@@ -15,7 +15,7 @@ import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 
 class SetLockedSlotsScreen(private val previous: Screen, private val archive: Archive) :
-    Screen(Component.literal("Set locked slots")) {
+    Screen(Component.translatable("menu.autodrop.lockedslots.name")) {
 
     private lateinit var nameInput: EditBox
     private lateinit var nameInputSuccess: Button
@@ -27,7 +27,7 @@ class SetLockedSlotsScreen(private val previous: Screen, private val archive: Ar
 
         matrices.drawCenteredString(
             Minecraft.getInstance().font,
-            Component.literal("Set locked slots"),
+            Component.translatable("menu.autodrop.lockedslots.name"),
             this.width / 2,
             this.height / 8,
             0x80FFFFFF.toInt()
@@ -72,11 +72,15 @@ class SetLockedSlotsScreen(private val previous: Screen, private val archive: Ar
             this.height / 4,
             this.width / 4,
             20,
-            Component.literal("Enter slots you would like to lock (separated by commas)")
+            Component.translatable("menu.autodrop.lockedslots.enterslots")
         )
 
         nameInputSuccess = button(
-            (this.width / 2) - (this.width / 8), this.height / 4 + 35, this.width / 4, 20, Component.literal("Confirm")
+            (this.width / 2) - (this.width / 8),
+            this.height / 4 + 35,
+            this.width / 4,
+            20,
+            Component.translatable("menu.autodrop.lockedslots.confirm")
         ) {
             if (!it.isActive) return@button
             val numbers = if (nameInput.value == "") listOf() else nameInput.value.split(',')
@@ -87,5 +91,4 @@ class SetLockedSlotsScreen(private val previous: Screen, private val archive: Ar
             onClose()
         }
     }
-
 }

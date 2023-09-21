@@ -29,7 +29,7 @@ class ArchiveListWidget(
         if (settings.archives.isEmpty()) {
             matrices.drawCenteredString(
                 minecraft.font,
-                Component.literal("No existing archives"),
+                Component.translatable("menu.autodrop.archive.archivewidget.noexistingarchives"),
                 _left + (_width / 2),
                 _top + (_height / 2),
                 0x80FFFFFF.toInt()

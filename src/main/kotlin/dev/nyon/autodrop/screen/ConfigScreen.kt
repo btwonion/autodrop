@@ -12,7 +12,7 @@ import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
 
-class ConfigScreen(private val previousScreen: Screen?) : Screen(Component.literal("autodrop")) {
+class ConfigScreen(private val previousScreen: Screen?) : Screen(Component.translatable("menu.autodrop.name")) {
 
     var currentArchive: String = ""
 
@@ -66,7 +66,7 @@ class ConfigScreen(private val previousScreen: Screen?) : Screen(Component.liter
             (this.height / 24) * 23,
             this.width / 4,
             20,
-            Component.literal("Add items")
+            Component.translatable("menu.autodrop.main.additems")
         ) {
             minecraft?.setScreen(null)
             minecraft?.setScreen(AddItemsScreen(this, currentArchive, this))
@@ -76,7 +76,7 @@ class ConfigScreen(private val previousScreen: Screen?) : Screen(Component.liter
             (this.height / 24) * 23,
             this.width / 4,
             20,
-            Component.literal("Set locked slots")
+            Component.translatable("menu.autodrop.main.setlockedslots")
         ) {
             minecraft?.setScreen(null)
             minecraft?.setScreen(
@@ -90,7 +90,7 @@ class ConfigScreen(private val previousScreen: Screen?) : Screen(Component.liter
             (this.height / 24) * 22,
             (this.width / 8) - 2,
             20,
-            Component.literal("Delete").withStyle(Style.EMPTY.withColor(0x99620401.toInt()))
+            Component.translatable("menu.autodrop.main.delete").withStyle(Style.EMPTY.withColor(0x99620401.toInt()))
         ) { button ->
             if (!button.active) return@button
             if (currentArchive == "") return@button
@@ -110,14 +110,15 @@ class ConfigScreen(private val previousScreen: Screen?) : Screen(Component.liter
             (this.height / 24) * 22,
             (this.width / 8),
             20,
-            Component.literal("Create archive")
+            Component.translatable("menu.autodrop.main.createarchive")
         ) {
             minecraft?.setScreen(null)
             minecraft?.setScreen(CreateArchiveScreen(this, this))
         }
-        doneButton = button(5, (this.height / 24) * 23, this.width / 4, 20, Component.literal("Done")) {
-            saveConfig()
-            minecraft?.setScreen(previousScreen)
-        }
+        doneButton =
+            button(5, (this.height / 24) * 23, this.width / 4, 20, Component.translatable("menu.autodrop.main.done")) {
+                saveConfig()
+                minecraft?.setScreen(previousScreen)
+            }
     }
 }

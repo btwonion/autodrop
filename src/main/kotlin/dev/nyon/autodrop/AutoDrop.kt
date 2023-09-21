@@ -38,9 +38,11 @@ object AutoDrop : ClientModInitializer {
             settings.enabled = !settings.enabled
             saveConfig()
             client.gui.setOverlayMessage(
-                Component.literal("autodrop ${if (settings.enabled) "enabled" else "disabled"}").withStyle(
-                    Style.EMPTY.withColor(0xF99147)
-                ), false
+                Component.translatable("menu.autodrop.name")
+                    .append(Component.translatable(if (settings.enabled) "menu.autodrop.overlay.enabled" else "menu.autodrop.overlay.disabled"))
+                    .withStyle(
+                        Style.EMPTY.withColor(0xF99147)
+                    ), false
             )
         }
         while (menuKeyBind.consumeClick()) {

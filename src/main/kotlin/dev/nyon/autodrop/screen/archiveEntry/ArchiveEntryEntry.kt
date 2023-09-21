@@ -21,7 +21,7 @@ import net.minecraft.world.item.Items
 class ArchiveEntryWidget(private val itemLocation: ResourceLocation, private val list: ArchiveEntryListWidget) :
     ContainerObjectSelectionList.Entry<ArchiveEntryWidget>() {
 
-    private val removeButton = button(0, 0, 50, 20, Component.literal("Remove")) {
+    private val removeButton = button(0, 0, 50, 20, Component.translatable("menu.autodrop.archiveentry.remove")) {
         settings.archives.first { it.name == list.archive }.items.remove(itemLocation)
         reloadArchiveProperties()
         saveConfig()

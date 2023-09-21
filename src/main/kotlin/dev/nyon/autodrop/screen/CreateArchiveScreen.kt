@@ -13,7 +13,7 @@ import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.Component
 
 class CreateArchiveScreen(private val previous: Screen, private val configScreen: ConfigScreen) :
-    Screen(Component.literal("Create archive")) {
+    Screen(Component.translatable("menu.autodrop.createarchive.name")) {
 
     private lateinit var nameInput: EditBox
     private lateinit var nameInputSuccess: Button
@@ -22,7 +22,7 @@ class CreateArchiveScreen(private val previous: Screen, private val configScreen
         renderDirtBackground(matrices)
         matrices.drawCenteredString(
             Minecraft.getInstance().font,
-            Component.literal("Enter archive name"),
+            Component.translatable("menu.autodrop.createarchive.entername"),
             this.width / 2,
             this.height / 8,
             0x80FFFFFF.toInt()
@@ -52,10 +52,14 @@ class CreateArchiveScreen(private val previous: Screen, private val configScreen
             this.height / 4,
             this.width / 4,
             20,
-            Component.literal("Enter new archive name here...")
+            Component.translatable("menu.autodrop.createarchive.enternewname")
         )
         nameInputSuccess = button(
-            (this.width / 2) - (this.width / 8), (this.height / 8) * 5, this.width / 4, 20, Component.literal("Confirm")
+            (this.width / 2) - (this.width / 8),
+            (this.height / 8) * 5,
+            this.width / 4,
+            20,
+            Component.translatable("menu.autodrop.createarchive.confirm")
         ) {
             if (!it.isActive) return@button
             val newArchive = nameInput.value

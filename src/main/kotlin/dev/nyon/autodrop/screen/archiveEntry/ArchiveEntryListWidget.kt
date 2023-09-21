@@ -28,7 +28,7 @@ class ArchiveEntryListWidget(
         if (archive == "") {
             matrices.drawCenteredString(
                 minecraft.font,
-                Component.literal("No archive selected"),
+                Component.translatable("menu.autodrop.archiveentrywidget.noarchiveselected"),
                 _left + (_width / 2),
                 _top + (_height / 2),
                 0x80FFFFFF.toInt()

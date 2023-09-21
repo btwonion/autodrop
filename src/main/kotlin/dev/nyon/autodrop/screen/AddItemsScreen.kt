@@ -19,7 +19,7 @@ import net.minecraft.world.item.Items
 
 class AddItemsScreen(
     private val previous: Screen, private val archive: String, private val configScreen: ConfigScreen
-) : Screen(Component.literal("Add item")) {
+) : Screen(Component.translatable("menu.autodrop.additem.name")) {
 
     private lateinit var nameInput: EditBox
     private lateinit var itemList: ItemList
@@ -33,7 +33,7 @@ class AddItemsScreen(
         addRenderableWidget(itemList)
         addRenderableWidget(nameInput)
         addRenderableWidget(button(
-            (this.width / 2) - this.width / 8, (this.height / 16) * 3, this.width / 4, 20, Component.literal("Done")
+            (this.width / 2) - this.width / 8, (this.height / 16) * 3, this.width / 4, 20, Component.translatable("menu.autodrop.additem.done")
         ) {
             onClose()
         })
@@ -44,16 +44,12 @@ class AddItemsScreen(
         configScreen.archiveEntryListWidget.refreshEntries()
     }
 
-    override fun tick() {
-        nameInput.tick()
-    }
-
     override fun render(matrices: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         renderDirtBackground(matrices)
         super.render(matrices, mouseX, mouseY, delta)
         matrices.drawCenteredString(
             Minecraft.getInstance().font,
-            Component.literal("Enter item name"),
+            Component.translatable("menu.autodrop.additem.entername"),
             this.width / 2,
             this.height / 16,
             0x80FFFFFF.toInt()
@@ -67,7 +63,7 @@ class AddItemsScreen(
             this.height / 8,
             this.width / 4,
             20,
-            Component.literal("Enter new archive name here...")
+            Component.translatable("menu.autodrop.additem.enteritemnameinput")
         )
         itemList = ItemList(archive, this.width, (this.height / 4) * 3, this.height / 4, this.height, 24, 0)
     }
@@ -75,7 +71,7 @@ class AddItemsScreen(
     inner class ItemEntry(private val item: Item, private val archive: String) :
         ContainerObjectSelectionList.Entry<ItemEntry>() {
 
-        private val addButton = button(0, 0, 50, 20, Component.literal("Add")) {
+        private val addButton = button(0, 0, 50, 20, Component.translatable("menu.autodrop.additem.add")) {
             settings.archives.first { it.name == archive }.items.add(BuiltInRegistries.ITEM.getKey(item))
             reloadArchiveProperties()
             itemList.refreshEntries(nameInput.value, false)
@@ -136,7 +132,7 @@ class AddItemsScreen(
             if (itemCount == 0) {
                 matrices.drawCenteredString(
                     minecraft.font,
-                    Component.literal("No items found"),
+                    Component.translatable("menu.autodrop.additem.noitemsfound"),
                     x0 + (width / 2),
                     250,
                     0x80FFFFFF.toInt()

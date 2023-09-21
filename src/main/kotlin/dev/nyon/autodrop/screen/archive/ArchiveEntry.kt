@@ -28,7 +28,7 @@ class ArchiveEntry(private val archive: String, private val configScreen: Config
 
         if (settings.activeArchives.contains(archive)) matrices.drawString(
             minecraft.font,
-            Component.literal("enabled"),
+            Component.translatable("menu.autodrop.archive.archiveentry.enabled"),
             (x + entryWidth) - ("enabled".chars().toList().size * 10),
             (y + 6.5).toInt(),
             0x991D5941.toInt(),
