@@ -17,7 +17,7 @@ plugins {
 
 group = "dev.nyon"
 val majorVersion = "1.6.0"
-val mcVersion = "1.20.1"
+val mcVersion = "1.20.2"
 version = "$majorVersion-$mcVersion"
 val authors = listOf("btwonion")
 val githubRepo = "btwonion/autodrop"
@@ -31,11 +31,11 @@ repositories {
 dependencies {
     minecraft("com.mojang:minecraft:$mcVersion")
     mappings(loom.layered {
-        parchment("org.parchmentmc.data:parchment-$mcVersion:2023.09.03@zip")
+        //parchment("org.parchmentmc.data:parchment-$mcVersion:2023.09.03@zip")
         officialMojangMappings()
     })
     modImplementation("net.fabricmc:fabric-loader:0.14.22")
-    modImplementation("net.fabricmc.fabric-api:fabric-api:0.88.1+$mcVersion")
+    modImplementation("net.fabricmc.fabric-api:fabric-api:0.89.0+$mcVersion")
     modImplementation("net.fabricmc:fabric-language-kotlin:1.10.10+kotlin.1.9.10")
     modApi("com.terraformersmc:modmenu:7.0.0")
 }
@@ -71,9 +71,18 @@ tasks {
         dependsOn("githubRelease")
         dependsOn("publish")
     }
+
+    withType<JavaCompile> {
+        options.release.set(17)
+    }
+
+    withType<KotlinCompile> {
+        kotlinOptions.jvmTarget = "17"
+    }
 }
 
-val majorVersionText = file("changelogs/$majorVersion.md").takeIf { it.exists() }?.readText() ?: error("No changelog provided!")
+val majorVersionText =
+    file("changelogs/$majorVersion-$mcVersion.md").takeIf { it.exists() }?.readText() ?: error("No changelog provided!")
 val changelogText = buildString {
     append(majorVersionText)
     file("changelogs/$version.md").takeIf { it.exists() }?.readText()?.also { append(it) }
@@ -107,11 +116,6 @@ githubRelease {
     overwrite(true)
     releaseAssets(tasks["remapJar"].outputs.files)
     targetCommitish("main")
-}
-
-tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "17"
-    kotlinOptions.freeCompilerArgs += "-Xskip-prerelease-check"
 }
 
 publishing {
