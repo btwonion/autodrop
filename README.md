@@ -8,7 +8,7 @@ inventory if they are blacklisted. You can disable it easily by pressing a hotke
 - archives can be toggled by double-clicking the archive in the gui
 
 ### Other
-⚠️ The development version is always the latest stable release of minecraft. 
-Therefore new features will only be available for the current and following minecraft versions.
+⚠️ The development version is always the latest stable release of Minecraft. 
+Therefore new features will only be available for the current and following Minecraft versions.
 
 If you need help with any of my mods just join my [discord server](https://nyon.dev/discord)
