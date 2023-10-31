@@ -3,8 +3,9 @@ package dev.nyon.autodrop.screen
 import com.mojang.blaze3d.systems.RenderSystem
 import dev.nyon.autodrop.config.models.Archive
 import dev.nyon.autodrop.config.reloadArchiveProperties
-import dev.nyon.autodrop.config.saveConfig
+import dev.nyon.autodrop.config.settings
 import dev.nyon.autodrop.util.button
+import dev.nyon.konfig.config.saveConfig
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.Button
@@ -87,7 +88,7 @@ class SetLockedSlotsScreen(private val previous: Screen, private val archive: Ar
             archive.lockedSlots =
                 if (numbers.isEmpty()) mutableListOf() else numbers.map { number -> number.toInt() }.toMutableList()
             reloadArchiveProperties()
-            saveConfig()
+            saveConfig(settings)
             onClose()
         }
     }

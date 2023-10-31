@@ -2,9 +2,9 @@ package dev.nyon.autodrop.screen
 
 import dev.nyon.autodrop.config.models.Archive
 import dev.nyon.autodrop.config.reloadArchiveProperties
-import dev.nyon.autodrop.config.saveConfig
 import dev.nyon.autodrop.config.settings
 import dev.nyon.autodrop.util.button
+import dev.nyon.konfig.config.saveConfig
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.Button
@@ -67,7 +67,7 @@ class CreateArchiveScreen(private val previous: Screen, private val configScreen
             settings.archives += archive
             settings.activeArchives += archive.name
             reloadArchiveProperties()
-            saveConfig()
+            saveConfig(settings)
             onClose()
             configScreen.archiveListWidget.refreshEntries()
         }

@@ -1,9 +1,9 @@
 package dev.nyon.autodrop.screen.archiveEntry
 
 import dev.nyon.autodrop.config.reloadArchiveProperties
-import dev.nyon.autodrop.config.saveConfig
 import dev.nyon.autodrop.config.settings
 import dev.nyon.autodrop.util.button
+import dev.nyon.konfig.config.saveConfig
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.ContainerObjectSelectionList
@@ -24,7 +24,7 @@ class ArchiveEntryWidget(private val itemLocation: ResourceLocation, private val
     private val removeButton = button(0, 0, 50, 20, Component.translatable("menu.autodrop.archiveentry.remove")) {
         settings.archives.first { it.name == list.archive }.items.remove(itemLocation)
         reloadArchiveProperties()
-        saveConfig()
+        saveConfig(settings)
         list.refreshEntries()
     }
 

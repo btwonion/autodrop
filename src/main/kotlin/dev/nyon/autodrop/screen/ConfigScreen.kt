@@ -1,11 +1,11 @@
 package dev.nyon.autodrop.screen
 
 import dev.nyon.autodrop.config.reloadArchiveProperties
-import dev.nyon.autodrop.config.saveConfig
 import dev.nyon.autodrop.config.settings
 import dev.nyon.autodrop.screen.archive.ArchiveListWidget
 import dev.nyon.autodrop.screen.archiveEntry.ArchiveEntryListWidget
 import dev.nyon.autodrop.util.button
+import dev.nyon.konfig.config.saveConfig
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.screens.Screen
@@ -97,7 +97,7 @@ class ConfigScreen(private val previousScreen: Screen?) : Screen(Component.trans
             settings.archives.removeIf { it.name == currentArchive }
             settings.activeArchives.removeIf { it == currentArchive }
             reloadArchiveProperties()
-            saveConfig()
+            saveConfig(settings)
             currentArchive = ""
             button.active = false
             archiveEntryListWidget.refreshEntries()
@@ -117,7 +117,7 @@ class ConfigScreen(private val previousScreen: Screen?) : Screen(Component.trans
         }
         doneButton =
             button(5, (this.height / 24) * 23, this.width / 4, 20, Component.translatable("menu.autodrop.main.done")) {
-                saveConfig()
+                saveConfig(settings)
                 minecraft?.setScreen(previousScreen)
             }
     }

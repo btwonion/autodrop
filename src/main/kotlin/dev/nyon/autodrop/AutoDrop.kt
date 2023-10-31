@@ -2,7 +2,11 @@ package dev.nyon.autodrop
 
 import com.mojang.blaze3d.platform.InputConstants
 import dev.nyon.autodrop.config.*
+import dev.nyon.autodrop.config.models.Config
 import dev.nyon.autodrop.screen.ConfigScreen
+import dev.nyon.konfig.config.config
+import dev.nyon.konfig.config.loadConfig
+import dev.nyon.konfig.config.saveConfig
 import kotlinx.coroutines.*
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper
@@ -36,7 +40,7 @@ object AutoDrop : ClientModInitializer {
     fun tick(client: Minecraft) {
         while (toggleKeyBind.consumeClick()) {
             settings.enabled = !settings.enabled
-            saveConfig()
+            saveConfig(settings)
             client.gui.setOverlayMessage(
                 Component.translatable("menu.autodrop.name")
                     .append(Component.translatable(if (settings.enabled) "menu.autodrop.overlay.enabled" else "menu.autodrop.overlay.disabled"))
@@ -79,7 +83,9 @@ object AutoDrop : ClientModInitializer {
         mcDispatcher = minecraft.asCoroutineDispatcher()
         mcScope = CoroutineScope(SupervisorJob() + mcDispatcher)
 
-        loadConfig()
+        config("simpleautodrop", 1, Config()) { jsonTree, version -> migrate(jsonTree, version) }
+        settings = loadConfig<Config>() ?: error("No config settings provided to load config!")
+
         reloadArchiveProperties()
     }
 }

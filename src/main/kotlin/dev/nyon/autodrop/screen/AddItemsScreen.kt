@@ -1,10 +1,10 @@
 package dev.nyon.autodrop.screen
 
 import dev.nyon.autodrop.config.reloadArchiveProperties
-import dev.nyon.autodrop.config.saveConfig
 import dev.nyon.autodrop.config.settings
 import dev.nyon.autodrop.screen.archiveEntry.ItemIconWidget
 import dev.nyon.autodrop.util.button
+import dev.nyon.konfig.config.saveConfig
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.ContainerObjectSelectionList
@@ -75,7 +75,7 @@ class AddItemsScreen(
             settings.archives.first { it.name == archive }.items.add(BuiltInRegistries.ITEM.getKey(item))
             reloadArchiveProperties()
             itemList.refreshEntries(nameInput.value, false)
-            saveConfig()
+            saveConfig(settings)
         }
 
         override fun render(
