@@ -3,10 +3,9 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.9.10"
-    kotlin("plugin.serialization") version "1.9.10"
+    kotlin("jvm") version "1.9.20"
+    kotlin("plugin.serialization") version "1.9.20"
     id("fabric-loom") version "1.3-SNAPSHOT"
-    id("io.github.juuxel.loom-quiltflower") version "1.9.0"
 
     id("com.modrinth.minotaur") version "2.8.1"
     id("com.github.breadmoirai.github-release") version "2.4.1"
@@ -26,18 +25,21 @@ repositories {
     mavenCentral()
     maven("https://maven.terraformersmc.com")
     maven("https://maven.parchmentmc.org")
+    maven("https://repo.nyon.dev/releases")
 }
 
 dependencies {
     minecraft("com.mojang:minecraft:$mcVersion")
     mappings(loom.layered {
-        //parchment("org.parchmentmc.data:parchment-$mcVersion:2023.09.03@zip")
+        parchment("org.parchmentmc.data:parchment-1.20.2:2023.10.22@zip")
         officialMojangMappings()
     })
-    modImplementation("net.fabricmc:fabric-loader:0.14.22")
-    modImplementation("net.fabricmc.fabric-api:fabric-api:0.89.0+$mcVersion")
-    modImplementation("net.fabricmc:fabric-language-kotlin:1.10.10+kotlin.1.9.10")
+    implementation("org.vineflower:vineflower:1.9.3")
+    modImplementation("net.fabricmc:fabric-loader:0.14.24")
+    modImplementation("net.fabricmc.fabric-api:fabric-api:0.90.4+$mcVersion")
+    modImplementation("net.fabricmc:fabric-language-kotlin:1.10.11+kotlin.1.9.20")
     modApi("com.terraformersmc:modmenu:7.0.0")
+    include(modImplementation("dev.nyon:konfig:1.0.4-$mcVersion")!!)
 }
 
 tasks {
