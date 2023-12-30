@@ -3,9 +3,9 @@ package dev.nyon.autodrop.config
 import dev.nyon.autodrop.config.models.Archive
 import dev.nyon.autodrop.config.models.Config
 import kotlinx.serialization.json.*
-import net.minecraft.core.registries.BuiltInRegistries
-import net.minecraft.resources.ResourceLocation
-import net.minecraft.world.item.Item
+import net.minecraft.item.Item
+import net.minecraft.registry.Registries
+import net.minecraft.util.Identifier
 
 var settings: Config = Config()
 var currentItems = mutableListOf<Item>()
@@ -16,7 +16,7 @@ fun reloadArchiveProperties() {
     blockedSlots.clear()
     settings.activeArchives.forEach { archiveName ->
         val archive = settings.archives.first { it.name == archiveName }
-        currentItems += archive.items.map { BuiltInRegistries.ITEM.get(it) }
+        currentItems += archive.items.map { Registries.ITEM.get(it) }
         blockedSlots += archive.lockedSlots
     }
 }
@@ -31,7 +31,7 @@ internal fun migrate(jsonTree: JsonElement, version: Int?): Config? {
                 return@map Archive(
                     archiveObject["name"]?.jsonPrimitive?.content ?: return null,
                     archiveObject["items"]?.jsonArray?.map secMap@{ content ->
-                        return@secMap ResourceLocation(
+                        return@secMap Identifier(
                             content.jsonPrimitive.contentOrNull ?: return null
                         )
                     }?.toMutableList() ?: return null,

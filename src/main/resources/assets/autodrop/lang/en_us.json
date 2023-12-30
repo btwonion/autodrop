@@ -1,5 +1,24 @@
 {
   "menu.autodrop.name": "autodrop",
+  "menu.autodrop.general.title": "General",
+  "menu.autodrop.general.itemconfig.title": "Configure items",
+  "menu.autodrop.general.itemconfig.description": "Configure the items which should be dropped.",
+  "menu.autodrop.general.active.title": "Active",
+  "menu.autodrop.general.active.description": "Decides whether this mod should be enabled.",
+  "menu.autodrop.general.dropdelay.title": "Drop delay",
+  "menu.autodrop.general.dropdelay.description": "Defines the delay that the mod waits before dropping the item after it's picked up.",
+  "menu.autodrop.archives.overview.title": "Archives",
+  "menu.autodrop.archives.createarchive.button": "Create archive",
+  "menu.autodrop.archives.done": "Done",
+  "menu.autodrop.archives.delete": "Delete",
+  "menu.autodrop.items.additems.button": "Add items",
+  "menu.autodrop.items.setlockedslots": "Add ignored slots",
+  "menu.autodrop.items.deleteitem.button": "Delete",
+
+
+
+
+
   "menu.autodrop.main.additems": "Add items",
   "menu.autodrop.main.setlockedslots": "Set locked slots",
   "menu.autodrop.main.delete": "Delete",

@@ -3,11 +3,11 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.9.20"
-    kotlin("plugin.serialization") version "1.9.20"
-    id("fabric-loom") version "1.3-SNAPSHOT"
+    kotlin("jvm") version "1.9.21"
+    kotlin("plugin.serialization") version "1.9.21"
+    id("fabric-loom") version "1.4-SNAPSHOT"
 
-    id("com.modrinth.minotaur") version "2.8.1"
+    id("com.modrinth.minotaur") version "2.8.7"
     id("com.github.breadmoirai.github-release") version "2.4.1"
 
     `maven-publish`
@@ -16,7 +16,7 @@ plugins {
 
 group = "dev.nyon"
 val majorVersion = "1.6.1"
-val mcVersion = "1.20.2"
+val mcVersion = "1.20.4"
 version = "$majorVersion-$mcVersion"
 val authors = listOf("btwonion")
 val githubRepo = "btwonion/autodrop"
@@ -26,20 +26,26 @@ repositories {
     maven("https://maven.terraformersmc.com")
     maven("https://maven.parchmentmc.org")
     maven("https://repo.nyon.dev/releases")
+    maven("https://maven.isxander.dev/releases")
 }
 
 dependencies {
     minecraft("com.mojang:minecraft:$mcVersion")
     mappings(loom.layered {
-        parchment("org.parchmentmc.data:parchment-1.20.2:2023.10.22@zip")
-        officialMojangMappings()
+        mappings("net.fabricmc:yarn:1.20.4+build.3")
+        //parchment("org.parchmentmc.data:parchment-1.20.2:2023.10.22@zip")
+        //officialMojangMappings()
     })
+
     implementation("org.vineflower:vineflower:1.9.3")
-    modImplementation("net.fabricmc:fabric-loader:0.14.24")
-    modImplementation("net.fabricmc.fabric-api:fabric-api:0.90.4+$mcVersion")
-    modImplementation("net.fabricmc:fabric-language-kotlin:1.10.11+kotlin.1.9.20")
-    modApi("com.terraformersmc:modmenu:7.0.0")
-    include(modImplementation("dev.nyon:konfig:1.0.4-$mcVersion")!!)
+    modImplementation("net.fabricmc:fabric-loader:0.15.3")
+    modImplementation("net.fabricmc.fabric-api:fabric-api:0.91.3+$mcVersion")
+    modImplementation("net.fabricmc:fabric-language-kotlin:1.10.16+kotlin.1.9.21")
+
+    modImplementation("dev.isxander.yacl:yet-another-config-lib-fabric:3.3.1+1.20.4")
+    modImplementation("com.terraformersmc:modmenu:9.0.0-pre.1")
+
+    include(modImplementation("dev.nyon:konfig:1.0.4-1.20.2")!!)
 }
 
 tasks {

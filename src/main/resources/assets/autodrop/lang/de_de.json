@@ -1,5 +1,23 @@
 {
   "menu.autodrop.name": "AutoDrop",
+  "menu.autodrop.general.title": "Allgemein",
+  "menu.autodrop.general.itemconfig.title": "Passe deine Items an",
+  "menu.autodrop.general.itemconfig.description": "Passe die Items an, die automatisch weggeworfen werden sollen.",
+  "menu.autodrop.general.active.title": "Aktiviert",
+  "menu.autodrop.general.active.description": "Aktiviert bzw. deaktiviert die Funktion dieser Mod.",
+  "menu.autodrop.general.dropdelay.title": "Wurf Verzögerung",
+  "menu.autodrop.general.dropdelay.description": "Gibt die Verzögerung an nach der das Item weggeworfen werfen soll, welches gerade aufgesammelt wurde.",
+  "menu.autodrop.archives.overview.title": "Kollektionen",
+  "menu.autodrop.archives.createarchive.button": "Kollektion erstellen",
+  "menu.autodrop.archives.done": "Fertig",
+  "menu.autodrop.archives.delete": "Löschen",
+  "menu.autodrop.items.additems.button": "Items hinzufügen",
+  "menu.autodrop.items.setlockedslots": "Setze ignorierte Slots",
+  "menu.autodrop.items.deleteitem.button": "Löschen",
+
+
+
+
   "menu.autodrop.main.additems": "Items hinzufügen",
   "menu.autodrop.main.setlockedslots": "Setze ignorierte Slots",
   "menu.autodrop.main.delete": "Löschen",

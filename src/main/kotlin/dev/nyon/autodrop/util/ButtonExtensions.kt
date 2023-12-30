@@ -1,13 +1,13 @@
 package dev.nyon.autodrop.util
 
-import net.minecraft.client.gui.components.Button
-import net.minecraft.network.chat.Component
+import net.minecraft.client.gui.widget.ButtonWidget
+import net.minecraft.text.Text
 
 fun button(
-    i: Int,
-    j: Int,
-    k: Int,
-    l: Int,
-    name: Component,
-    onClick: (Button) -> Unit
-) = object : Button(i, j, k, l, name, onClick, { Component.empty() }) {}
+    x: Int, y: Int, width: Int, height: Int, description: Text, onClick: (ButtonWidget) -> Unit
+): ButtonWidget {
+    val buttonHeight = if (height > 20) 20 else height
+    val buttonWidth = if (width > 50) 50 else width
+    val button = object : ButtonWidget(x, y, buttonWidth, buttonHeight, description, onClick, { Text.empty() }) {}
+    return button
+}
