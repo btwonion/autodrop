@@ -3,9 +3,9 @@ package dev.nyon.autodrop.config
 import dev.nyon.autodrop.config.models.Archive
 import dev.nyon.autodrop.config.models.Config
 import kotlinx.serialization.json.*
-import net.minecraft.item.Item
-import net.minecraft.registry.Registries
-import net.minecraft.util.Identifier
+import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.world.item.Item
 
 var settings: Config = Config()
 var currentItems = mutableListOf<Item>()
@@ -31,7 +31,7 @@ internal fun migrate(jsonTree: JsonElement, version: Int?): Config? {
                 return@map Archive(
                     archiveObject["name"]?.jsonPrimitive?.content ?: return null,
                     archiveObject["items"]?.jsonArray?.map secMap@{ content ->
-                        return@secMap Identifier(
+                        return@secMap ResourceLocation(
                             content.jsonPrimitive.contentOrNull ?: return null
                         )
                     }?.toMutableList() ?: return null,
