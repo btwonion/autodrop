@@ -1,53 +1,53 @@
 package dev.nyon.autodrop
 
+import com.mojang.blaze3d.platform.InputConstants
 import dev.nyon.autodrop.config.*
 import dev.nyon.autodrop.config.models.Config
-import dev.nyon.autodrop.config.screen.createYaclScreen
 import dev.nyon.konfig.config.config
 import dev.nyon.konfig.config.loadConfig
 import dev.nyon.konfig.config.saveConfig
 import kotlinx.coroutines.*
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper
-import net.minecraft.client.MinecraftClient
-import net.minecraft.client.gui.screen.ingame.InventoryScreen
-import net.minecraft.client.option.KeyBinding
-import net.minecraft.client.util.InputUtil
-import net.minecraft.screen.slot.SlotActionType
-import net.minecraft.text.Text
+import net.minecraft.client.KeyMapping
+import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.screens.inventory.InventoryScreen
+import net.minecraft.network.chat.Component
+import net.minecraft.world.entity.player.Inventory
+import net.minecraft.world.inventory.ClickType
 import org.lwjgl.glfw.GLFW
 import kotlin.time.Duration.Companion.milliseconds
 
 lateinit var mcDispatcher: CoroutineDispatcher
 lateinit var mcScope: CoroutineScope
-lateinit var minecraft: MinecraftClient
+lateinit var minecraft: Minecraft
 
 object AutoDrop : ClientModInitializer {
 
     private val toggleKeyBind = KeyBindingHelper.registerKeyBinding(
-        KeyBinding(
-            "Toggle AutoDrop", InputUtil.Type.field_1668, GLFW.GLFW_KEY_J, "autodrop"
+        KeyMapping(
+            "Toggle AutoDrop", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_J, "autodrop"
         )
     )
 
     private val menuKeyBind = KeyBindingHelper.registerKeyBinding(
-        KeyBinding(
-            "Open GUI", InputUtil.Type.field_1668, GLFW.GLFW_KEY_O, "autodrop"
+        KeyMapping(
+            "Open GUI", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_O, "autodrop"
         )
     )
 
-    fun tick(client: MinecraftClient) {
-        if (toggleKeyBind.wasPressed()) {
+    fun tick(client: Minecraft) {
+        if (toggleKeyBind.consumeClick()) {
             settings.enabled = !settings.enabled
             saveConfig(settings)
-            client.inGameHud.setOverlayMessage(
-                Text.translatable("menu.autodrop.name")
-                    .append(Text.translatable(if (settings.enabled) "menu.autodrop.overlay.enabled" else "menu.autodrop.overlay.disabled"))
-                    .withColor(0xF99147),
-                false
+            client.gui.setOverlayMessage(
+                Component.translatable("menu.autodrop.name").append(" ")
+                    .append(Component.translatable(if (settings.enabled) "menu.autodrop.overlay.enabled" else "menu.autodrop.overlay.disabled"))
+                    .withColor(0xF99147), false
             )
+            if (settings.enabled) onTake()
         }
-        if (menuKeyBind.wasPressed()) client.setScreen(createYaclScreen(null))
+        if (menuKeyBind.consumeClick()) client.setScreen(createYaclScreen(null))
     }
 
     private var jobWaiting = false
@@ -62,11 +62,11 @@ object AutoDrop : ClientModInitializer {
             delay(settings.dropDelay.milliseconds)
 
             val screen = InventoryScreen(player)
-            screen.screenHandler.slots.filter {
-                it.hasStack() && !blockedSlots.contains(it.index) && currentItems.contains(it.stack.item)
-            }.forEachIndexed { _, slot ->
-                minecraft.interactionManager?.clickSlot(
-                    screen.screenHandler.syncId, slot.index, 1, SlotActionType.THROW, player
+            screen.menu.slots.filter {
+                it.hasItem() && !blockedSlots.contains(it.index) && currentItems.contains(it.item.item) && it.container is Inventory && (it.index in 0..35 || it.index in 100..103 || it.index in 80..83)
+            }.forEach { slot ->
+                minecraft.gameMode?.handleInventoryMouseClick(
+                    screen.menu.containerId, slot.index, 1, ClickType.THROW, player
                 )
             }
 
@@ -75,7 +75,7 @@ object AutoDrop : ClientModInitializer {
     }
 
     override fun onInitializeClient() {
-        minecraft = MinecraftClient.getInstance()
+        minecraft = Minecraft.getInstance()
         mcDispatcher = minecraft.asCoroutineDispatcher()
         mcScope = CoroutineScope(SupervisorJob() + mcDispatcher)
 
