@@ -4,10 +4,10 @@ import net.minecraft.client.gui.components.Button
 import net.minecraft.network.chat.Component
 
 fun button(
-    i: Int,
-    j: Int,
-    k: Int,
-    l: Int,
-    name: Component,
-    onClick: (Button) -> Unit
-) = object : Button(i, j, k, l, name, onClick, { Component.empty() }) {}
+    x: Int, y: Int, width: Int, height: Int, description: Component, onClick: (Button) -> Unit
+): Button {
+    val buttonHeight = if (height > 20) 20 else height
+    val buttonWidth = if (width > 50) 50 else width
+    val button = object : Button(x, y, buttonWidth, buttonHeight, description, onClick, { Component.empty() }) {}
+    return button
+}

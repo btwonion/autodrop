@@ -19,6 +19,9 @@ fun reloadArchiveProperties() {
         currentItems += archive.items.map { BuiltInRegistries.ITEM.get(it) }
         blockedSlots += archive.lockedSlots
     }
+
+    currentItems = currentItems.toSet().toMutableList()
+    blockedSlots = blockedSlots.toSet().toMutableList()
 }
 
 internal fun migrate(jsonTree: JsonElement, version: Int?): Config? {

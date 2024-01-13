@@ -7,5 +7,5 @@ data class Config(
     var enabled: Boolean = true,
     val archives: MutableList<Archive> = mutableListOf(),
     val activeArchives: MutableList<String> = mutableListOf(),
-    val dropDelay: Long = 200
+    var dropDelay: Long = 200
 )

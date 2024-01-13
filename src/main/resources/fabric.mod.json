@@ -18,9 +18,10 @@
   "version": "${version}",
   "environment": "client",
   "depends": {
-    "fabric-language-kotlin": ">=1.10.11+kotlin.1.9.20",
-    "fabric-api": ">=0.90.4+1.20.2",
-    "minecraft": ">=1.20.2"
+    "fabric-language-kotlin": ">=1.10.17+kotlin.1.9.22",
+    "fabric-api": ">=0.91.1+1.20.3",
+    "yet_another_config_lib_v3": ">=3.3.1+1.20.4",
+    "minecraft": ">=1.20.3"
   },
   "suggests": {
     "modmenu": "7.0.0"

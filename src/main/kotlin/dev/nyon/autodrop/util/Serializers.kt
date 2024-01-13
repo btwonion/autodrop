@@ -8,7 +8,7 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import net.minecraft.resources.ResourceLocation
 
-object ResourceLocationSerializer : KSerializer<ResourceLocation> {
+object IdentifierSerializer : KSerializer<ResourceLocation> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("resourcelocation", PrimitiveKind.STRING)
 
     override fun serialize(encoder: Encoder, value: ResourceLocation) {

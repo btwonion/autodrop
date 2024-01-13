@@ -3,7 +3,6 @@ package dev.nyon.autodrop
 import com.mojang.blaze3d.platform.InputConstants
 import dev.nyon.autodrop.config.*
 import dev.nyon.autodrop.config.models.Config
-import dev.nyon.autodrop.screen.ConfigScreen
 import dev.nyon.konfig.config.config
 import dev.nyon.konfig.config.loadConfig
 import dev.nyon.konfig.config.saveConfig
@@ -14,7 +13,7 @@ import net.minecraft.client.KeyMapping
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.screens.inventory.InventoryScreen
 import net.minecraft.network.chat.Component
-import net.minecraft.network.chat.Style
+import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.inventory.ClickType
 import org.lwjgl.glfw.GLFW
 import kotlin.time.Duration.Companion.milliseconds
@@ -38,20 +37,17 @@ object AutoDrop : ClientModInitializer {
     )
 
     fun tick(client: Minecraft) {
-        while (toggleKeyBind.consumeClick()) {
+        if (toggleKeyBind.consumeClick()) {
             settings.enabled = !settings.enabled
             saveConfig(settings)
             client.gui.setOverlayMessage(
-                Component.translatable("menu.autodrop.name")
+                Component.translatable("menu.autodrop.name").append(" ")
                     .append(Component.translatable(if (settings.enabled) "menu.autodrop.overlay.enabled" else "menu.autodrop.overlay.disabled"))
-                    .withStyle(
-                        Style.EMPTY.withColor(0xF99147)
-                    ), false
+                    .withColor(0xF99147), false
             )
+            if (settings.enabled) onTake()
         }
-        while (menuKeyBind.consumeClick()) {
-            client.setScreen(ConfigScreen(null))
-        }
+        if (menuKeyBind.consumeClick()) client.setScreen(createYaclScreen(null))
     }
 
     private var jobWaiting = false
@@ -67,8 +63,8 @@ object AutoDrop : ClientModInitializer {
 
             val screen = InventoryScreen(player)
             screen.menu.slots.filter {
-                it.hasItem() && !blockedSlots.contains(it.index) && currentItems.contains(it.item.item)
-            }.forEachIndexed { _, slot ->
+                it.hasItem() && !blockedSlots.contains(it.index) && currentItems.contains(it.item.item) && it.container is Inventory
+            }.forEach { slot ->
                 minecraft.gameMode?.handleInventoryMouseClick(
                     screen.menu.containerId, slot.index, 1, ClickType.THROW, player
                 )
