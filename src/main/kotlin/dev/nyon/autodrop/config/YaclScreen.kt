@@ -99,13 +99,15 @@ private fun ConfigCategory.Builder.appendCreateArchiveOption(): ConfigCategory.B
 private fun ConfigCategory.Builder.appendArchivesOptions(): ConfigCategory.Builder {
     settings.archives.map { it.name }.forEach { archiveName ->
         group(
-            ListOption.createBuilder<Item>().name(Component.literal(archiveName)).binding(mutableListOf(),
-                { settings.archives.first { it.name == archiveName }.items.map { BuiltInRegistries.ITEM.get(it) } },
-                {
-                    settings.archives.first { archive -> archive.name == archiveName }.items =
-                        it.map { item -> BuiltInRegistries.ITEM.getKey(item) }.toMutableList()
-                    reloadArchiveProperties()
-                }).controller(ItemControllerBuilder::create).initial(Items.STONE).collapsed(true).build()
+            ListOption.createBuilder<Item>().name(Component.literal(archiveName))
+                .description(OptionDescription.of(Component.translatable("menu.autodrop.archives.edit.description")))
+                .binding(mutableListOf(),
+                    { settings.archives.first { it.name == archiveName }.items.map { BuiltInRegistries.ITEM.get(it) } },
+                    {
+                        settings.archives.first { archive -> archive.name == archiveName }.items =
+                            it.map { item -> BuiltInRegistries.ITEM.getKey(item) }.toMutableList()
+                        reloadArchiveProperties()
+                    }).controller(ItemControllerBuilder::create).initial(Items.STONE).collapsed(true).build()
         )
     }
     return this
@@ -116,7 +118,7 @@ private fun ConfigCategory.Builder.appendLockedSlotsOptions(): ConfigCategory.Bu
         group(
             ListOption.createBuilder<Int>().name(Component.literal(archiveName)).description(
                 OptionDescription.createBuilder().text(Component.translatable("menu.autodrop.lockedslots.description"))
-                    .image(ResourceLocation("autodrop", "image/inventory-slots.png"), 352, 332).build()
+                    .image(ResourceLocation("autodrop", "image/inventory-slots.png"), 352, 331).build()
             ).binding(mutableListOf(), { settings.archives.first { it.name == archiveName }.lockedSlots }, {
                 settings.archives.first { archive -> archive.name == archiveName }.lockedSlots = it.toMutableList()
                 reloadArchiveProperties()

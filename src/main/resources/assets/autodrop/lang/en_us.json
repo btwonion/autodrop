@@ -6,14 +6,15 @@
   "menu.autodrop.general.active.title": "Active",
   "menu.autodrop.general.active.description": "Decides whether this mod should be enabled.",
   "menu.autodrop.general.dropdelay.title": "Drop delay",
-  "menu.autodrop.general.dropdelay.description": "Defines the delay that the mod waits before dropping the item after it's picked up.",
+  "menu.autodrop.general.dropdelay.description": "Defines the delay in milliseconds that the mod waits before dropping the item after it's picked up.",
   "menu.autodrop.archives.title": "Archives",
   "menu.autodrop.lockedslots.title": "Locked slots",
   "menu.autodrop.archives.createarchive.title": "Create archive",
-  "menu.autodrop.archives.createarchive.description": "Click to create a new archive",
+  "menu.autodrop.archives.createarchive.description": "Click to create a new archive:",
   "menu.autodrop.archives.createarchive.note": "NOTE: To edit the new archive you have to re-enter this screen!",
   "menu.autodrop.lockedslots.description": "Edit your locked slots here. You can see the inventory numbers of each slot above.",
   "menu.autodrop.general.enabledarchives.title": "Enabled archives",
   "menu.autodrop.general.enabledarchives.description": "Edit your enabled archives here.",
-  "menu.autodrop.general.enabledarchives.tickbox": "Click to disable/enable this archive."
+  "menu.autodrop.general.enabledarchives.tickbox": "Click to disable/enable this archive.",
+  "menu.autodrop.archives.edit.description": "Edit your archives here."
 }

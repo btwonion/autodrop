@@ -6,7 +6,7 @@
   "menu.autodrop.general.active.title": "Aktiviert",
   "menu.autodrop.general.active.description": "Aktiviert bzw. deaktiviert die Funktion dieser Mod.",
   "menu.autodrop.general.dropdelay.title": "Wurf Verzögerung",
-  "menu.autodrop.general.dropdelay.description": "Gibt die Verzögerung an nach der das Item weggeworfen werfen soll, welches gerade aufgesammelt wurde.",
+  "menu.autodrop.general.dropdelay.description": "Gibt die Verzögerung in Millisekunden an, nach der das Item weggeworfen werfen soll, welches gerade aufgesammelt wurde.",
   "menu.autodrop.archives.title": "Listen",
   "menu.autodrop.lockedslots.title": "Gesperrte Inventarplätze",
   "menu.autodrop.archives.createarchive.title": "Liste erstellen",
@@ -15,5 +15,6 @@
   "menu.autodrop.lockedslots.description": "Editiere hier deine gesperrten Inventarplätze. Du kannst oben die Nummern von den jeweiligen Inventarplätzen sehen.",
   "menu.autodrop.general.enabledarchives.title": "Aktivierte Listen",
   "menu.autodrop.general.enabledarchives.description": "Aktiviere bzw. deaktivierte bestimmte Listen.",
-  "menu.autodrop.general.enabledarchives.tickbox": "Klicke um die Liste zu de-/aktivieren."
+  "menu.autodrop.general.enabledarchives.tickbox": "Klicke um die Liste zu de-/aktivieren.",
+  "menu.autodrop.archives.edit.description": "Editiere hier deine Listen."
 }
