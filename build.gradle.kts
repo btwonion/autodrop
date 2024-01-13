@@ -5,10 +5,10 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     kotlin("jvm") version "1.9.22"
     kotlin("plugin.serialization") version "1.9.22"
-    id("fabric-loom") version "1.4-SNAPSHOT"
+    id("fabric-loom") version "1.5-SNAPSHOT"
 
     id("com.modrinth.minotaur") version "2.8.7"
-    id("com.github.breadmoirai.github-release") version "2.4.1"
+    id("com.github.breadmoirai.github-release") version "2.5.2"
 
     `maven-publish`
     signing
@@ -65,7 +65,7 @@ tasks {
                 "name" to modName,
                 "description" to modDescription,
                 "version" to project.version,
-                "github" to githubRepo,
+                "github" to githubRepo
             )
         }
     }
@@ -116,13 +116,13 @@ githubRelease {
     token(findProperty("github.token")?.toString())
 
     val split = githubRepo.split("/")
-    owner(split[0])
-    repo(split[1])
-    tagName("v${project.version}")
-    body(changelogText)
-    overwrite(true)
+    owner = split[0]
+    repo = split[1]
+    tagName = "v${project.version}"
+    body = changelogText
+    overwrite = true
     releaseAssets(tasks["remapJar"].outputs.files)
-    targetCommitish("main")
+    targetCommitish = "main"
 }
 
 publishing {
