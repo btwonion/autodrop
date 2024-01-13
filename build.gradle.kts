@@ -106,6 +106,7 @@ modrinth {
     dependencies {
         required.project("fabric-api")
         required.project("fabric-language-kotlin")
+        required.project("yacl")
         optional.project("modmenu")
     }
     changelog.set(changelogText)
