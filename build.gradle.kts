@@ -88,12 +88,8 @@ tasks {
     }
 }
 
-val majorVersionText =
+val changelogText =
     file("changelogs/$majorVersion-$mcVersion.md").takeIf { it.exists() }?.readText() ?: error("No changelog provided!")
-val changelogText = buildString {
-    append(majorVersionText)
-    file("changelogs/$version.md").takeIf { it.exists() }?.readText()?.also { append(it) }
-}
 
 modrinth {
     token.set(findProperty("modrinth.token")?.toString())
