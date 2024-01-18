@@ -9,6 +9,7 @@ import dev.nyon.konfig.config.saveConfig
 import kotlinx.coroutines.*
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper
+import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.client.KeyMapping
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.screens.inventory.InventoryScreen
@@ -16,6 +17,7 @@ import net.minecraft.network.chat.Component
 import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.inventory.ClickType
 import org.lwjgl.glfw.GLFW
+import kotlin.io.path.*
 import kotlin.time.Duration.Companion.milliseconds
 
 lateinit var mcDispatcher: CoroutineDispatcher
@@ -79,7 +81,14 @@ object AutoDrop : ClientModInitializer {
         mcDispatcher = minecraft.asCoroutineDispatcher()
         mcScope = CoroutineScope(SupervisorJob() + mcDispatcher)
 
-        config("simpleautodrop", 1, Config()) { jsonTree, version -> migrate(jsonTree, version) }
+        val oldConfigFile = FabricLoader.getInstance().configDir.resolve("simpleautodrop.json")
+        val newConfigFile = FabricLoader.getInstance().configDir.resolve("autodrop.json")
+        if (oldConfigFile.exists()) {
+            if (newConfigFile.notExists()) newConfigFile.createFile()
+            newConfigFile.writeText(oldConfigFile.readText())
+            oldConfigFile.deleteIfExists()
+        }
+        config(newConfigFile, 1, Config()) { jsonTree, version -> migrate(jsonTree, version) }
         settings = loadConfig<Config>() ?: error("No config settings provided to load config!")
 
         reloadArchiveProperties()
