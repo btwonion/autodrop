@@ -58,6 +58,7 @@ private fun ConfigCategory.Builder.appendGeneralConfigOptions(): ConfigCategory.
 }
 
 private fun ConfigCategory.Builder.appendActiveArchivesOptionGroup(): ConfigCategory.Builder {
+    if (settings.archives.isEmpty()) return this
     val group = OptionGroup.createBuilder().name(Component.translatable("menu.autodrop.general.enabledarchives.title"))
         .description(OptionDescription.of(Component.translatable("menu.autodrop.general.enabledarchives.description")))
 
