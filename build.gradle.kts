@@ -37,14 +37,14 @@ dependencies {
     })
 
     implementation("org.vineflower:vineflower:1.9.3")
-    modImplementation("net.fabricmc:fabric-loader:0.15.3")
-    modImplementation("net.fabricmc.fabric-api:fabric-api:0.93.1+$mcVersion")
+    modImplementation("net.fabricmc:fabric-loader:0.15.6")
+    modImplementation("net.fabricmc.fabric-api:fabric-api:0.94.1+$mcVersion")
     modImplementation("net.fabricmc:fabric-language-kotlin:1.10.17+kotlin.1.9.22")
 
     modImplementation("dev.isxander.yacl:yet-another-config-lib-fabric:3.3.1+1.20.4")
     modImplementation("com.terraformersmc:modmenu:9.0.0-pre.1")
 
-    include(modImplementation("dev.nyon:konfig:1.0.4-1.20.2")!!)
+    include(modImplementation("dev.nyon:konfig:1.1.0-1.20.4")!!)
 }
 
 tasks {
