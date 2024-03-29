@@ -11,7 +11,10 @@ import net.minecraft.resources.ResourceLocation
 object IdentifierSerializer : KSerializer<ResourceLocation> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("resourcelocation", PrimitiveKind.STRING)
 
-    override fun serialize(encoder: Encoder, value: ResourceLocation) {
+    override fun serialize(
+        encoder: Encoder,
+        value: ResourceLocation
+    ) {
         encoder.encodeString(value.toString())
     }
 

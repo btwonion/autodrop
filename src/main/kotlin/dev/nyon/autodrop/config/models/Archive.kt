@@ -7,6 +7,9 @@ import net.minecraft.resources.ResourceLocation
 @Serializable
 data class Archive(
     val name: String,
-    var items: MutableList<@Serializable(with = IdentifierSerializer::class) ResourceLocation>,
+    var items: MutableList<
+        @Serializable(with = IdentifierSerializer::class)
+        ResourceLocation
+    >,
     var lockedSlots: MutableList<Int>
 )

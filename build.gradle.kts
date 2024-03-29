@@ -1,11 +1,12 @@
 @file:Suppress("SpellCheckingInspection")
 
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import kotlin.io.path.readText
 
 plugins {
-    kotlin("jvm") version "1.9.22"
-    kotlin("plugin.serialization") version "1.9.22"
-    id("fabric-loom") version "1.5-SNAPSHOT"
+    kotlin("jvm") version "1.9.23"
+    kotlin("plugin.serialization") version "1.9.23"
+    id("fabric-loom") version "1.6-SNAPSHOT"
 
     id("com.modrinth.minotaur") version "2.8.7"
     id("com.github.breadmoirai.github-release") version "2.5.2"
@@ -16,7 +17,7 @@ plugins {
 
 group = "dev.nyon"
 val majorVersion = "1.6.2"
-val mcVersion = "1.20.4"
+val mcVersion = "24w13a"
 version = "$majorVersion-$mcVersion"
 val authors = listOf("btwonion")
 val githubRepo = "btwonion/autodrop"
@@ -31,18 +32,20 @@ repositories {
 
 dependencies {
     minecraft("com.mojang:minecraft:$mcVersion")
-    mappings(loom.layered {
-        parchment("org.parchmentmc.data:parchment-1.20.3:2023.12.31@zip")
-        officialMojangMappings()
-    })
+    mappings(
+        loom.layered {
+            parchment("org.parchmentmc.data:parchment-1.20.4:2024.02.25@zip")
+            officialMojangMappings()
+        }
+    )
 
     implementation("org.vineflower:vineflower:1.9.3")
-    modImplementation("net.fabricmc:fabric-loader:0.15.6")
-    modImplementation("net.fabricmc.fabric-api:fabric-api:0.94.1+$mcVersion")
-    modImplementation("net.fabricmc:fabric-language-kotlin:1.10.17+kotlin.1.9.22")
+    modImplementation("net.fabricmc:fabric-loader:0.15.7")
+    modImplementation("net.fabricmc.fabric-api:fabric-api:0.96.13+1.20.5")
+    modImplementation("net.fabricmc:fabric-language-kotlin:1.10.19+kotlin.1.9.23")
 
-    modImplementation("dev.isxander.yacl:yet-another-config-lib-fabric:3.3.1+1.20.4")
-    modImplementation("com.terraformersmc:modmenu:9.0.0-pre.1")
+    modCompileOnly("dev.isxander.yacl:yet-another-config-lib-fabric:3.3.1+1.20.4")
+    modImplementation("com.terraformersmc:modmenu:10.0.0-alpha.3")
 
     include(modImplementation("dev.nyon:konfig:1.1.0-1.20.4")!!)
 }
@@ -89,7 +92,10 @@ tasks {
 }
 
 val changelogText =
-    file("changelogs/$majorVersion-$mcVersion.md").takeIf { it.exists() }?.readText() ?: error("No changelog provided!")
+    buildString {
+        append("# v${project.version}\n")
+        rootDir.toPath().resolve("changelog.md").readText().also { append(it) }
+    }
 
 modrinth {
     token.set(findProperty("modrinth.token")?.toString())
