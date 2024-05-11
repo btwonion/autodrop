@@ -133,7 +133,7 @@ publishMods {
     github {
         repository = githubRepo
         accessToken = providers.environmentVariable("GITHUB_TOKEN")
-        commitish = "master"
+        commitish = "main"
     }
 
     discord {
