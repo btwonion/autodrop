@@ -12,13 +12,27 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(Inventory.class)
 public class PlayerInventoryMixin {
 
-    @Inject(method = "add(ILnet/minecraft/world/item/ItemStack;)Z", at = @At(value = "RETURN"))
-    public void onTake(int slot, ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
+    @Inject(
+        method = "add(ILnet/minecraft/world/item/ItemStack;)Z",
+        at = @At(value = "RETURN")
+    )
+    public void onTake(
+        int slot,
+        ItemStack stack,
+        CallbackInfoReturnable<Boolean> cir
+    ) {
         AutoDrop.INSTANCE.onTake();
     }
 
-    @Inject(method = "setItem", at = @At(value = "RETURN"))
-    public void onTake(int i, ItemStack itemStack, CallbackInfo ci) {
+    @Inject(
+        method = "setItem",
+        at = @At(value = "RETURN")
+    )
+    public void onTake(
+        int i,
+        ItemStack itemStack,
+        CallbackInfo ci
+    ) {
         AutoDrop.INSTANCE.onTake();
     }
 }

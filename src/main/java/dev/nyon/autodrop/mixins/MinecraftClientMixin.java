@@ -10,7 +10,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Minecraft.class)
 public class MinecraftClientMixin {
 
-    @Inject(method = "tick", at = @At("TAIL"))
+    @Inject(
+        method = "tick",
+        at = @At("TAIL")
+    )
     public void onTick(CallbackInfo ci) {
         AutoDrop.INSTANCE.tick((Minecraft) (Object) this);
     }

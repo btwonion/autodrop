@@ -1,12 +1,6 @@
 package dev.nyon.autodrop.config
 
-import dev.isxander.yacl3.api.ButtonOption
-import dev.isxander.yacl3.api.ConfigCategory
-import dev.isxander.yacl3.api.ListOption
-import dev.isxander.yacl3.api.Option
-import dev.isxander.yacl3.api.OptionDescription
-import dev.isxander.yacl3.api.OptionGroup
-import dev.isxander.yacl3.api.YetAnotherConfigLib
+import dev.isxander.yacl3.api.*
 import dev.isxander.yacl3.api.controller.IntegerFieldControllerBuilder
 import dev.isxander.yacl3.api.controller.ItemControllerBuilder
 import dev.isxander.yacl3.api.controller.LongFieldControllerBuilder
@@ -61,9 +55,8 @@ private fun ConfigCategory.Builder.appendGeneralConfigOptions(): ConfigCategory.
 
 private fun ConfigCategory.Builder.appendActiveArchivesOptionGroup(): ConfigCategory.Builder {
     if (settings.archives.isEmpty()) return this
-    val group =
-        OptionGroup.createBuilder().name(Component.translatable("menu.autodrop.general.enabledarchives.title"))
-            .description(OptionDescription.of(Component.translatable("menu.autodrop.general.enabledarchives.description")))
+    val group = OptionGroup.createBuilder().name(Component.translatable("menu.autodrop.general.enabledarchives.title"))
+        .description(OptionDescription.of(Component.translatable("menu.autodrop.general.enabledarchives.description")))
 
     settings.archives.forEach { archive ->
         group.option(
@@ -95,9 +88,7 @@ private fun ConfigCategory.Builder.appendCreateArchiveOption(): ConfigCategory.B
             ).action { _, _ ->
                 settings.archives.add(
                     Archive(
-                        "Archive ${settings.archives.size + 1}",
-                        mutableListOf(),
-                        mutableListOf()
+                        "Archive ${settings.archives.size + 1}", mutableListOf(), mutableListOf()
                     )
                 )
                 saveConfig(settings)
@@ -108,19 +99,15 @@ private fun ConfigCategory.Builder.appendCreateArchiveOption(): ConfigCategory.B
 
 private fun ConfigCategory.Builder.appendArchivesOptions(): ConfigCategory.Builder {
     settings.archives.map { it.name }.forEach { archiveName ->
-        group(
-            ListOption.createBuilder<Item>().name(Component.literal(archiveName))
-                .description(OptionDescription.of(Component.translatable("menu.autodrop.archives.edit.description")))
-                .binding(
-                    mutableListOf(),
-                    { settings.archives.first { it.name == archiveName }.items.map { BuiltInRegistries.ITEM.get(it) } },
-                    {
-                        settings.archives.first { archive -> archive.name == archiveName }.items =
-                            it.map { item -> BuiltInRegistries.ITEM.getKey(item) }.toMutableList()
-                        reloadArchiveProperties()
-                    }
-                ).controller(ItemControllerBuilder::create).initial(Items.STONE).collapsed(true).build()
-        )
+        group(ListOption.createBuilder<Item>().name(Component.literal(archiveName))
+            .description(OptionDescription.of(Component.translatable("menu.autodrop.archives.edit.description")))
+            .binding(mutableListOf(),
+                { settings.archives.first { it.name == archiveName }.items.map { BuiltInRegistries.ITEM.get(it) } },
+                {
+                    settings.archives.first { archive -> archive.name == archiveName }.items =
+                        it.map { item -> BuiltInRegistries.ITEM.getKey(item) }.toMutableList()
+                    reloadArchiveProperties()
+                }).controller(ItemControllerBuilder::create).initial(Items.STONE).collapsed(true).build())
     }
     return this
 }

@@ -1,7 +1,6 @@
 @file:Suppress("SpellCheckingInspection")
 
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import kotlin.io.path.readText
 
 plugins {
     kotlin("jvm") version "1.9.24"
@@ -50,12 +49,10 @@ repositories {
 
 dependencies {
     minecraft("com.mojang:minecraft:$mcVersion")
-    mappings(
-        loom.layered {
-            parchment("org.parchmentmc.data:parchment-${property("deps.parchment")}@zip")
-            officialMojangMappings()
-        }
-    )
+    mappings(loom.layered {
+        parchment("org.parchmentmc.data:parchment-${property("deps.parchment")}@zip")
+        officialMojangMappings()
+    })
 
     implementation("org.vineflower:vineflower:1.10.1")
     modImplementation("net.fabricmc:fabric-loader:0.15.11")
@@ -75,15 +72,14 @@ tasks {
         val modName = "autodrop"
         val modDescription = "Mod to automatically drop items from your inventory"
 
-        val props =
-            mapOf(
-                "id" to modId,
-                "name" to modName,
-                "description" to modDescription,
-                "version" to project.version,
-                "github" to githubRepo,
-                "mc" to mcVersionRange
-            )
+        val props = mapOf(
+            "id" to modId,
+            "name" to modName,
+            "description" to modDescription,
+            "version" to project.version,
+            "github" to githubRepo,
+            "mc" to mcVersionRange
+        )
 
         props.forEach(inputs::property)
 
@@ -108,13 +104,13 @@ tasks {
     }
 }
 
-val changelogText =
-    buildString {
-        append("# v${project.version}\n")
-        file("../../changelog.md").readText().also { append(it) }
-    }
+val changelogText = buildString {
+    append("# v${project.version}\n")
+    file("../../changelog.md").readText().also { append(it) }
+}
 
-val supportedMcVersions: List<String> = property("supportedMcVersions")!!.toString().split(',').map(String::trim).filter(String::isNotEmpty)
+val supportedMcVersions: List<String> =
+    property("supportedMcVersions")!!.toString().split(',').map(String::trim).filter(String::isNotEmpty)
 
 publishMods {
     displayName = "v${project.version}"
@@ -171,9 +167,7 @@ publishing {
 java {
     withSourcesJar()
 
-    javaVersion.toInt()
-        .let { JavaVersion.values()[it - 1] }
-        .let {
+    javaVersion.toInt().let { JavaVersion.values()[it - 1] }.let {
             sourceCompatibility = it
             targetCompatibility = it
         }
