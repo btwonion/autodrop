@@ -8,9 +8,7 @@
     "sources": "https://github.com/btwonion/autodrop"
   },
   "authors": [
-    {
-      "name": "btwonion"
-    }
+    "btwonion"
   ],
   "icon": "assets/autodrop/icon/icon.png",
   "contributors": [],
@@ -18,13 +16,13 @@
   "version": "${version}",
   "environment": "client",
   "depends": {
-    "fabric-language-kotlin": ">=1.10.19+kotlin.1.9.23",
-    "fabric-api": ">=0.91.1+1.20.3",
-    "yet_another_config_lib_v3": ">=3.3.1+1.20.4",
-    "minecraft": ">=1.20.3"
+    "fabric-language-kotlin": ">=1.10.20+kotlin.1.9.24",
+    "fabric-api": "*",
+    "yet_another_config_lib_v3": "*",
+    "minecraft": "${mc}"
   },
   "suggests": {
-    "modmenu": "10.0.0-alpha.3"
+    "modmenu": "*"
   },
   "entrypoints": {
     "client": [

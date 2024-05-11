@@ -20,10 +20,6 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.Items
 
-/**
- * @author btwonion
- * @since 19/12/2023
- */
 fun createYaclScreen(parent: Screen? = null): Screen {
     val builder = YetAnotherConfigLib.createBuilder()
     builder.title(Component.translatable("menu.autodrop.name"))

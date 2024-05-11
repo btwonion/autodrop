@@ -4,23 +4,41 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import kotlin.io.path.readText
 
 plugins {
-    kotlin("jvm") version "1.9.23"
-    kotlin("plugin.serialization") version "1.9.23"
+    kotlin("jvm") version "1.9.24"
+    kotlin("plugin.serialization") version "1.9.24"
     id("fabric-loom") version "1.6-SNAPSHOT"
 
-    id("com.modrinth.minotaur") version "2.8.7"
-    id("com.github.breadmoirai.github-release") version "2.5.2"
+    id("me.modmuss50.mod-publish-plugin") version "0.5.+"
 
     `maven-publish`
     signing
 }
 
+val featureVersion = "1.6.2"
+val mcVersion = property("mcVersion")!!.toString()
+val mcVersionRange = property("mcVersionRange")!!.toString()
+version = "$featureVersion-$mcVersion"
+
 group = "dev.nyon"
-val majorVersion = "1.6.2"
-val mcVersion = "24w13a"
-version = "$majorVersion-$mcVersion"
 val authors = listOf("btwonion")
 val githubRepo = "btwonion/autodrop"
+
+loom {
+    if (stonecutter.current.isActive) {
+        runConfigs.all {
+            ideConfigGenerated(true)
+            runDir("../../run")
+        }
+
+        rootProject.tasks.register("runActive") {
+            group = "mod"
+
+            dependsOn(tasks.named("runClient"))
+        }
+    }
+
+    mixin { useLegacyMixinAp = false }
+}
 
 repositories {
     mavenCentral()
@@ -34,98 +52,99 @@ dependencies {
     minecraft("com.mojang:minecraft:$mcVersion")
     mappings(
         loom.layered {
-            parchment("org.parchmentmc.data:parchment-1.20.4:2024.02.25@zip")
+            parchment("org.parchmentmc.data:parchment-${property("deps.parchment")}@zip")
             officialMojangMappings()
         }
     )
 
-    implementation("org.vineflower:vineflower:1.9.3")
-    modImplementation("net.fabricmc:fabric-loader:0.15.7")
-    modImplementation("net.fabricmc.fabric-api:fabric-api:0.96.13+1.20.5")
-    modImplementation("net.fabricmc:fabric-language-kotlin:1.10.19+kotlin.1.9.23")
+    implementation("org.vineflower:vineflower:1.10.1")
+    modImplementation("net.fabricmc:fabric-loader:0.15.11")
+    modImplementation("net.fabricmc.fabric-api:fabric-api:${property("deps.fapi")!!}")
+    modImplementation("net.fabricmc:fabric-language-kotlin:1.10.20+kotlin.1.9.24")
 
-    modCompileOnly("dev.isxander.yacl:yet-another-config-lib-fabric:3.3.1+1.20.4")
-    modImplementation("com.terraformersmc:modmenu:10.0.0-alpha.3")
+    modImplementation("dev.isxander:yet-another-config-lib:${property("deps.yacl")!!}")
+    modImplementation("com.terraformersmc:modmenu:${property("deps.modMenu")!!}")
 
-    include(modImplementation("dev.nyon:konfig:1.1.0-1.20.4")!!)
+    include(modImplementation("dev.nyon:konfig:2.0.1-1.20.4")!!)
 }
 
+val javaVersion = property("javaVer")!!.toString()
 tasks {
     processResources {
         val modId = "autodrop"
         val modName = "autodrop"
         val modDescription = "Mod to automatically drop items from your inventory"
 
-        inputs.property("id", modId)
-        inputs.property("name", modName)
-        inputs.property("description", modDescription)
-        inputs.property("version", project.version)
-        inputs.property("github", githubRepo)
-
-        filesMatching("fabric.mod.json") {
-            expand(
+        val props =
+            mapOf(
                 "id" to modId,
                 "name" to modName,
                 "description" to modDescription,
                 "version" to project.version,
-                "github" to githubRepo
+                "github" to githubRepo,
+                "mc" to mcVersionRange
             )
+
+        props.forEach(inputs::property)
+
+        filesMatching("fabric.mod.json") {
+            expand(props)
         }
     }
 
     register("releaseMod") {
         group = "publishing"
 
-        dependsOn("modrinthSyncBody")
-        dependsOn("modrinth")
-        dependsOn("githubRelease")
+        dependsOn("publishMods")
         dependsOn("publish")
     }
 
     withType<JavaCompile> {
-        options.release.set(17)
+        options.release = javaVersion.toInt()
     }
 
     withType<KotlinCompile> {
-        kotlinOptions.jvmTarget = "17"
+        kotlinOptions.jvmTarget = javaVersion
     }
 }
 
 val changelogText =
     buildString {
         append("# v${project.version}\n")
-        rootDir.toPath().resolve("changelog.md").readText().also { append(it) }
+        file("../../changelog.md").readText().also { append(it) }
     }
 
-modrinth {
-    token.set(findProperty("modrinth.token")?.toString())
-    projectId.set("lg17V3i3")
-    versionNumber.set("${project.version}")
-    versionType.set("release")
-    uploadFile.set(tasks["remapJar"])
-    gameVersions.set(listOf(mcVersion))
-    loaders.set(listOf("fabric", "quilt"))
-    dependencies {
-        required.project("fabric-api")
-        required.project("fabric-language-kotlin")
-        required.project("yacl")
-        optional.project("modmenu")
+val supportedMcVersions: List<String> = property("supportedMcVersions")!!.toString().split(',').map(String::trim).filter(String::isNotEmpty)
+
+publishMods {
+    displayName = "v${project.version}"
+    file = tasks.remapJar.get().archiveFile
+    changelog = changelogText
+    type = STABLE
+    modLoaders.addAll("fabric", "quilt")
+
+    modrinth {
+        projectId = "lg17V3i3"
+        accessToken = providers.environmentVariable("MODRINTH_API_KEY")
+        minecraftVersions.addAll(supportedMcVersions)
+
+        requires { slug = "fabric-api" }
+        requires { slug = "yacl" }
+        requires { slug = "fabric-language-kotlin" }
+        optional { slug = "modmenu" }
     }
-    changelog.set(changelogText)
-    syncBodyFrom.set(file("README.md").readText())
-}
 
-githubRelease {
-    token(findProperty("github.token")?.toString())
+    github {
+        repository = githubRepo
+        accessToken = providers.environmentVariable("GITHUB_TOKEN")
+        commitish = "master"
+    }
 
-    val split = githubRepo.split("/")
-    owner = split[0]
-    repo = split[1]
-    tagName = "v${project.version}"
-    body = changelogText
-    overwrite = true
-    releaseAssets(tasks["remapJar"].outputs.files)
-    targetCommitish = "main"
+    discord {
+        webhookUrl = providers.environmentVariable("DISCORD_WEBHOOK")
+        username = "Release Notifier"
+        content = "# A new version of autodrop released!\n$changelogText\n\n"
+    }
 }
 
 publishing {
@@ -133,16 +152,16 @@ publishing {
         maven {
             name = "nyon"
             url = uri("https://repo.nyon.dev/releases")
-            credentials(PasswordCredentials::class)
-            authentication {
-                create<BasicAuthentication>("basic")
+            credentials {
+                username = providers.environmentVariable("NYON_USERNAME").orNull
+                password = providers.environmentVariable("NYON_PASSWORD").orNull
             }
         }
     }
     publications {
         create<MavenPublication>("maven") {
             groupId = "dev.nyon"
-            artifactId = "autodrop"
+            artifactId = "better-boat-movement"
             version = project.version.toString()
             from(components["java"])
         }
@@ -151,8 +170,27 @@ publishing {
 
 java {
     withSourcesJar()
+
+    javaVersion.toInt()
+        .let { JavaVersion.values()[it - 1] }
+        .let {
+            sourceCompatibility = it
+            targetCompatibility = it
+        }
 }
 
+kotlin {
+    jvmToolchain(javaVersion.toInt())
+}
+
+/*
 signing {
+    val signingKey: String? by project
+    val signingPassword: String? by project
+    useGpgCmd()
+    if (signingKey != null && signingPassword != null) {
+        useInMemoryPgpKeys(signingKey, signingPassword)
+    }
     sign(publishing.publications)
 }
+ */

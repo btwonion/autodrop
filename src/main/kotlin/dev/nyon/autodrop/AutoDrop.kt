@@ -25,6 +25,7 @@ import net.minecraft.client.KeyMapping
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.screens.inventory.InventoryScreen
 import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.Style
 import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.inventory.ClickType
 import org.lwjgl.glfw.GLFW
@@ -70,7 +71,7 @@ object AutoDrop : ClientModInitializer {
                     .append(
                         Component.translatable(if (settings.enabled) "menu.autodrop.overlay.enabled" else "menu.autodrop.overlay.disabled")
                     )
-                    .withColor(0xF99147),
+                    .withStyle(Style.EMPTY.withColor(0xF99147)),
                 false
             )
             if (settings.enabled) onTake()
@@ -113,15 +114,8 @@ object AutoDrop : ClientModInitializer {
         mcDispatcher = minecraft.asCoroutineDispatcher()
         mcScope = CoroutineScope(SupervisorJob() + mcDispatcher)
 
-        val oldConfigFile = FabricLoader.getInstance().configDir.resolve("simpleautodrop.json")
-        val newConfigFile = FabricLoader.getInstance().configDir.resolve("autodrop.json")
-        if (oldConfigFile.exists()) {
-            if (newConfigFile.notExists()) newConfigFile.createFile()
-            newConfigFile.writeText(oldConfigFile.readText())
-            oldConfigFile.deleteIfExists()
-        }
-        config(newConfigFile, 1, Config()) { jsonTree, version -> migrate(jsonTree, version) }
-        settings = loadConfig<Config>() ?: error("No config settings provided to load config!")
+        config(FabricLoader.getInstance().configDir.resolve("autodrop.json"), 1, Config()) { jsonTree, version -> migrate(jsonTree, version) }
+        settings = loadConfig<Config>()
 
         reloadArchiveProperties()
     }
