@@ -1,0 +1,35 @@
+name: release
+
+on:
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    name: Release
+    permissions: write-all
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: 21
+          distribution: temurin
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+      - name: Release with Gradle
+        uses: Wandalen/wretry.action@master
+        with:
+          command: ./gradlew releaseAllVersions --stacktrace
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MODRINTH_API_KEY: ${{ secrets.MODRINTH_API_KEY }}
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+          NYON_USERNAME: ${{ secrets.NYON_USERNAME }}
+          NYON_PASSWORD: ${{ secrets.NYON_PASSWORD }}
+          ORG_GRADLE_PROJECT_signingKey: ${{ secrets.GPG_SECRET_KEY }}
+          ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.GPG_SECRET_KEY_PASSWORD }}
+          GPG_SECRET_KEY_ID: ${{ secrets.GPG_SECRET_KEY_ID }}
