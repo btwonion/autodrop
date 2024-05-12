@@ -157,7 +157,7 @@ publishing {
     publications {
         create<MavenPublication>("maven") {
             groupId = "dev.nyon"
-            artifactId = "better-boat-movement"
+            artifactId = "autodrop"
             version = project.version.toString()
             from(components["java"])
         }
