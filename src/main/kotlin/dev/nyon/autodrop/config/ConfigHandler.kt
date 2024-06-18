@@ -36,9 +36,7 @@ internal fun migrate(
                 return@map Archive(
                     archiveObject["name"]?.jsonPrimitive?.content ?: return null,
                     archiveObject["items"]?.jsonArray?.map secMap@{ content ->
-                        return@secMap ResourceLocation(
-                            content.jsonPrimitive.contentOrNull ?: return null
-                        )
+                        return@secMap /*? if >=1.21 {*/ /*ResourceLocation.parse(content.jsonPrimitive.contentOrNull ?: return null) *//*?} else {*/ ResourceLocation(content.jsonPrimitive.contentOrNull ?: return null) /*?}*/
                     }?.toMutableList() ?: return null,
                     archiveObject["lockedSlots"]?.jsonArray?.map secMap@{ content ->
                         content.jsonPrimitive.content.toIntOrNull() ?: return null

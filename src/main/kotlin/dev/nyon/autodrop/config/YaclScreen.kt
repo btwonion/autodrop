@@ -117,7 +117,7 @@ private fun ConfigCategory.Builder.appendLockedSlotsOptions(): ConfigCategory.Bu
         group(
             ListOption.createBuilder<Int>().name(Component.literal(archiveName)).description(
                 OptionDescription.createBuilder().text(Component.translatable("menu.autodrop.lockedslots.description"))
-                    .image(ResourceLocation("autodrop", "image/inventory-slots.png"), 352, 331).build()
+                    .image(/*? if >=1.21 {*/ /*ResourceLocation.parse("autodrop:image/inventory-slots.png") *//*?} else {*/ ResourceLocation("autodrop", "image/inventory-slots.png") /*?}*/, 352, 331).build()
             ).binding(mutableListOf(), { settings.archives.first { it.name == archiveName }.lockedSlots }, {
                 settings.archives.first { archive -> archive.name == archiveName }.lockedSlots = it.toMutableList()
                 reloadArchiveProperties()

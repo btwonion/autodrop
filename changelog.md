@@ -1,2 +1,2 @@
-- support 1.20.1, 1.20.4, 1.20.6
-- remove migrator for old config
+- add support for 1.21
+- fix archive name being only the version

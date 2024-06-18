@@ -18,6 +18,6 @@ object IdentifierSerializer : KSerializer<ResourceLocation> {
     }
 
     override fun deserialize(decoder: Decoder): ResourceLocation {
-        return ResourceLocation(decoder.decodeString())
+        return /*? if >=1.21 {*/ /*ResourceLocation.parse(decoder.decodeString()) *//*?} else {*/ ResourceLocation(decoder.decodeString()) /*?}*/
     }
 }

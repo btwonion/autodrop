@@ -1,11 +1,12 @@
-@file:Suppress("SpellCheckingInspection")
+@file:Suppress("SpellCheckingInspection", "UnstableApiUsage")
 
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.9.24"
-    kotlin("plugin.serialization") version "1.9.24"
-    id("fabric-loom") version "1.6-SNAPSHOT"
+    kotlin("jvm") version "2.0.0"
+    kotlin("plugin.serialization") version "2.0.0"
+    id("fabric-loom") version "1.7-SNAPSHOT"
 
     id("me.modmuss50.mod-publish-plugin") version "0.5.+"
 
@@ -13,7 +14,8 @@ plugins {
     signing
 }
 
-val featureVersion = "1.6.2"
+val beta: Int? = null // Pattern is '1.0.0-beta1-1.20.6-pre.2'
+val featureVersion = "1.7.0${if (beta != null) "-beta$beta" else ""}"
 val mcVersion = property("mcVersion")!!.toString()
 val mcVersionRange = property("mcVersionRange")!!.toString()
 version = "$featureVersion-$mcVersion"
@@ -22,17 +24,15 @@ group = "dev.nyon"
 val authors = listOf("btwonion")
 val githubRepo = "btwonion/autodrop"
 
+base {
+    archivesName.set(rootProject.name)
+}
+
 loom {
     if (stonecutter.current.isActive) {
         runConfigs.all {
             ideConfigGenerated(true)
             runDir("../../run")
-        }
-
-        rootProject.tasks.register("runActive") {
-            group = "mod"
-
-            dependsOn(tasks.named("runClient"))
         }
     }
 
@@ -50,14 +50,15 @@ repositories {
 dependencies {
     minecraft("com.mojang:minecraft:$mcVersion")
     mappings(loom.layered {
-        parchment("org.parchmentmc.data:parchment-${property("deps.parchment")}@zip")
+        val parchment: String = property("deps.parchment").toString()
+        if (parchment.isNotEmpty()) parchment("org.parchmentmc.data:parchment-$parchment@zip")
         officialMojangMappings()
     })
 
     implementation("org.vineflower:vineflower:1.10.1")
     modImplementation("net.fabricmc:fabric-loader:0.15.11")
     modImplementation("net.fabricmc.fabric-api:fabric-api:${property("deps.fapi")!!}")
-    modImplementation("net.fabricmc:fabric-language-kotlin:1.10.20+kotlin.1.9.24")
+    modImplementation("net.fabricmc:fabric-language-kotlin:1.11.0+kotlin.2.0.0")
 
     modImplementation("dev.isxander:yet-another-config-lib:${property("deps.yacl")!!}")
     modImplementation("com.terraformersmc:modmenu:${property("deps.modMenu")!!}")
@@ -100,13 +101,15 @@ tasks {
     }
 
     withType<KotlinCompile> {
-        kotlinOptions.jvmTarget = javaVersion
+        compilerOptions {
+            jvmTarget = JvmTarget.fromTarget(javaVersion)
+        }
     }
 }
 
 val changelogText = buildString {
     append("# v${project.version}\n")
-    file("../../changelog.md").readText().also { append(it) }
+    file("../../changelog.md").readText().also(::append)
 }
 
 val supportedMcVersions: List<String> =
@@ -116,7 +119,7 @@ publishMods {
     displayName = "v${project.version}"
     file = tasks.remapJar.get().archiveFile
     changelog = changelogText
-    type = STABLE
+    type = if (beta != null) BETA else STABLE
     modLoaders.addAll("fabric", "quilt")
 
     modrinth {
@@ -134,12 +137,6 @@ publishMods {
         repository = githubRepo
         accessToken = providers.environmentVariable("GITHUB_TOKEN")
         commitish = "main"
-    }
-
-    discord {
-        webhookUrl = providers.environmentVariable("DISCORD_WEBHOOK")
-        username = "Release Notifier"
-        content = "# A new version of autodrop released!\n$changelogText\n\n"
     }
 }
 
@@ -168,13 +165,9 @@ java {
     withSourcesJar()
 
     javaVersion.toInt().let { JavaVersion.values()[it - 1] }.let {
-            sourceCompatibility = it
-            targetCompatibility = it
-        }
-}
-
-kotlin {
-    jvmToolchain(javaVersion.toInt())
+        sourceCompatibility = it
+        targetCompatibility = it
+    }
 }
 
 /*
