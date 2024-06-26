@@ -1,2 +1,1 @@
-- add support for 1.21
-- fix archive name being only the version
+- fix config screen on 1.20.6
