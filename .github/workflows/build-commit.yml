@@ -39,8 +39,9 @@ jobs:
         uses: gradle/actions/setup-gradle@v3
       - name: Build with Gradle
         uses: Wandalen/wretry@master
-        command: 
-          - ./gradlew buildAllVersions --stacktrace
+        with:
+          command:
+            - ./gradlew buildAllVersions --stacktrace
       - uses: actions/upload-artifact@v4
         with:
           path: versions/**/build/libs/*.jar
