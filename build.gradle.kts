@@ -1,4 +1,4 @@
-@file:Suppress("SpellCheckingInspection", "UnstableApiUsage")
+@file:Suppress("SpellCheckingInspection", "UnstableApiUsage", "RedundantNullableReturnType")
 
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -14,8 +14,8 @@ plugins {
     signing
 }
 
-val beta: Int? = null // Pattern is '1.0.0-beta1-1.20.6-pre.2'
-val featureVersion = "1.7.0${if (beta != null) "-beta$beta" else ""}"
+val beta: Int? = 1 // Pattern is '1.0.0-beta1-1.20.6-pre.2'
+val featureVersion = "2.0.0${if (beta != null) "-beta$beta" else ""}"
 val mcVersion = property("mcVersion")!!.toString()
 val mcVersionRange = property("mcVersionRange")!!.toString()
 version = "$featureVersion-$mcVersion"
@@ -109,7 +109,8 @@ tasks {
 
 val changelogText = buildString {
     append("# v${project.version}\n")
-    file("../../changelog.md").readText().also(::append)
+    if (beta != null) append("### As this is still a beta version, this version can contain bugs. Feel free to report ANY misbehaviours and errors!")
+    rootDir.resolve("changelog.md").readText().also(::append)
 }
 
 val supportedMcVersions: List<String> =

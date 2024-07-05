@@ -16,5 +16,8 @@
     "menu.autodrop.general.enabledarchives.title": "Aktivierte Listen",
     "menu.autodrop.general.enabledarchives.description": "Aktiviere bzw. deaktivierte bestimmte Listen.",
     "menu.autodrop.general.enabledarchives.tickbox": "Klicke um die Liste zu de-/aktivieren.",
-    "menu.autodrop.archives.edit.description": "Editiere hier deine Listen."
+    "menu.autodrop.archives.edit.description": "Editiere hier deine Listen.",
+    "key.autodrop.toggle": "De-/Aktiviere AutoDrop",
+    "key.autodrop.gui": "Öffne das GUI",
+    "key.autodrop.category": "AutoDrop"
 }

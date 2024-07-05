@@ -16,5 +16,8 @@
     "menu.autodrop.general.enabledarchives.title": "Enabled archives",
     "menu.autodrop.general.enabledarchives.description": "Edit your enabled archives here.",
     "menu.autodrop.general.enabledarchives.tickbox": "Click to disable/enable this archive.",
-    "menu.autodrop.archives.edit.description": "Edit your archives here."
+    "menu.autodrop.archives.edit.description": "Edit your archives here.",
+    "key.autodrop.toggle": "Toggle AutoDrop",
+    "key.autodrop.gui": "Open GUI",
+    "key.autodrop.category": "AutoDrop"
 }

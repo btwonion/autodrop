@@ -98,7 +98,7 @@ tasks.register("postUpdate") {
     val json = buildJsonObject {
         put("username", webhook.username)
         put("avatar_url", webhook.avatarUrl)
-        put("content", "<@$roleId>")
+        put("content", "<@&$roleId>")
         put("embeds", embedsJson)
     }
 

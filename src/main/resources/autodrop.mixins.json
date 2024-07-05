@@ -1,15 +1,16 @@
 {
-    "required": true,
-    "minVersion": "0.8",
-    "package": "dev.nyon.autodrop.mixins",
-    "compatibilityLevel": "JAVA_17",
-    "mixins": [
-        "PlayerInventoryMixin"
-    ],
-    "injectors": {
-        "defaultRequire": 1
-    },
-    "client": [
-        "MinecraftClientMixin"
-    ]
+  "required": true,
+  "minVersion": "0.8",
+  "package": "dev.nyon.autodrop.mixins",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+      "InventoryMixin",
+    "PlayerMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "client": [
+    "MinecraftClientMixin"
+  ]
 }
