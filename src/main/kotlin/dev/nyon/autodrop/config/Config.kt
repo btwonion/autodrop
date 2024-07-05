@@ -33,10 +33,10 @@ data class Config(
 @Suppress("SpellCheckingInspection")
 @Serializable
 data class TriggerConfig(
-    val onPickup: Boolean = true,
-    val onSneak: Boolean = false,
-    val onJump: Boolean = false,
-    val onSlotSwitch: Boolean = false
+    var onPickup: Boolean = true,
+    var onSneak: Boolean = false,
+    var onJump: Boolean = false,
+    var onSlotSwitch: Boolean = false
 )
 
 /**

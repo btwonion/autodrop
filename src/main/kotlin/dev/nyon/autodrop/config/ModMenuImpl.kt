@@ -7,8 +7,7 @@ import com.terraformersmc.modmenu.api.ModMenuApi
 class ModMenuImpl : ModMenuApi {
     override fun getModConfigScreenFactory(): ConfigScreenFactory<*> {
         return ConfigScreenFactory {
-            // TODO: screen
-            it
+            createYaclScreen(it)
         }
     }
 }

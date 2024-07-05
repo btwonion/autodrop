@@ -45,7 +45,7 @@ object AutoDrop : ClientModInitializer {
             )
             if (config.enabled) invokeAutodrop()
         }
-        // TODO: screen if (menuKeyBind.consumeClick()) client.setScreen(createYaclScreen(null))
+        if (menuKeyBind.consumeClick()) client.setScreen(createYaclScreen(null))
     }
 
     private var jobWaiting = false

@@ -1,128 +1,65 @@
 package dev.nyon.autodrop.config
 
-import dev.isxander.yacl3.api.*
-import dev.isxander.yacl3.api.controller.IntegerFieldControllerBuilder
-import dev.isxander.yacl3.api.controller.ItemControllerBuilder
-import dev.isxander.yacl3.api.controller.LongFieldControllerBuilder
-import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder
-import dev.nyon.autodrop.config.models.Archive
+import dev.isxander.yacl3.dsl.*
 import dev.nyon.konfig.config.saveConfig
 import net.minecraft.client.gui.screens.Screen
-import net.minecraft.core.registries.BuiltInRegistries
-import net.minecraft.network.chat.Component
-import net.minecraft.resources.ResourceLocation
-import net.minecraft.world.item.Item
-import net.minecraft.world.item.Items
 
-fun createYaclScreen(parent: Screen? = null): Screen {
-    val builder = YetAnotherConfigLib.createBuilder()
-    builder.title(Component.translatable("menu.autodrop.name"))
-    builder.category(
-        ConfigCategory.createBuilder().name(Component.translatable("menu.autodrop.archives.title"))
-            .appendCreateArchiveOption().appendArchivesOptions().build()
-    )
-    builder.category(
-        ConfigCategory.createBuilder().name(Component.translatable("menu.autodrop.lockedslots.title"))
-            .appendLockedSlotsOptions().build()
-    )
+fun createYaclScreen(parent: Screen? = null): Screen = YetAnotherConfigLib("autodrop") {
+    val general by categories.registering {
+        val enabled by rootOptions.registering {
+            binding(true, { config.enabled }, { config.enabled = it })
+            controller = tickBox()
+            descriptionBuilder {
+                addDefaultText(1)
+            }
+        }
 
-    builder.category(
-        ConfigCategory.createBuilder().name(Component.translatable("menu.autodrop.general.title"))
-            .appendGeneralConfigOptions().appendActiveArchivesOptionGroup().build()
-    )
+        val delay by rootOptions.registering {
+            binding(200, { config.dropDelay }, { config.dropDelay = it })
+            controller = numberField(min = 0L)
+            descriptionBuilder {
+                addDefaultText(1)
+            }
+        }
 
-    builder.save { saveConfig(settings) }
-    val screen = builder.build()
-    return screen.generateScreen(parent)
-}
+        val triggers by groups.registering {
+            descriptionBuilder {
+                addDefaultText(1)
+            }
 
-private fun ConfigCategory.Builder.appendGeneralConfigOptions(): ConfigCategory.Builder {
-    option(
-        Option.createBuilder<Boolean>().name(Component.translatable("menu.autodrop.general.active.title"))
-            .description(OptionDescription.of(Component.translatable("menu.autodrop.general.active.description")))
-            .binding(true, { settings.enabled }, { settings.enabled = it }).controller(TickBoxControllerBuilder::create)
-            .build()
-    )
-    option(
-        Option.createBuilder<Long>().name(Component.translatable("menu.autodrop.general.dropdelay.title"))
-            .description(OptionDescription.of(Component.translatable("menu.autodrop.general.dropdelay.description")))
-            .binding(200, { settings.dropDelay }, { settings.dropDelay = it })
-            .controller(LongFieldControllerBuilder::create).build()
-    )
+            val pick by options.registering {
+                binding(true, { config.triggerConfig.onPickup }, { config.triggerConfig.onPickup = it })
+                controller = tickBox()
+                descriptionBuilder {
+                    addDefaultText(1)
+                }
+            }
 
-    return this
-}
+            val sneak by options.registering {
+                binding(false, { config.triggerConfig.onSneak }, { config.triggerConfig.onSneak = it })
+                controller = tickBox()
+                descriptionBuilder {
+                    addDefaultText(1)
+                }
+            }
 
-private fun ConfigCategory.Builder.appendActiveArchivesOptionGroup(): ConfigCategory.Builder {
-    if (settings.archives.isEmpty()) return this
-    val group = OptionGroup.createBuilder().name(Component.translatable("menu.autodrop.general.enabledarchives.title"))
-        .description(OptionDescription.of(Component.translatable("menu.autodrop.general.enabledarchives.description")))
+            val jump by options.registering {
+                binding(false, { config.triggerConfig.onJump }, { config.triggerConfig.onJump = it })
+                controller = tickBox()
+                descriptionBuilder {
+                    addDefaultText(1)
+                }
+            }
 
-    settings.archives.forEach { archive ->
-        group.option(
-            Option.createBuilder<Boolean>().name(Component.translatable(archive.name))
-                .description(OptionDescription.of(Component.translatable("menu.autodrop.general.enabledarchives.tickbox")))
-                .binding(true, { settings.activeArchives.contains(archive.name) }, {
-                    if (it) {
-                        settings.activeArchives.add(archive.name)
-                    } else {
-                        settings.activeArchives.removeIf { archiveName -> archiveName == archive.name }
-                    }
-                    reloadArchiveProperties()
-                }).controller(TickBoxControllerBuilder::create).build()
-        )
+            val switch by options.registering {
+                binding(false, { config.triggerConfig.onSlotSwitch }, { config.triggerConfig.onSlotSwitch = it })
+                controller = tickBox()
+                descriptionBuilder {
+                    addDefaultText(1)
+                }
+            }
+        }
     }
 
-    group(group.build())
-    return this
-}
-
-private fun ConfigCategory.Builder.appendCreateArchiveOption(): ConfigCategory.Builder {
-    option(
-        ButtonOption.createBuilder().name(Component.translatable("menu.autodrop.archives.createarchive.title"))
-            .description(
-                OptionDescription.of(
-                    Component.translatable("menu.autodrop.archives.createarchive.description"),
-                    Component.translatable("menu.autodrop.archives.createarchive.note")
-                )
-            ).action { _, _ ->
-                settings.archives.add(
-                    Archive(
-                        "Archive ${settings.archives.size + 1}", mutableListOf(), mutableListOf()
-                    )
-                )
-                saveConfig(settings)
-            }.build()
-    )
-    return this
-}
-
-private fun ConfigCategory.Builder.appendArchivesOptions(): ConfigCategory.Builder {
-    settings.archives.map { it.name }.forEach { archiveName ->
-        group(ListOption.createBuilder<Item>().name(Component.literal(archiveName))
-            .description(OptionDescription.of(Component.translatable("menu.autodrop.archives.edit.description")))
-            .binding(mutableListOf(),
-                { settings.archives.first { it.name == archiveName }.items.map { BuiltInRegistries.ITEM.get(it) } },
-                {
-                    settings.archives.first { archive -> archive.name == archiveName }.items =
-                        it.map { item -> BuiltInRegistries.ITEM.getKey(item) }.toMutableList()
-                    reloadArchiveProperties()
-                }).controller(ItemControllerBuilder::create).initial(Items.STONE).collapsed(true).build())
-    }
-    return this
-}
-
-private fun ConfigCategory.Builder.appendLockedSlotsOptions(): ConfigCategory.Builder {
-    settings.archives.map { it.name }.forEach { archiveName ->
-        group(
-            ListOption.createBuilder<Int>().name(Component.literal(archiveName)).description(
-                OptionDescription.createBuilder().text(Component.translatable("menu.autodrop.lockedslots.description"))
-                    .image(/*? if >=1.21 {*/ ResourceLocation.parse("autodrop:image/inventory-slots.png") /*?} else {*/ /*ResourceLocation("autodrop", "image/inventory-slots.png") *//*?}*/, 352, 331).build()
-            ).binding(mutableListOf(), { settings.archives.first { it.name == archiveName }.lockedSlots }, {
-                settings.archives.first { archive -> archive.name == archiveName }.lockedSlots = it.toMutableList()
-                reloadArchiveProperties()
-            }).controller(IntegerFieldControllerBuilder::create).initial(0).collapsed(true).build()
-        )
-    }
-    return this
-}
+    save { saveConfig(config) }
+}.generateScreen(parent)
