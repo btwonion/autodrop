@@ -1,6 +1,8 @@
-package dev.nyon.autodrop.config
+package dev.nyon.autodrop.config.screen
 
 import dev.isxander.yacl3.dsl.*
+import dev.nyon.autodrop.config.config
+import dev.nyon.autodrop.minecraft
 import dev.nyon.konfig.config.saveConfig
 import net.minecraft.client.gui.screens.Screen
 
@@ -9,6 +11,16 @@ fun createYaclScreen(parent: Screen? = null): Screen = YetAnotherConfigLib("auto
         val enabled by rootOptions.registering {
             binding(true, { config.enabled }, { config.enabled = it })
             controller = tickBox()
+            descriptionBuilder {
+                addDefaultText(1)
+            }
+        }
+
+        val screen by rootOptions.registeringButton {
+            action { parent, _ ->
+                minecraft.setScreen(ArchiveScreen(parent))
+            }
+
             descriptionBuilder {
                 addDefaultText(1)
             }

@@ -2,6 +2,7 @@ package dev.nyon.autodrop
 
 import com.mojang.blaze3d.platform.InputConstants
 import dev.nyon.autodrop.config.*
+import dev.nyon.autodrop.config.screen.createYaclScreen
 import dev.nyon.autodrop.extensions.DataComponentPatchSerializer
 import dev.nyon.autodrop.extensions.ItemSerializer
 import dev.nyon.konfig.config.config

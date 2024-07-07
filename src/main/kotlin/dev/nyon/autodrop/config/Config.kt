@@ -18,7 +18,7 @@ import net.minecraft.world.item.Item
 data class Config(
     var enabled: Boolean = true,
     val triggerConfig: TriggerConfig = TriggerConfig(),
-    val archives: MutableList<Archive> = mutableListOf(),
+    val archives: MutableList<Archive> = mutableListOf(Archive(true, "Archive 1", mutableListOf(), mutableListOf())),
     var dropDelay: Long = 200
 )
 
@@ -49,7 +49,7 @@ data class TriggerConfig(
  */
 @Serializable
 data class Archive(
-    val enabled: Boolean = true,
+    var enabled: Boolean = true,
     val name: String,
     var entries: MutableList<ItemIdentification>,
     var ignoredSlots: MutableList<Int>
