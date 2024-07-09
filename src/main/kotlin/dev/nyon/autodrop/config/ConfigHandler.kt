@@ -6,7 +6,7 @@ import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.resources.ResourceLocation
 
 var config: Config = Config()
-var currentItems = mutableSetOf<ItemIdentification>()
+var currentItems = mutableSetOf<ItemIdentificator>()
 var ignoredSlots = mutableSetOf<Int>()
 
 fun reloadArchiveProperties() {
@@ -33,7 +33,7 @@ internal fun migrate(
                     archiveObject["name"]?.jsonPrimitive?.content ?: return null,
                     archiveObject["items"]?.jsonArray?.map secMap@{ content ->
                         val resourceLocation = /*? if >=1.21 {*/ ResourceLocation.parse(content.jsonPrimitive.contentOrNull ?: return null) /*?} else {*//* ResourceLocation(content.jsonPrimitive.contentOrNull ?: return null) *//*?}*/
-                        return@secMap ItemIdentification(
+                        return@secMap ItemIdentificator(
                             BuiltInRegistries.ITEM.get(resourceLocation),
                             DataComponentPatch.EMPTY,
                             1

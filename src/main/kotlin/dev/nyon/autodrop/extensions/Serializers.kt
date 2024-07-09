@@ -40,14 +40,17 @@ object DataComponentPatchSerializer : KSerializer<DataComponentPatch> {
     private val dynamicOps = registryAccess.createSerializationContext(NbtOps.INSTANCE)
 
     override fun deserialize(decoder: Decoder): DataComponentPatch {
-        val result = itemParser.parse(StringReader(decoder.decodeString()))
+        val decoded = decoder.decodeString()
+        val correctString = if (decoded.startsWith('[')) "stone$decoded" else decoded
+        val result = itemParser.parse(StringReader(correctString))
         return result.components
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun serialize(encoder: Encoder, value: DataComponentPatch) {
         val stringMap = value.entrySet().mapNotNull { (type, value) ->
             val resourceLocation = BuiltInRegistries.DATA_COMPONENT_TYPE.getKey(type)
-            val encoded = type.codec()!!.encodeStart(dynamicOps, value.get() as Nothing?).result().getOrNull()
+            val encoded = (type.codec() as? com.mojang.serialization.Encoder<Any>)?.encodeStart(dynamicOps, value.orElseThrow())?.result()?.getOrNull()
             return@mapNotNull if (resourceLocation == null || encoded == null) null
             else "$resourceLocation=$encoded"
         }

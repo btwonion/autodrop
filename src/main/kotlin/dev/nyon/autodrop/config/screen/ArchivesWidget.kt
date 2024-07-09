@@ -26,16 +26,8 @@ class ArchivesWidget(private val archiveScreen: ArchiveScreen) : ObjectSelection
         return x + INNER_PAD
     }
 
-    override fun getWidth(): Int {
-        return (internalMinecraft.screen!!.width / 4) - 2 * OUTER_PAD
-    }
-
-    override fun getHeight(): Int {
-        return (internalMinecraft.screen!!.height / 4) * 3 - 2 * OUTER_PAD
-    }
-
     override fun getRowWidth(): Int {
-        return getWidth() - 2 * INNER_PAD
+        return width - 2 * INNER_PAD
     }
 
     override fun getScrollbarPosition(): Int {
@@ -44,6 +36,12 @@ class ArchivesWidget(private val archiveScreen: ArchiveScreen) : ObjectSelection
 
     override fun getMaxScroll(): Int {
         return max(0, maxPosition - getHeight() + INNER_PAD)
+    }
+
+    override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
+        width = (internalMinecraft.screen!!.width / 4) - 2 * OUTER_PAD
+        height = internalMinecraft.screen!!.height - 3 * OUTER_PAD - 9 - 4 * 20
+        super.renderWidget(guiGraphics, i, j, f)
     }
 
     fun refreshEntries() {
@@ -66,12 +64,11 @@ class ArchivesWidgetEntry(private val archive: Archive, private val archiveScree
         isSelected: Boolean,
         delta: Float
     ) {
-        if (archiveScreen.selected?.name == archive.name) guiGraphics.fill(x - 3, y - 2, x + width - 2, y + height + 2, 0xFF404040.toInt())
+        if (archiveScreen.selected.name == archive.name) guiGraphics.fill(x - 3, y - 2, x + width - 2, y + height + 2, 0xFF404040.toInt())
 
         // Draw archive name
         val hundredPercentAlphaWhite = 0xFFFFFFFF.toInt()
-        val textPad = height - internalMinecraft.font.lineHeight / 2
-        guiGraphics.drawString(internalMinecraft.font, Component.literal(archive.name), x, y + textPad / 2, 0xFFFFFF)
+        guiGraphics.drawString(internalMinecraft.font, Component.literal(archive.name), x, y + INNER_PAD / 2, 0xFFFFFF)
 
         // tick box - outer rectangle
         val rightX = x + width - INNER_PAD
