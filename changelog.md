@@ -1,2 +1,2 @@
-- add support for 1.21
-- fix archive name being only the version
+- add new ui for configuring the archives
+- now support nbt/component filters and filter for amounts
