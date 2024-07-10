@@ -7,13 +7,13 @@ import dev.nyon.autodrop.config.reloadArchiveProperties
 import dev.nyon.autodrop.config.screen.create.CreateArchiveScreen
 import dev.nyon.autodrop.config.screen.ignored.IgnoredSlotsScreen
 import dev.nyon.autodrop.config.screen.modify.ModifyIdentifierScreen
+import dev.nyon.autodrop.extensions.emptyStoredComponents
 import dev.nyon.autodrop.extensions.screenComponent
 import dev.nyon.konfig.config.saveConfig
 import net.minecraft.ChatFormatting
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.screens.Screen
-import net.minecraft.core.component.DataComponentPatch
 import dev.nyon.autodrop.minecraft as internalMinecraft
 
 const val INNER_PAD = 5
@@ -54,7 +54,7 @@ class ArchiveScreen(private val parent: Screen?) : Screen(screenComponent("title
     }.build().also { addWidget(it) }
 
     private val addIdentifierButton = Button.builder(screenComponent("identifier")) {
-        val newIdentifier = ItemIdentifier(null, DataComponentPatch.EMPTY, 1)
+        val newIdentifier = ItemIdentifier(null, emptyStoredComponents, 1)
 
         selected.entries.add(newIdentifier)
         internalMinecraft.setScreen(
@@ -72,6 +72,7 @@ class ArchiveScreen(private val parent: Screen?) : Screen(screenComponent("title
 
     override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, tickDelta: Float) {
         renderBackground(guiGraphics, mouseX, mouseY, tickDelta)
+
         archivesWidget.render(guiGraphics, mouseX, mouseY, tickDelta)
 
         // render archive item list, if empty, render info

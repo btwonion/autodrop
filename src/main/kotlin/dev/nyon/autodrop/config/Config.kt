@@ -1,8 +1,8 @@
 package dev.nyon.autodrop.config
 
+import dev.nyon.autodrop.extensions.StoredComponents
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
-import net.minecraft.core.component.DataComponentPatch
 import net.minecraft.world.item.Item
 
 /**
@@ -59,5 +59,5 @@ data class Archive(
  */
 @Serializable
 data class ItemIdentifier(
-    var type: @Contextual Item?, var components: @Contextual DataComponentPatch, var amount: Int
+    var type: @Contextual Item?, var components: @Contextual StoredComponents, var amount: Int
 )

@@ -21,9 +21,7 @@ class ModifyIdentifierScreen(private val parent: ArchiveScreen, private val item
     Screen(screenComponent("modify.title")) {
     private val matcher: () -> Boolean = {
         (itemEditBox.value.isBlank() || BuiltInRegistries.ITEM.getOptional(resourceLocation(itemEditBox.value)).isPresent) && kotlin.runCatching {
-            DataComponentPatchSerializer.toPatch(
-                componentsEditBox.value
-            )
+            DataComponentPatchSerializer.toPatch(componentsEditBox.value)
         }.isSuccess && amountEditBox.value.toIntOrNull().let { it != null && it in 0 .. 64 }
     }
 

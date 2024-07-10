@@ -5,6 +5,7 @@ import dev.nyon.autodrop.config.*
 import dev.nyon.autodrop.config.screen.root.ArchiveScreen
 import dev.nyon.autodrop.extensions.DataComponentPatchSerializer
 import dev.nyon.autodrop.extensions.ItemSerializer
+import dev.nyon.autodrop.extensions.StoredComponents
 import dev.nyon.konfig.config.config
 import dev.nyon.konfig.config.loadConfig
 import dev.nyon.konfig.config.saveConfig
@@ -16,15 +17,16 @@ import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.client.KeyMapping
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.screens.inventory.InventoryScreen
-import net.minecraft.core.component.DataComponentPatch
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
 import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.inventory.ClickType
 import net.minecraft.world.item.Item
-import net.minecraft.world.item.enchantment.ItemEnchantments
 import org.lwjgl.glfw.GLFW
 import kotlin.time.Duration.Companion.milliseconds
+
+//? if >=1.20.5
+import net.minecraft.world.item.enchantment.ItemEnchantments
 
 lateinit var mcScope: CoroutineScope
 lateinit var minecraft: Minecraft
@@ -70,14 +72,15 @@ object AutoDrop : ClientModInitializer {
                 val isValid = currentItems.any { identifier ->
                     val typeValid = identifier.type == null || itemStack.item == identifier.type
                     val amountValid = itemStack.count >= identifier.amount
-                    val componentValid =
+
+                    /*? if >=1.21 {*/val componentValid =
                         identifier.components.isEmpty || identifier.components.entrySet().all { (key, component) ->
                             val identifierComponent = component.get()
                             val itemComponent = itemStack.get(key) ?: return@all false
 
                             if (identifierComponent as? ItemEnchantments != null && itemComponent as? ItemEnchantments != null) {
                                 return@all identifierComponent.entrySet()
-                                    .all { entry -> // How tf is minecraft too bad to create a simple equals check - or it's me?
+                                    .all { entry -> // How tf is minecraft too bad to create a simple equals check - or is it me?
                                         itemComponent.entrySet().map { it.key.value().description.string }
                                             .contains(entry.key.value().description.string)
                                     }
@@ -85,9 +88,29 @@ object AutoDrop : ClientModInitializer {
 
                             itemComponent == identifierComponent
                         }
+                    /*?} else if >=1.20.5 {*//*val componentValid = identifier.components.isEmpty || identifier.components.all { component ->
+                        val identifierComponent = component.value
+                        val itemComponent = itemStack.get(component.type) ?: return@all false
 
+                        if (identifierComponent as? ItemEnchantments != null && itemComponent as? ItemEnchantments != null) {
+                            return@all identifierComponent.entrySet()
+                                .all { entry -> // How tf is minecraft too bad to create a simple equals check - or is it me?
+                                    itemComponent.entrySet().map { it.key.value().descriptionId }
+                                        .contains(entry.key.value().descriptionId)
+                                }
+                        }
+
+                        itemComponent == identifierComponent
+                    }
+
+                    *//*?} else {*/
+                    /*val componentValid = identifier.components.allKeys.all { key ->
+                        if (itemStack.tag == null) return@all false
+                        itemStack.tag!!.get(key) == identifier.components.get(key)
+                    }*//*?}*/
                     typeValid && amountValid && componentValid
                 }
+
 
                 if (!isValid) return@forEach
 
@@ -109,7 +132,7 @@ object AutoDrop : ClientModInitializer {
         config(FabricLoader.getInstance().configDir.resolve("autodrop.json"), 1, Config(), jsonBuilder = {
             serializersModule = SerializersModule {
                 contextual(Item::class, ItemSerializer)
-                contextual(DataComponentPatch::class, DataComponentPatchSerializer)
+                contextual(StoredComponents::class, DataComponentPatchSerializer)
             }
         }) { jsonTree, version -> migrate(jsonTree, version) }
         config = loadConfig<Config>()
