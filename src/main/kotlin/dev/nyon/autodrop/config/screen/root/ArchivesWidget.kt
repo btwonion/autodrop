@@ -1,4 +1,4 @@
-package dev.nyon.autodrop.config.screen
+package dev.nyon.autodrop.config.screen.root
 
 import dev.nyon.autodrop.config.Archive
 import dev.nyon.autodrop.config.config
@@ -12,11 +12,7 @@ import kotlin.time.Duration.Companion.milliseconds
 import dev.nyon.autodrop.minecraft as internalMinecraft
 
 class ArchivesWidget(private val archiveScreen: ArchiveScreen) : ObjectSelectionList<ArchivesWidgetEntry>(
-    internalMinecraft,
-    0,
-    0,
-    OUTER_PAD,
-    internalMinecraft.font.lineHeight + 2 * INNER_PAD
+    internalMinecraft, 0, 0, OUTER_PAD, internalMinecraft.font.lineHeight + 2 * INNER_PAD
 ) {
     override fun getX(): Int {
         return OUTER_PAD
@@ -40,7 +36,7 @@ class ArchivesWidget(private val archiveScreen: ArchiveScreen) : ObjectSelection
 
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
         width = (internalMinecraft.screen!!.width / 4) - 2 * OUTER_PAD
-        height = internalMinecraft.screen!!.height - 3 * OUTER_PAD - 9 - 4 * 20
+        height = internalMinecraft.screen!!.height - 3 * OUTER_PAD - 12 - 5 * 20
         super.renderWidget(guiGraphics, i, j, f)
     }
 
@@ -51,7 +47,8 @@ class ArchivesWidget(private val archiveScreen: ArchiveScreen) : ObjectSelection
     }
 }
 
-class ArchivesWidgetEntry(private val archive: Archive, private val archiveScreen: ArchiveScreen) : ObjectSelectionList.Entry<ArchivesWidgetEntry>() {
+class ArchivesWidgetEntry(private val archive: Archive, private val archiveScreen: ArchiveScreen) :
+    ObjectSelectionList.Entry<ArchivesWidgetEntry>() {
     override fun render(
         guiGraphics: GuiGraphics,
         index: Int,
@@ -64,7 +61,9 @@ class ArchivesWidgetEntry(private val archive: Archive, private val archiveScree
         isSelected: Boolean,
         delta: Float
     ) {
-        if (archiveScreen.selected.name == archive.name) guiGraphics.fill(x - 3, y - 2, x + width - 2, y + height + 2, 0xFF404040.toInt())
+        if (archiveScreen.selected.name == archive.name) guiGraphics.fill(
+            x - 3, y - 2, x + width - 2, y + height + 2, 0xFF404040.toInt()
+        )
 
         // Draw archive name
         val hundredPercentAlphaWhite = 0xFFFFFFFF.toInt()

@@ -1,7 +1,8 @@
-package dev.nyon.autodrop.config.screen
+package dev.nyon.autodrop.config.screen.root
 
 import dev.nyon.autodrop.config.Archive
-import dev.nyon.autodrop.config.ItemIdentificator
+import dev.nyon.autodrop.config.ItemIdentifier
+import dev.nyon.autodrop.config.screen.modify.ModifyIdentifierScreen
 import dev.nyon.autodrop.extensions.screenComponent
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.Button
@@ -14,9 +15,10 @@ import net.minecraft.world.item.Items
 import kotlin.math.max
 import dev.nyon.autodrop.minecraft as internalMinecraft
 
-class ArchiveItemsWidget(var archive: Archive) : ObjectSelectionList<ArchiveItemEntry>(
-    internalMinecraft, 0, 0, OUTER_PAD, 20 + 2 * INNER_PAD
-) {
+class ArchiveItemsWidget(var archive: Archive, private val parent: ArchiveScreen) :
+    ObjectSelectionList<ArchiveItemEntry>(
+        internalMinecraft, 0, 0, OUTER_PAD, 20 + 2 * INNER_PAD
+    ) {
     override fun getX(): Int {
         return internalMinecraft.screen!!.width / 4 + OUTER_PAD
     }
@@ -47,7 +49,7 @@ class ArchiveItemsWidget(var archive: Archive) : ObjectSelectionList<ArchiveItem
         scrollAmount = 0.0
         clearEntries()
         archive.entries.map {
-            ArchiveItemEntry(it) {
+            ArchiveItemEntry(it, parent) {
                 archive.entries.remove(it)
                 refreshEntries()
             }
@@ -55,9 +57,10 @@ class ArchiveItemsWidget(var archive: Archive) : ObjectSelectionList<ArchiveItem
     }
 }
 
-class ArchiveItemEntry(private val itemIdentificatior: ItemIdentificator, private val onRemove: () -> Unit) :
-    ObjectSelectionList.Entry<ArchiveItemEntry>() {
-    private val item: Item = itemIdentificatior.type ?: Items.AIR
+class ArchiveItemEntry(
+    private val itemIdentifier: ItemIdentifier, private val parent: ArchiveScreen, private val onRemove: () -> Unit
+) : ObjectSelectionList.Entry<ArchiveItemEntry>() {
+    private val item: Item = itemIdentifier.type ?: Items.AIR
     private val itemLocationString = BuiltInRegistries.ITEM.getKey(item).run {
         val string = toString()
         if (string.length > 20) return@run "${string.take(17)}..."
@@ -69,7 +72,7 @@ class ArchiveItemEntry(private val itemIdentificatior: ItemIdentificator, privat
     }.width(75).build()
 
     private val modifyButton = Button.builder(screenComponent("widget.items.modify")) {
-        // TODO: open modify screen
+        internalMinecraft.setScreen(ModifyIdentifierScreen(parent, itemIdentifier))
     }.width(75).build()
 
     override fun render(
@@ -93,14 +96,14 @@ class ArchiveItemEntry(private val itemIdentificatior: ItemIdentificator, privat
         val twentyCharacterWidth = internalMinecraft.font.width(Component.literal("minecraft:chestplate")) * 2
         guiGraphics.drawCenteredString(
             internalMinecraft.font,
-            screenComponent("widget.items.component.${!itemIdentificatior.components.isEmpty}"),
+            screenComponent("widget.items.component.${!itemIdentifier.components.isEmpty}"),
             x + INNER_PAD * 3 + twentyCharacterWidth,
             y + textPad,
             0xFFFFFF
         )
         guiGraphics.drawString(
             internalMinecraft.font,
-            screenComponent("widget.items.amount", itemIdentificatior.amount.toString()),
+            screenComponent("widget.items.amount", itemIdentifier.amount.toString()),
             x + INNER_PAD * 4 + (twentyCharacterWidth * 1.5).toInt(),
             y + textPad,
             0xFFFFFF

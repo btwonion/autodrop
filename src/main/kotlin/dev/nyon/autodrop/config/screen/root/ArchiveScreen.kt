@@ -1,13 +1,18 @@
-package dev.nyon.autodrop.config.screen
+package dev.nyon.autodrop.config.screen.root
 
 import dev.nyon.autodrop.config.Archive
+import dev.nyon.autodrop.config.ItemIdentifier
 import dev.nyon.autodrop.config.config
+import dev.nyon.autodrop.config.screen.create.CreateArchiveScreen
+import dev.nyon.autodrop.config.screen.ignored.IgnoredSlotsScreen
+import dev.nyon.autodrop.config.screen.modify.ModifyIdentifierScreen
 import dev.nyon.autodrop.extensions.screenComponent
 import dev.nyon.konfig.config.saveConfig
 import net.minecraft.ChatFormatting
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.screens.Screen
+import net.minecraft.core.component.DataComponentPatch
 import dev.nyon.autodrop.minecraft as internalMinecraft
 
 const val INNER_PAD = 5
@@ -21,31 +26,45 @@ class ArchiveScreen(private val parent: Screen?) : Screen(screenComponent("title
         it.refreshEntries()
     }
 
-    private val archiveItemsWidget = ArchiveItemsWidget(selected).also {
+    val archiveItemsWidget = ArchiveItemsWidget(selected, this@ArchiveScreen).also {
         addWidget(it)
         it.refreshEntries()
     }
 
     private val doneButton = Button.builder(screenComponent("done")) {
         onClose()
-    }.width(internalMinecraft.screen!!.width / 4 - 2 * OUTER_PAD).build().also { addWidget(it) }
+    }.build().also { addWidget(it) }
 
     private val setIgnoredSlotsButton = Button.builder(screenComponent("ignored")) {
-        // TODO: open ignored slots screen
-    }.width(internalMinecraft.screen!!.width / 4 - 2 * OUTER_PAD).build().also { addWidget(it) }
+        internalMinecraft.setScreen(IgnoredSlotsScreen(selected, this@ArchiveScreen))
+    }.build().also { addWidget(it) }
 
     private val createArchiveButton = Button.builder(screenComponent("create")) {
-        // TODO: open create archive screen
-    }.width(internalMinecraft.screen!!.width / 4 - 2 * OUTER_PAD).build().also { addWidget(it) }
+        internalMinecraft.setScreen(CreateArchiveScreen(this@ArchiveScreen) {
+            archivesWidget.refreshEntries()
+            select(it)
+        })
+    }.build().also { addWidget(it) }
 
     private val deleteArchiveButton = Button.builder(screenComponent("delete").withStyle(ChatFormatting.DARK_RED)) {
         config.archives.remove(selected)
         selected = config.archives.first()
         archivesWidget.refreshEntries()
-    }.width(internalMinecraft.screen!!.width / 4 - 2 * OUTER_PAD).build().also { addWidget(it) }
+    }.build().also { addWidget(it) }
+
+    private val addIdentifierButton = Button.builder(screenComponent("identifier")) {
+        val newIdentifier = ItemIdentifier(null, DataComponentPatch.EMPTY, 1)
+
+        selected.entries.add(newIdentifier)
+        internalMinecraft.setScreen(
+            ModifyIdentifierScreen(
+                this@ArchiveScreen, newIdentifier
+            )
+        )
+    }.build().also { addWidget(it) }
 
     override fun onClose() {
-        minecraft!!.setScreen(parent)
+        internalMinecraft.setScreen(parent)
         saveConfig(config)
     }
 
@@ -79,6 +98,21 @@ class ArchiveScreen(private val parent: Screen?) : Screen(screenComponent("title
         deleteArchiveButton.setPosition(OUTER_PAD, internalMinecraft.screen!!.height - OUTER_PAD - 4 * 20 - 9)
         deleteArchiveButton.width = internalMinecraft.screen!!.width / 4 - 2 * OUTER_PAD
         deleteArchiveButton.render(guiGraphics, mouseX, mouseY, tickDelta)
+
+        addIdentifierButton.setPosition(OUTER_PAD, internalMinecraft.screen!!.height - OUTER_PAD - 5 * 20 - 12)
+        addIdentifierButton.width = internalMinecraft.screen!!.width / 4 - 2 * OUTER_PAD
+        addIdentifierButton.render(guiGraphics, mouseX, mouseY, tickDelta)
+    }
+
+    override fun rebuildWidgets() {
+        super.rebuildWidgets()
+        addWidget(archivesWidget)
+        addWidget(archiveItemsWidget)
+        addWidget(doneButton)
+        addWidget(setIgnoredSlotsButton)
+        addWidget(createArchiveButton)
+        addWidget(deleteArchiveButton)
+        addWidget(addIdentifierButton)
     }
 
     fun select(archive: Archive) {

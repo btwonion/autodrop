@@ -13,7 +13,6 @@ import net.minecraft.core.component.DataComponentPatch
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.data.registries.VanillaRegistries
 import net.minecraft.nbt.NbtOps
-import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.Item
 import kotlin.jvm.optionals.getOrNull
 
@@ -21,7 +20,7 @@ object ItemSerializer : KSerializer<Item> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("item", PrimitiveKind.STRING)
 
     override fun deserialize(decoder: Decoder): Item {
-        val resourceLocation = /*? if >=1.21 {*/ ResourceLocation.parse(decoder.decodeString()) /*?} else {*/ /*ResourceLocation(decoder.decodeString()) *//*?}*/
+        val resourceLocation = resourceLocation(decoder.decodeString())
         return BuiltInRegistries.ITEM.get(resourceLocation)
     }
 
@@ -39,22 +38,31 @@ object DataComponentPatchSerializer : KSerializer<DataComponentPatch> {
     private val itemParser = ItemParser(registryAccess)
     private val dynamicOps = registryAccess.createSerializationContext(NbtOps.INSTANCE)
 
-    override fun deserialize(decoder: Decoder): DataComponentPatch {
-        val decoded = decoder.decodeString()
+    fun toPatch(decoded: String): DataComponentPatch {
         val correctString = if (decoded.startsWith('[')) "stone$decoded" else decoded
         val result = itemParser.parse(StringReader(correctString))
         return result.components
     }
 
     @Suppress("UNCHECKED_CAST")
-    override fun serialize(encoder: Encoder, value: DataComponentPatch) {
-        val stringMap = value.entrySet().mapNotNull { (type, value) ->
+    fun toString(patch: DataComponentPatch): String {
+        val stringMap = patch.entrySet().mapNotNull { (type, value) ->
             val resourceLocation = BuiltInRegistries.DATA_COMPONENT_TYPE.getKey(type)
-            val encoded = (type.codec() as? com.mojang.serialization.Encoder<Any>)?.encodeStart(dynamicOps, value.orElseThrow())?.result()?.getOrNull()
+            val encoded =
+                (type.codec() as? com.mojang.serialization.Encoder<Any>)?.encodeStart(dynamicOps, value.orElseThrow())
+                    ?.result()?.getOrNull()
             return@mapNotNull if (resourceLocation == null || encoded == null) null
             else "$resourceLocation=$encoded"
         }
+        return stringMap.toString()
+    }
 
-        encoder.encodeString(stringMap.toString())
+    override fun deserialize(decoder: Decoder): DataComponentPatch {
+        val decoded = decoder.decodeString()
+        return toPatch(decoded)
+    }
+
+    override fun serialize(encoder: Encoder, value: DataComponentPatch) {
+        encoder.encodeString(toString(value))
     }
 }

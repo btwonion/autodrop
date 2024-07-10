@@ -2,6 +2,7 @@ package dev.nyon.autodrop.config.screen
 
 import dev.isxander.yacl3.dsl.*
 import dev.nyon.autodrop.config.config
+import dev.nyon.autodrop.config.screen.root.ArchiveScreen
 import dev.nyon.autodrop.minecraft
 import dev.nyon.konfig.config.saveConfig
 import net.minecraft.client.gui.screens.Screen
