@@ -1,1 +1,2 @@
-- fix config screen on 1.20.6
+- add new ui for configuring the archives
+- now support nbt/component filters and filter for amounts
