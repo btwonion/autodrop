@@ -3,6 +3,7 @@ package dev.nyon.autodrop.config.screen.root
 import dev.nyon.autodrop.config.Archive
 import dev.nyon.autodrop.config.ItemIdentifier
 import dev.nyon.autodrop.config.config
+import dev.nyon.autodrop.config.reloadArchiveProperties
 import dev.nyon.autodrop.config.screen.create.CreateArchiveScreen
 import dev.nyon.autodrop.config.screen.ignored.IgnoredSlotsScreen
 import dev.nyon.autodrop.config.screen.modify.ModifyIdentifierScreen
@@ -66,6 +67,7 @@ class ArchiveScreen(private val parent: Screen?) : Screen(screenComponent("title
     override fun onClose() {
         internalMinecraft.setScreen(parent)
         saveConfig(config)
+        reloadArchiveProperties()
     }
 
     override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, tickDelta: Float) {
