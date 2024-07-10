@@ -20,4 +20,4 @@ part (enclosed by `{}` or `[]`).
 
 ### Other
 
-If you need help with any of my mods just join my [discord server](https://nyon.dev/discord)
+If you need help with any of my mods just join my [discord server](https://nyon.dev/discord).
