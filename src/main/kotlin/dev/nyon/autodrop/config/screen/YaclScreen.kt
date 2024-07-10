@@ -2,6 +2,7 @@ package dev.nyon.autodrop.config.screen
 
 import dev.isxander.yacl3.dsl.*
 import dev.nyon.autodrop.config.config
+import dev.nyon.autodrop.config.reloadArchiveProperties
 import dev.nyon.autodrop.config.screen.root.ArchiveScreen
 import dev.nyon.autodrop.minecraft
 import dev.nyon.konfig.config.saveConfig
@@ -55,24 +56,11 @@ fun createYaclScreen(parent: Screen? = null): Screen = YetAnotherConfigLib("auto
                     addDefaultText(1)
                 }
             }
-
-            val jump by options.registering {
-                binding(false, { config.triggerConfig.onJump }, { config.triggerConfig.onJump = it })
-                controller = tickBox()
-                descriptionBuilder {
-                    addDefaultText(1)
-                }
-            }
-
-            val switch by options.registering {
-                binding(false, { config.triggerConfig.onSlotSwitch }, { config.triggerConfig.onSlotSwitch = it })
-                controller = tickBox()
-                descriptionBuilder {
-                    addDefaultText(1)
-                }
-            }
         }
     }
 
-    save { saveConfig(config) }
+    save {
+        saveConfig(config)
+        reloadArchiveProperties()
+    }
 }.generateScreen(parent)

@@ -27,16 +27,11 @@ data class Config(
  *
  * @param onPickup defines whether the inventory should be cleared on item pickups.
  * @param onSneak defines whether the inventory should be cleared on sneak.
- * @param onJump defines whether the inventory should be cleared on jump.
- * @param onSlotSwitch defines whether the inventory should be cleared on slot switch in the hotbar.
  */
-@Suppress("SpellCheckingInspection")
 @Serializable
 data class TriggerConfig(
     var onPickup: Boolean = true,
-    var onSneak: Boolean = false,
-    var onJump: Boolean = false,
-    var onSlotSwitch: Boolean = false
+    var onSneak: Boolean = false
 )
 
 /**

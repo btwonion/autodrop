@@ -42,9 +42,5 @@
     "yacl3.config.autodrop.category.general.group.triggers.option.pick": "On Item Pickup",
     "yacl3.config.autodrop.category.general.group.triggers.option.pick.description": "Toggles whether the autodrop function should run when picking up an item.",
     "yacl3.config.autodrop.category.general.group.triggers.option.sneak": "On Sneak",
-    "yacl3.config.autodrop.category.general.group.triggers.option.sneak.description": "Toggles whether the autodrop function should run when sneaking.",
-    "yacl3.config.autodrop.category.general.group.triggers.option.jump": "On Jump",
-    "yacl3.config.autodrop.category.general.group.triggers.option.jump.description": "Toggles whether the autodrop function should run when jumping.",
-    "yacl3.config.autodrop.category.general.group.triggers.option.switch": "On Slot Switch",
-    "yacl3.config.autodrop.category.general.group.triggers.option.switch.description": "Toggles whether the autodrop function should run when switching an hotbar slot."
+    "yacl3.config.autodrop.category.general.group.triggers.option.sneak.description": "Toggles whether the autodrop function should run when sneaking."
 }

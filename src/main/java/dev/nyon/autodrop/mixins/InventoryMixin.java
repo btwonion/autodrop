@@ -40,17 +40,4 @@ public class InventoryMixin {
             .getTriggerConfig()
             .getOnPickup()) AutoDrop.INSTANCE.invokeAutodrop();
     }
-
-    @Inject(
-        method = "pickSlot",
-        at = @At(value = "RETURN")
-    )
-    public void invokeOnSlotSwitch(
-        int i,
-        CallbackInfo ci
-    ) {
-        if (ConfigHandlerKt.getConfig()
-            .getTriggerConfig()
-            .getOnSlotSwitch()) AutoDrop.INSTANCE.invokeAutodrop();
-    }
 }
