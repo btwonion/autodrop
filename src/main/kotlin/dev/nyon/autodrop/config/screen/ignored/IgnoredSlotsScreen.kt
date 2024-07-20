@@ -59,7 +59,7 @@ class IgnoredSlotsScreen(private val archive: Archive, private val parent: Scree
         ignoredSlotsEditBox.render(guiGraphics, mouseX, mouseY, tickDelta)
 
         // render image
-        val imageLocation = resourceLocation("autodrop:image/inventory-slots.png")
+        val imageLocation = resourceLocation("autodrop:image/inventory-slots.png") ?: error("Failed to load inventory slot guide image.")
         RenderSystem.setShader(GameRenderer::getPositionTexShader)
         RenderSystem.setShaderTexture(0, imageLocation)
         RenderSystem.enableBlend()
