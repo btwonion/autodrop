@@ -3,6 +3,8 @@ package dev.nyon.autodrop.config.screen.modify
 import dev.nyon.autodrop.config.ItemIdentifier
 import dev.nyon.autodrop.config.config
 import dev.nyon.autodrop.config.screen.root.ArchiveScreen
+import dev.nyon.autodrop.config.screen.root.INNER_PAD
+import dev.nyon.autodrop.config.screen.root.OUTER_PAD
 import dev.nyon.autodrop.extensions.DataComponentPatchSerializer
 import dev.nyon.autodrop.extensions.resourceLocation
 import dev.nyon.autodrop.extensions.screenComponent
@@ -28,7 +30,6 @@ class ModifyIdentifierScreen(private val parent: ArchiveScreen, private val item
     private val lastIndex: Instant = Clock.System.now()
     private val itemEditBox: EditBox =
         EditBox(internalMinecraft.font, 0, 0, 20, 20, screenComponent("modify.empty")).also {
-            addWidget(it)
             it.onClick(10.0, 10.0)
             it.setResponder { input ->
                 val now = Clock.System.now()
@@ -44,7 +45,6 @@ class ModifyIdentifierScreen(private val parent: ArchiveScreen, private val item
 
     private val componentsEditBox: EditBox =
         EditBox(internalMinecraft.font, 0, 0, 20, 20, screenComponent("modify.empty")).also {
-            addWidget(it)
             it.onClick(10.0, 10.0)
             it.setMaxLength(300)
             it.value = DataComponentPatchSerializer.toString(itemIdentifier.components)
@@ -54,7 +54,6 @@ class ModifyIdentifierScreen(private val parent: ArchiveScreen, private val item
 
     private val amountEditBox: EditBox =
         EditBox(internalMinecraft.font, 0, 0, 20, 20, screenComponent("modify.empty")).also {
-            addWidget(it)
             it.onClick(10.0, 10.0)
             it.setMaxLength(2)
             it.value = itemIdentifier.amount.toString()
@@ -70,69 +69,76 @@ class ModifyIdentifierScreen(private val parent: ArchiveScreen, private val item
         itemIdentifier.type = this@item
         itemEditBox.value = BuiltInRegistries.ITEM.getKey(this@item).toString()
     }.also {
-        addWidget(it)
         it.refreshEntries()
     }
 
     private val doneButton = Button.builder(screenComponent("done")) {
         onClose()
-    }.build().also { addWidget(it) }
+    }.build()
 
-    override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, tickDelta: Float) {
-        renderBackground(guiGraphics, mouseX, mouseY, tickDelta)
+    override fun init() {
+        addRenderableWidget(itemEditBox)
+        addRenderableWidget(componentsEditBox)
+        addRenderableWidget(amountEditBox)
+        addRenderableWidget(itemListWidget)
+        addRenderableWidget(doneButton)
+        super.init()
+    }
+
+    override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, tickDelta: Float) { // render item edit box
+        itemEditBox.setPosition(
+            internalMinecraft.screen!!.width / 4,
+            OUTER_PAD + INNER_PAD + internalMinecraft.font.lineHeight
+        )
+        itemEditBox.width = internalMinecraft.screen!!.width / 2
+
+        componentsEditBox.setPosition(
+            internalMinecraft.screen!!.width / 4,
+            OUTER_PAD * 2 + INNER_PAD * 3 + internalMinecraft.font.lineHeight * 2 + 20 + internalMinecraft.screen!!.height / 6
+        )
+        componentsEditBox.width = internalMinecraft.screen!!.width / 2
+
+        amountEditBox.setPosition(
+            internalMinecraft.screen!!.width / 4,
+            OUTER_PAD * 3 + INNER_PAD * 4 + internalMinecraft.font.lineHeight * 3 + 20 * 2 + internalMinecraft.screen!!.height / 6
+        )
+        amountEditBox.width = internalMinecraft.screen!!.width / 2
+
+        // render done button
+        doneButton.setPosition(
+            internalMinecraft.screen!!.width / 3,
+            internalMinecraft.screen!!.height - OUTER_PAD - doneButton.height
+        )
+        doneButton.width = internalMinecraft.screen!!.width / 3
+        doneButton.active = matcher()
+        super.render(guiGraphics, mouseX, mouseY, tickDelta)
 
         // render description
         guiGraphics.drawCenteredString(
             internalMinecraft.font,
             screenComponent("modify.item.description"),
             internalMinecraft.screen!!.width / 2,
-            internalMinecraft.screen!!.height / 10,
+            OUTER_PAD,
             0xFFFFFF
         )
-
-        // render item edit box
-        itemEditBox.setPosition(internalMinecraft.screen!!.width / 3, internalMinecraft.screen!!.height / 8)
-        itemEditBox.width = internalMinecraft.screen!!.width / 3
-        itemEditBox.render(guiGraphics, mouseX, mouseY, tickDelta)
-
-        // render item list if edit box is selected
-        itemListWidget.render(guiGraphics, mouseX, mouseY, tickDelta)
 
         // render components text and edit box
         guiGraphics.drawCenteredString(
             internalMinecraft.font,
             screenComponent("modify.components.description"),
             internalMinecraft.screen!!.width / 2,
-            (internalMinecraft.screen!!.height * .4).toInt(),
+            OUTER_PAD * 2 + INNER_PAD * 2 + internalMinecraft.font.lineHeight + 20 + internalMinecraft.screen!!.height / 6,
             0xFFFFFF
         )
-
-        componentsEditBox.setPosition(
-            internalMinecraft.screen!!.width / 3, (internalMinecraft.screen!!.height * .45).toInt()
-        )
-        componentsEditBox.width = internalMinecraft.screen!!.width / 3
-        componentsEditBox.render(guiGraphics, mouseX, mouseY, tickDelta)
 
         // render amount text and edit box
         guiGraphics.drawCenteredString(
             internalMinecraft.font,
             screenComponent("modify.amount.description"),
             internalMinecraft.screen!!.width / 2,
-            (internalMinecraft.screen!!.height * .575).toInt(),
+            OUTER_PAD * 3 + INNER_PAD * 3 + internalMinecraft.font.lineHeight * 2 + 20 * 2 + internalMinecraft.screen!!.height / 6,
             0xFFFFFF
         )
-
-        amountEditBox.setPosition(
-            internalMinecraft.screen!!.width / 3, (internalMinecraft.screen!!.height * .625).toInt()
-        )
-        amountEditBox.width = internalMinecraft.screen!!.width / 3
-        amountEditBox.render(guiGraphics, mouseX, mouseY, tickDelta)
-
-        // render done button
-        doneButton.setPosition(internalMinecraft.screen!!.width / 3, (internalMinecraft.screen!!.height * .8).toInt())
-        doneButton.width = internalMinecraft.screen!!.width / 3
-        doneButton.render(guiGraphics, mouseX, mouseY, tickDelta)
-        doneButton.active = matcher()
     }
 
     override fun shouldCloseOnEsc(): Boolean {

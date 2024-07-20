@@ -22,11 +22,10 @@ import net.minecraft.network.chat.Style
 import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.inventory.ClickType
 import net.minecraft.world.item.Item
-import org.lwjgl.glfw.GLFW
-import kotlin.time.Duration.Companion.milliseconds
-
 //? if >=1.20.5
 import net.minecraft.world.item.enchantment.ItemEnchantments
+import org.lwjgl.glfw.GLFW
+import kotlin.time.Duration.Companion.milliseconds
 
 lateinit var mcScope: CoroutineScope
 lateinit var minecraft: Minecraft
@@ -73,7 +72,9 @@ object AutoDrop : ClientModInitializer {
                     val typeValid = identifier.type == null || itemStack.item == identifier.type
                     val amountValid = itemStack.count >= identifier.amount
 
-                    /*? if >=1.21 {*/val componentValid =
+                    /*? if >=1.21 {*/
+                    
+                    val componentValid =
                         identifier.components.isEmpty || identifier.components.entrySet().all { (key, component) ->
                             val identifierComponent = component.get()
                             val itemComponent = itemStack.get(key) ?: return@all false
@@ -88,7 +89,8 @@ object AutoDrop : ClientModInitializer {
 
                             itemComponent == identifierComponent
                         }
-                    /*?} else if >=1.20.5 {*//*val componentValid = identifier.components.isEmpty || identifier.components.all { component ->
+                    /*?} else if >=1.20.5 {*/
+                    /*val componentValid = identifier.components.isEmpty || identifier.components.all { component ->
                         val identifierComponent = component.value
                         val itemComponent = itemStack.get(component.type) ?: return@all false
 
@@ -102,12 +104,12 @@ object AutoDrop : ClientModInitializer {
 
                         itemComponent == identifierComponent
                     }
-
-                    *//*?} else {*/
-                    /*val componentValid = identifier.components.allKeys.all { key ->
+                    *//*?} else {*//*
+                    val componentValid = identifier.components.allKeys.all { key ->
                         if (itemStack.tag == null) return@all false
                         itemStack.tag!!.get(key) == identifier.components.get(key)
-                    }*//*?}*/
+                    }
+                    *//*?}*/
                     typeValid && amountValid && componentValid
                 }
 

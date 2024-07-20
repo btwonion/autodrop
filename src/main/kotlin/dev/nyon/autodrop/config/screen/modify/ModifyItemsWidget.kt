@@ -1,6 +1,7 @@
 package dev.nyon.autodrop.config.screen.modify
 
 import dev.nyon.autodrop.config.screen.root.INNER_PAD
+import dev.nyon.autodrop.config.screen.root.OUTER_PAD
 import dev.nyon.autodrop.extensions.screenComponent
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.Button
@@ -10,14 +11,15 @@ import net.minecraft.network.chat.Component
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import kotlin.math.max
+import kotlin.math.min
 import dev.nyon.autodrop.minecraft as internalMinecraft
 
 class ModifyItemsWidget(var input: String, private val onSelect: Item.() -> Unit) :
     ObjectSelectionList<ModifyItemsEntry>(
-        internalMinecraft, 0, 0, 0, 20 + 2 * INNER_PAD
+        internalMinecraft, 0, 0, 0, internalMinecraft.font.lineHeight + 2 * INNER_PAD
     ) {
     override fun getX(): Int {
-        return internalMinecraft.screen!!.width / 3
+        return internalMinecraft.screen!!.width / 4
     }
 
     override fun getRowLeft(): Int {
@@ -37,9 +39,9 @@ class ModifyItemsWidget(var input: String, private val onSelect: Item.() -> Unit
     }
 
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
-        width = internalMinecraft.screen!!.width / 3
+        width = internalMinecraft.screen!!.width / 2
         height = internalMinecraft.screen!!.height / 6
-        y = internalMinecraft.screen!!.height / 6 + 2 * INNER_PAD + internalMinecraft.font.lineHeight
+        y = OUTER_PAD + INNER_PAD * 2 + internalMinecraft.font.lineHeight + 20
         super.renderWidget(guiGraphics, i, j, f)
     }
 
@@ -84,13 +86,17 @@ class ModifyItemsEntry(private val item: Item, private val onSelect: () -> Unit)
         isSelected: Boolean,
         delta: Float
     ) {
-        val textPad = 7
-        guiGraphics.renderItem(ItemStack(item), x + INNER_PAD, y + 4)
+        guiGraphics.renderItem(ItemStack(item), x + INNER_PAD, y - 1)
         guiGraphics.drawString(
-            internalMinecraft.font, itemLocationString, x + INNER_PAD * 2 + height, y + textPad, 0xFFFFFF
+            internalMinecraft.font,
+            itemLocationString,
+            x + INNER_PAD + internalMinecraft.font.lineHeight * 2,
+            y + height / 2 - internalMinecraft.font.lineHeight / 2,
+            0xFFFFFF
         )
 
-        selectButton.setPosition(x + width - selectButton.width, y)
+        selectButton.height = min(20, internalMinecraft.screen!!.height / 15)
+        selectButton.setPosition(x + width - selectButton.width - INNER_PAD, y + height / 2 - selectButton.height / 2)
         selectButton.render(guiGraphics, mouseX, mouseY, delta)
     }
 

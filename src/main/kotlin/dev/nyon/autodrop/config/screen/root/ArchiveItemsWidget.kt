@@ -17,7 +17,7 @@ import dev.nyon.autodrop.minecraft as internalMinecraft
 
 class ArchiveItemsWidget(var archive: Archive, private val parent: ArchiveScreen) :
     ObjectSelectionList<ArchiveItemEntry>(
-        internalMinecraft, 0, 0, OUTER_PAD, 20 + 2 * INNER_PAD
+        internalMinecraft, 0, 0, OUTER_PAD, internalMinecraft.font.lineHeight * 3 + 4 * INNER_PAD
     ) {
     override fun getX(): Int {
         return internalMinecraft.screen!!.width / 4 + OUTER_PAD
@@ -63,7 +63,7 @@ class ArchiveItemEntry(
     private val item: Item = itemIdentifier.type ?: Items.AIR
     private val itemLocationString = BuiltInRegistries.ITEM.getKey(item).run {
         val string = toString()
-        if (string.length > 20) return@run "${string.take(17)}..."
+        if (string.length > 25) return@run "${string.take(22)}..."
         else return@run string
     }
 
@@ -87,31 +87,33 @@ class ArchiveItemEntry(
         isSelected: Boolean,
         delta: Float
     ) {
-        val textPad = 7
-        guiGraphics.renderItem(ItemStack(item), x + INNER_PAD, y + 4)
+        val textX = x + internalMinecraft.font.lineHeight * 3 + INNER_PAD
+        guiGraphics.renderItem(ItemStack(item), x + INNER_PAD, y + INNER_PAD + internalMinecraft.font.lineHeight)
         guiGraphics.drawString(
-            internalMinecraft.font, itemLocationString, x + INNER_PAD * 2 + height, y + textPad, 0xFFFFFF
+            internalMinecraft.font, itemLocationString, textX, y + INNER_PAD, 0xFFFFFF
         )
 
-        val twentyCharacterWidth = internalMinecraft.font.width(Component.literal("minecraft:chestplate")) * 2
-        guiGraphics.drawCenteredString(
+        guiGraphics.drawString(
             internalMinecraft.font,
             screenComponent("widget.items.component.${!itemIdentifier.components.isEmpty}"),
-            x + INNER_PAD * 3 + twentyCharacterWidth,
-            y + textPad,
+            textX,
+            y + internalMinecraft.font.lineHeight + INNER_PAD * 2,
             0xFFFFFF
         )
         guiGraphics.drawString(
             internalMinecraft.font,
             screenComponent("widget.items.amount", itemIdentifier.amount.toString()),
-            x + INNER_PAD * 4 + (twentyCharacterWidth * 1.5).toInt(),
-            y + textPad,
+            textX,
+            y + internalMinecraft.font.lineHeight * 2 + INNER_PAD * 3,
             0xFFFFFF
         )
 
-        removeButton.setPosition(x + width - removeButton.width, y)
+        removeButton.setPosition(x + width - removeButton.width - INNER_PAD, y + height / 2 - 10)
         removeButton.render(guiGraphics, mouseX, mouseY, delta)
-        modifyButton.setPosition(x + width - removeButton.width - (INNER_PAD * 0.5).toInt() - modifyButton.width, y)
+        modifyButton.setPosition(
+            x + width - removeButton.width - INNER_PAD * 2 - modifyButton.width,
+            y + height / 2 - 10
+        )
         modifyButton.render(guiGraphics, mouseX, mouseY, delta)
     }
 

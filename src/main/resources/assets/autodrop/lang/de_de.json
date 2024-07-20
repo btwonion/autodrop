@@ -22,7 +22,6 @@
     "menu.autodrop.screen.modify.item.description": "Wähle das Item aus, welches du filtern willst (optional)",
     "menu.autodrop.screen.modify.items.select": "Auswählen",
     "menu.autodrop.screen.modify.title": "Neue Liste erstellen",
-    "menu.autodrop.screen.noitems": "Es konnten keine Identifikatoren in dieser Liste gefunden werden.",
     "menu.autodrop.screen.title": "AutoDrop",
     "menu.autodrop.screen.widget.items.amount": "Mindestanzahl: %d",
     "menu.autodrop.screen.widget.items.component.false": "Komponenten Filter: No",

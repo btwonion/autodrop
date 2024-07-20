@@ -1,2 +1,3 @@
-- add new ui for configuring the archives
-- now support nbt/component filters and filter for amounts
+- fix crash on invalid character in item name
+- fix wrong filter in archive creation edit box
+- provide better screen compatibility for smaller screens

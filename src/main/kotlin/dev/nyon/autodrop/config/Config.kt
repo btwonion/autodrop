@@ -30,8 +30,7 @@ data class Config(
  */
 @Serializable
 data class TriggerConfig(
-    var onPickup: Boolean = true,
-    var onSneak: Boolean = false
+    var onPickup: Boolean = true, var onSneak: Boolean = false
 )
 
 /**

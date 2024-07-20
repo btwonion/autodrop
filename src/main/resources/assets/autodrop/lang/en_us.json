@@ -3,7 +3,6 @@
     "menu.autodrop.overlay.disabled": "disabled",
     "menu.autodrop.name": "AutoDrop",
     "menu.autodrop.screen.title": "AutoDrop",
-    "menu.autodrop.screen.noitems": "No items found in this archive.",
     "menu.autodrop.screen.done": "Done",
     "menu.autodrop.screen.ignored": "Set ignored slots",
     "menu.autodrop.screen.create": "Create archive",

@@ -3,6 +3,8 @@ package dev.nyon.autodrop.config.screen.ignored
 import com.mojang.blaze3d.systems.RenderSystem
 import dev.nyon.autodrop.config.Archive
 import dev.nyon.autodrop.config.config
+import dev.nyon.autodrop.config.screen.root.INNER_PAD
+import dev.nyon.autodrop.config.screen.root.OUTER_PAD
 import dev.nyon.autodrop.extensions.resourceLocation
 import dev.nyon.autodrop.extensions.screenComponent
 import dev.nyon.konfig.config.saveConfig
@@ -12,8 +14,6 @@ import net.minecraft.client.gui.components.EditBox
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.renderer.GameRenderer
 import dev.nyon.autodrop.minecraft as internalMinecraft
-
-private const val IMAGE_SIZE = 254
 
 class IgnoredSlotsScreen(private val archive: Archive, private val parent: Screen?) :
     Screen(screenComponent("ignored.title")) {
@@ -28,7 +28,6 @@ class IgnoredSlotsScreen(private val archive: Archive, private val parent: Scree
 
     private val ignoredSlotsEditBox =
         EditBox(internalMinecraft.font, 0, 0, 20, 20, screenComponent("ignored.empty")).also {
-            addWidget(it)
             it.value = archive.ignoredSlots.joinToString(separator = ",") { input -> input.toString() }
             it.setMaxLength(136)
             it.setFilter(matcher)
@@ -39,27 +38,44 @@ class IgnoredSlotsScreen(private val archive: Archive, private val parent: Scree
 
     private val doneButton = Button.builder(screenComponent("done")) {
         onClose()
-    }.build().also { addWidget(it) }
+    }.build()
+
+    override fun init() {
+        addRenderableWidget(ignoredSlotsEditBox)
+        addRenderableWidget(doneButton)
+        super.init()
+    }
 
     override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, tickDelta: Float) {
-        renderBackground(guiGraphics, mouseX, mouseY, tickDelta)
+        ignoredSlotsEditBox.setPosition(
+            internalMinecraft.screen!!.width / 4,
+            OUTER_PAD + INNER_PAD + internalMinecraft.font.lineHeight
+        )
+        ignoredSlotsEditBox.width = internalMinecraft.screen!!.width / 2
+
+        doneButton.setPosition(
+            internalMinecraft.screen!!.width / 3,
+            internalMinecraft.screen!!.height - OUTER_PAD - doneButton.height
+        )
+        doneButton.width = internalMinecraft.screen!!.width / 3
+        doneButton.active = matcher(ignoredSlotsEditBox.value)
+
+        super.render(guiGraphics, mouseX, mouseY, tickDelta)
 
         // render description
         guiGraphics.drawCenteredString(
             internalMinecraft.font,
             screenComponent("ignored.description"),
             internalMinecraft.screen!!.width / 2,
-            internalMinecraft.screen!!.height / 6,
+            OUTER_PAD,
             0xFFFFFF
         )
 
-        // render edit box
-        ignoredSlotsEditBox.setPosition(internalMinecraft.screen!!.width / 3, internalMinecraft.screen!!.height / 4)
-        ignoredSlotsEditBox.width = internalMinecraft.screen!!.width / 3
-        ignoredSlotsEditBox.render(guiGraphics, mouseX, mouseY, tickDelta)
-
         // render image
-        val imageLocation = resourceLocation("autodrop:image/inventory-slots.png") ?: error("Failed to load inventory slot guide image.")
+        val imageLocation = resourceLocation("autodrop:image/inventory-slots.png")
+            ?: error("Failed to load inventory slot guide image.")
+        val imageSize = height / 2
+
         RenderSystem.setShader(GameRenderer::getPositionTexShader)
         RenderSystem.setShaderTexture(0, imageLocation)
         RenderSystem.enableBlend()
@@ -67,21 +83,16 @@ class IgnoredSlotsScreen(private val archive: Archive, private val parent: Scree
         RenderSystem.enableDepthTest()
         guiGraphics.blit(
             imageLocation,
-            internalMinecraft.screen!!.width / 2 - IMAGE_SIZE / 2,
-            (internalMinecraft.screen!!.height * .55).toInt() - IMAGE_SIZE / 2,
+            internalMinecraft.screen!!.width / 2 - imageSize / 2,
+            OUTER_PAD + INNER_PAD * 2 + internalMinecraft.font.lineHeight + 20,
             0,
-            0,
-            IMAGE_SIZE,
-            IMAGE_SIZE
+            0F,
+            0F,
+            imageSize - 1,
+            imageSize,
+            imageSize,
+            imageSize
         )
-        RenderSystem.disableBlend()
-        RenderSystem.disableDepthTest()
-
-        // render done button
-        doneButton.setPosition(internalMinecraft.screen!!.width / 3, (internalMinecraft.screen!!.height * .8).toInt())
-        doneButton.width = internalMinecraft.screen!!.width / 3
-        doneButton.render(guiGraphics, mouseX, mouseY, tickDelta)
-        doneButton.active = matcher(ignoredSlotsEditBox.value)
     }
 
     override fun shouldCloseOnEsc(): Boolean {

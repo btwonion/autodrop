@@ -35,7 +35,7 @@ class ArchivesWidget(private val archiveScreen: ArchiveScreen) : ObjectSelection
     }
 
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
-        width = (internalMinecraft.screen!!.width / 4) - 2 * OUTER_PAD
+        width = (internalMinecraft.screen!!.width / 4) - OUTER_PAD
         height = internalMinecraft.screen!!.height - 3 * OUTER_PAD - 12 - 5 * 20
         super.renderWidget(guiGraphics, i, j, f)
     }
@@ -67,7 +67,13 @@ class ArchivesWidgetEntry(private val archive: Archive, private val archiveScree
 
         // Draw archive name
         val hundredPercentAlphaWhite = 0xFFFFFFFF.toInt()
-        guiGraphics.drawString(internalMinecraft.font, Component.literal(archive.name), x, y + INNER_PAD / 2, 0xFFFFFF)
+        guiGraphics.drawString(
+            internalMinecraft.font,
+            Component.literal(archive.name),
+            x,
+            y + height / 2 - internalMinecraft.font.lineHeight / 2,
+            0xFFFFFF
+        )
 
         // tick box - outer rectangle
         val rightX = x + width - INNER_PAD
