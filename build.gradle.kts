@@ -14,7 +14,7 @@ plugins {
 
 val beta: Int = property("mod.beta").toString().toInt()
 val majorVersion: String = property("mod.major-version").toString()
-val mcVersion = property("mcVersion").toString() // Pattern is '1.0.0-beta1-1.20.6-pre.2'
+val mcVersion = property("vers.mcVersion").toString() // Pattern is '1.0.0-beta1-1.20.6-pre.2'
 version = "$majorVersion${if (beta != 0) "-beta$beta" else ""}-$mcVersion"
 
 group = property("mod.group").toString()
@@ -44,13 +44,13 @@ repositories {
 }
 
 val flkVersion = "${libs.versions.fabric.language.kotlin.orNull}${libs.versions.kotlin.orNull}"
-val fapiVersion = property("deps.fapi").toString()
-val modMenuVersion = property("deps.modMenu").toString()
-val yaclVersion = property("deps.yacl").toString()
+val fapiVersion = property("vers.deps.fapi").toString()
+val modMenuVersion = property("vers.deps.modMenu").toString()
+val yaclVersion = property("vers.deps.yacl").toString()
 dependencies {
     minecraft("com.mojang:minecraft:$mcVersion")
     mappings(loom.layered {
-        val quiltMappings: String = property("deps.quiltmappings").toString()
+        val quiltMappings: String = property("vers.deps.quiltmappings").toString()
         if (quiltMappings.isNotEmpty()) mappings("org.quiltmc:quilt-mappings:$quiltMappings:intermediary-v2")
         officialMojangMappings()
     })
@@ -67,11 +67,11 @@ dependencies {
     include(libs.konfig)
 }
 
-val javaVersion = property("javaVer").toString()
+val javaVersion = property("vers.javaVer").toString()
 val modId = property("mod.id").toString()
 val modName = property("mod.name").toString()
 val modDescription = property("mod.description").toString()
-val mcVersionRange = property("mcVersionRange").toString()
+val mcVersionRange = property("vers.mcVersionRange").toString()
 tasks {
     processResources {
         val props = mapOf(
@@ -120,7 +120,7 @@ val changelogText = buildString {
 }
 
 val supportedMcVersions: List<String> =
-    property("supportedMcVersions")!!.toString().split(',').map(String::trim).filter(String::isNotEmpty)
+    property("vers.supportedMcVersions")!!.toString().split(',').map(String::trim).filter(String::isNotEmpty)
 
 publishMods {
     displayName = "v${project.version}"
