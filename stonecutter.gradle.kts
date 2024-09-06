@@ -1,6 +1,7 @@
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.*
+import org.gradle.configurationcache.extensions.capitalized
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
@@ -64,23 +65,24 @@ tasks.register("postUpdate") {
     val url = providers.environmentVariable("DISCORD_WEBHOOK").orNull ?: return@register
     val roleId = providers.environmentVariable("DISCORD_ROLE_ID").orNull ?: return@register
     val changelogText = rootProject.file("changelog.md").readText()
-    val webhook = DiscordWebhook(
-        username = "${rootProject.name} Release Notifier",
+    val webhook = DiscordWebhook(username = "${rootProject.name} Release Notifier",
         avatarUrl = avatar,
-        embeds = listOf(
-            Embed(
-                title = "v$featureVersion of ${rootProject.name} released!",
-                description = "# Changelog\n$changelogText",
-                timestamp = Instant.now().toString(),
-                color = color,
-                fields = listOf(
-                    Field(
-                        "Supported versions", stonecutter.versions.joinToString { it.version }, false
-                    ),
-                    Field("Modrinth", "https://modrinth.com/mod/$slug", true),
-                    Field("GitHub", "https://github.com/$repo", true)
-                )
+        embeds = listOf(Embed(title = "v$featureVersion of ${rootProject.name} released!",
+            description = "# Changelog\n$changelogText",
+            timestamp = Instant.now().toString(),
+            color = color,
+            fields = listOf(Field(
+                "Supported versions", stonecutter.versions.joinToString { it.version.split('-')[0] }, false
+            ),
+                Field(
+                    "Supported loaders",
+                    stonecutter.versions.map { it.version.split('-')[1] }.toSet().joinToString { it.capitalized() },
+                    false
+                ),
+                Field("Modrinth", "https://modrinth.com/mod/$slug", true),
+                Field("GitHub", "https://github.com/$repo", true)
             )
+        )
         )
     )
 
