@@ -44,6 +44,7 @@ val slug = property("mod.slug").toString()
 val repo = property("mod.repo").toString()
 val avatar = property("mod.icon-url").toString()
 val color = property("mod.color").toString().toInt()
+val supportedLoaders = property("mod.supported-loaders").toString().split(',').map { it.capitalized() }
 tasks.register("postUpdate") {
     group = "mod"
 
@@ -52,24 +53,25 @@ tasks.register("postUpdate") {
     val url = providers.environmentVariable("DISCORD_WEBHOOK").orNull ?: return@register
     val roleId = providers.environmentVariable("DISCORD_ROLE_ID").orNull ?: return@register
     val changelogText = rootProject.file("changelog.md").readText()
-    val webhook = DiscordWebhook(username = "${rootProject.name} Release Notifier",
-        avatarUrl = avatar,
-        embeds = listOf(Embed(title = "v$featureVersion of ${rootProject.name} released!",
-            description = "# Changelog\n$changelogText",
-            timestamp = Instant.now().toString(),
-            color = color,
-            fields = listOf(Field(
-                "Supported versions", stonecutter.versions.toSet().joinToString { it.version }, false
-            ),
-                Field(
-                    "Supported loaders",
-                    stonecutter.projects.map { it.name.split('-')[1] }.toSet().joinToString { it.capitalized() },
-                    false
-                ),
-                Field("Modrinth", "https://modrinth.com/mod/$slug", true),
-                Field("GitHub", "https://github.com/$repo", true)
+
+    val webhook = DiscordWebhook(
+        username = "${rootProject.name} Release Notifier", avatarUrl = avatar, embeds = listOf(
+            Embed(
+                title = "v$featureVersion of ${rootProject.name} released!",
+                description = "# Changelog\n$changelogText",
+                timestamp = Instant.now().toString(),
+                color = color,
+                fields = listOf(
+                    Field(
+                        "Supported versions", stonecutter.versions.map { it.version }.toSet().joinToString(), false
+                    ),
+                    Field(
+                        "Supported loaders", supportedLoaders.joinToString(), false
+                    ),
+                    Field("Modrinth", "https://modrinth.com/mod/$slug", true),
+                    Field("GitHub", "https://github.com/$repo", true)
+                )
             )
-        )
         )
     )
 
