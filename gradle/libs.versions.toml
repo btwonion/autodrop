@@ -1,0 +1,19 @@
+[versions]
+kotlin = "2.0.20"
+mod-publish = "0.5.+"
+fabric-loom = "1.7-SNAPSHOT"
+fabric-loader = "0.16.4"
+fabric-language-kotlin = "1.12.1+kotlin."
+vineflower = "1.10.1"
+konfig = "2.0.2-1.20.4"
+
+[libraries]
+vineflower = { module = "org.vineflower:vineflower", version.ref = "vineflower" }
+konfig = { module = "dev.nyon:konfig", version.ref = "konfig" }
+fabric-loader = { module = "net.fabricmc:fabric-loader", version.ref = "fabric-loader"}
+
+[plugins]
+kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+fabric-loom = { id = "fabric-loom", version.ref = "fabric-loom" }
+mod-publish = { id = "me.modmuss50.mod-publish-plugin", version.ref = "mod-publish" }

@@ -12,14 +12,14 @@ pluginManagement {
 }
 
 plugins {
-    id("dev.kikugie.stonecutter") version "0.4.2"
+    id("dev.kikugie.stonecutter") version "0.4.+"
 }
 
 
 buildscript {
     repositories { mavenCentral() }
     dependencies {
-        classpath("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.0-RC")
+        classpath("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.2")
     }
 }
 

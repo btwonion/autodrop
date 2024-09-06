@@ -1,3 +1,1 @@
-- fix crash on invalid character in item name
-- fix wrong filter in archive creation edit box
-- provide better screen compatibility for smaller screens
+- update build logic to make updating versions easier

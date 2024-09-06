@@ -4,25 +4,21 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "2.0.0"
-    kotlin("plugin.serialization") version "2.0.0"
-    id("fabric-loom") version "1.7-SNAPSHOT"
-
-    id("me.modmuss50.mod-publish-plugin") version "0.5.+"
+    alias(libs.plugins.kotlin)
+    alias(libs.plugins.kotlinx.serialization)
+    alias(libs.plugins.fabric.loom)
+    alias(libs.plugins.mod.publish)
 
     `maven-publish`
-    signing
 }
 
-val beta: Int? = 2 // Pattern is '1.0.0-beta1-1.20.6-pre.2'
-val featureVersion = "2.0.0${if (beta != null) "-beta$beta" else ""}"
-val mcVersion = property("mcVersion")!!.toString()
-val mcVersionRange = property("mcVersionRange")!!.toString()
-version = "$featureVersion-$mcVersion"
+val beta: Int = property("mod.beta").toString().toInt()
+val majorVersion: String = property("mod.major-version").toString()
+val mcVersion = property("mcVersion").toString() // Pattern is '1.0.0-beta1-1.20.6-pre.2'
+version = "$majorVersion${if (beta != 0) "-beta$beta" else ""}-$mcVersion"
 
-group = "dev.nyon"
-val authors = listOf("btwonion")
-val githubRepo = "btwonion/autodrop"
+group = property("mod.group").toString()
+val githubRepo = property("mod.repo").toString()
 
 base {
     archivesName.set(rootProject.name)
@@ -42,44 +38,54 @@ loom {
 repositories {
     mavenCentral()
     maven("https://maven.terraformersmc.com")
-    maven("https://maven.parchmentmc.org")
+    maven("https://maven.quiltmc.org/repository/release/")
     maven("https://repo.nyon.dev/releases")
     maven("https://maven.isxander.dev/releases")
 }
 
+val flkVersion = "${libs.versions.fabric.language.kotlin.orNull}${libs.versions.kotlin.orNull}"
+val fapiVersion = property("deps.fapi").toString()
+val modMenuVersion = property("deps.modMenu").toString()
+val yaclVersion = property("deps.yacl").toString()
 dependencies {
     minecraft("com.mojang:minecraft:$mcVersion")
     mappings(loom.layered {
-        val parchment: String = property("deps.parchment").toString()
-        if (parchment.isNotEmpty()) parchment("org.parchmentmc.data:parchment-$parchment@zip")
+        val quiltMappings: String = property("deps.quiltmappings").toString()
+        if (quiltMappings.isNotEmpty()) mappings("org.quiltmc:quilt-mappings:$quiltMappings:intermediary-v2")
         officialMojangMappings()
     })
 
-    implementation("org.vineflower:vineflower:1.10.1")
-    modImplementation("net.fabricmc:fabric-loader:0.15.11")
-    modImplementation("net.fabricmc.fabric-api:fabric-api:${property("deps.fapi")!!}")
-    modImplementation("net.fabricmc:fabric-language-kotlin:1.11.0+kotlin.2.0.0")
+    implementation(libs.vineflower)
+    implementation(libs.fabric.loader)
+    modImplementation("net.fabricmc.fabric-api:fabric-api:$fapiVersion")
+    modImplementation("net.fabricmc:fabric-language-kotlin:$flkVersion")
 
-    modImplementation("dev.isxander:yet-another-config-lib:${property("deps.yacl")!!}")
-    modImplementation("com.terraformersmc:modmenu:${property("deps.modMenu")!!}")
+    modImplementation("dev.isxander:yet-another-config-lib:$yaclVersion")
+    modImplementation("com.terraformersmc:modmenu:$modMenuVersion")
 
-    include(modImplementation("dev.nyon:konfig:2.0.1-1.20.4")!!)
+    modImplementation(libs.konfig)
+    include(libs.konfig)
 }
 
-val javaVersion = property("javaVer")!!.toString()
+val javaVersion = property("javaVer").toString()
+val modId = property("mod.id").toString()
+val modName = property("mod.name").toString()
+val modDescription = property("mod.description").toString()
+val mcVersionRange = property("mcVersionRange").toString()
 tasks {
     processResources {
-        val modId = "autodrop"
-        val modName = "autodrop"
-        val modDescription = "Mod to automatically drop items from your inventory"
-
         val props = mapOf(
             "id" to modId,
             "name" to modName,
             "description" to modDescription,
             "version" to project.version,
             "github" to githubRepo,
-            "mc" to mcVersionRange
+            "mc" to mcVersionRange,
+            "flk" to flkVersion,
+            "fapi" to fapiVersion,
+            "yacl" to yaclVersion,
+            "modmenu" to modMenuVersion,
+            "repo" to githubRepo
         )
 
         props.forEach(inputs::property)
@@ -109,7 +115,7 @@ tasks {
 
 val changelogText = buildString {
     append("# v${project.version}\n")
-    if (beta != null) appendLine("### As this is still a beta version, this version can contain bugs. Feel free to report ANY misbehaviours and errors!")
+    if (beta != 0) appendLine("### As this is still a beta version, this version can contain bugs. Feel free to report ANY misbehaviours and errors!")
     rootDir.resolve("changelog.md").readText().also(::append)
 }
 
@@ -120,7 +126,7 @@ publishMods {
     displayName = "v${project.version}"
     file = tasks.remapJar.get().archiveFile
     changelog = changelogText
-    type = if (beta != null) BETA else STABLE
+    type = if (beta != 0) BETA else STABLE
     modLoaders.addAll("fabric", "quilt")
 
     modrinth {
@@ -137,7 +143,7 @@ publishMods {
     github {
         repository = githubRepo
         accessToken = providers.environmentVariable("GITHUB_TOKEN")
-        commitish = "main"
+        commitish = property("mod.main-branch").toString()
     }
 }
 
@@ -155,7 +161,7 @@ publishing {
     publications {
         create<MavenPublication>("maven") {
             groupId = "dev.nyon"
-            artifactId = "autodrop"
+            artifactId = modName
             version = project.version.toString()
             from(components["java"])
         }
@@ -170,15 +176,3 @@ java {
         targetCompatibility = it
     }
 }
-
-/*
-signing {
-    val signingKey: String? by project
-    val signingPassword: String? by project
-    useGpgCmd()
-    if (signingKey != null && signingPassword != null) {
-        useInMemoryPgpKeys(signingKey, signingPassword)
-    }
-    sign(publishing.publications)
-}
- */
