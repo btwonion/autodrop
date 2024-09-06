@@ -10,7 +10,12 @@ import java.time.Instant
 plugins {
     id("dev.kikugie.stonecutter")
 }
-stonecutter active "1.21" /* [SC] DO NOT EDIT */
+stonecutter active "1.21-neoforge" /* [SC] DO NOT EDIT */
+
+stonecutter configureEach {
+    val platforms = listOf("fabric", "neoforge").map { it to current.project.contains(it) }
+    consts(platforms)
+}
 
 stonecutter registerChiseled tasks.register("buildAllVersions", stonecutter.chiseled) {
     group = "mod"
@@ -35,7 +40,12 @@ private data class DiscordWebhook(
 tasks.register("postUpdate") {
     group = "mod"
 
-    val version = project(stonecutter.versions.first().project).version.toString()
+    val slug = property("mod.slug").toString()
+    val repo = property("mod.repo").toString()
+    val avatar = property("mod.icon-url").toString()
+    val color = property("mod.color").toString().toInt()
+
+    val version = project(stonecutter.versions.first().project).version.toString().split('+')[0]
     val hyphenCount = version.count { it == '-' }
     val featureVersion = when (hyphenCount) {
         1 -> version.split("-").first()
@@ -56,19 +66,19 @@ tasks.register("postUpdate") {
     val changelogText = rootProject.file("changelog.md").readText()
     val webhook = DiscordWebhook(
         username = "${rootProject.name} Release Notifier",
-        avatarUrl = "https://raw.githubusercontent.com/btwonion/autodrop/main/src/main/resources/assets/autodrop/icon/icon.png",
+        avatarUrl = avatar,
         embeds = listOf(
             Embed(
                 title = "v$featureVersion of ${rootProject.name} released!",
                 description = "# Changelog\n$changelogText",
                 timestamp = Instant.now().toString(),
-                color = 0x4ab616,
+                color = color,
                 fields = listOf(
                     Field(
                         "Supported versions", stonecutter.versions.joinToString { it.version }, false
                     ),
-                    Field("Modrinth", "https://modrinth.com/mod/autodrop", true),
-                    Field("GitHub", "https://github.com/btwonion/autodrop", true)
+                    Field("Modrinth", "https://modrinth.com/mod/$slug", true),
+                    Field("GitHub", "https://github.com/$repo", true)
                 )
             )
         )

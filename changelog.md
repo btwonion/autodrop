@@ -1,1 +1,2 @@
 - update build logic to make updating versions easier
+- add neoforge support!

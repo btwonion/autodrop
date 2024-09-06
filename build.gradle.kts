@@ -1,21 +1,25 @@
 @file:Suppress("SpellCheckingInspection", "UnstableApiUsage", "RedundantNullableReturnType")
 
+import net.fabricmc.loom.util.ModPlatform
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     alias(libs.plugins.kotlin)
     alias(libs.plugins.kotlinx.serialization)
-    alias(libs.plugins.fabric.loom)
+    alias(libs.plugins.architectury.loom)
     alias(libs.plugins.mod.publish)
 
     `maven-publish`
 }
 
+val loader = loom.platform.get()
+val isFabric = loader == ModPlatform.FABRIC
+
 val beta: Int = property("mod.beta").toString().toInt()
 val majorVersion: String = property("mod.major-version").toString()
-val mcVersion = property("vers.mcVersion").toString() // Pattern is '1.0.0-beta1-1.20.6-pre.2'
-version = "$majorVersion${if (beta != 0) "-beta$beta" else ""}-$mcVersion"
+val mcVersion = property("vers.mcVersion").toString() // Pattern is '1.0.0-beta1-1.20.6-pre.2+fabric'
+version = "$majorVersion${if (beta != 0) "-beta$beta" else ""}-$mcVersion+${loader.name.lowercase()}"
 
 group = property("mod.group").toString()
 val githubRepo = property("mod.repo").toString()
@@ -33,6 +37,7 @@ loom {
     }
 
     mixin { useLegacyMixinAp = false }
+    silentMojangMappingsLicense()
 }
 
 repositories {
@@ -41,12 +46,14 @@ repositories {
     maven("https://maven.quiltmc.org/repository/release/")
     maven("https://repo.nyon.dev/releases")
     maven("https://maven.isxander.dev/releases")
+    maven("https://thedarkcolour.github.io/KotlinForForge/")
+    maven("https://maven.neoforged.net/releases/")
 }
 
-val flkVersion = "${libs.versions.fabric.language.kotlin.orNull}${libs.versions.kotlin.orNull}"
-val fapiVersion = property("vers.deps.fapi").toString()
-val modMenuVersion = property("vers.deps.modMenu").toString()
 val yaclVersion = property("vers.deps.yacl").toString()
+val flk: String = "${libs.versions.fabric.language.kotlin.orNull}${libs.versions.kotlin.orNull}"
+val fapi: String by lazy { property("vers.deps.fapi").toString() }
+val modmenu: String by lazy { property("vers.deps.modMenu").toString() }
 dependencies {
     minecraft("com.mojang:minecraft:$mcVersion")
     mappings(loom.layered {
@@ -56,12 +63,20 @@ dependencies {
     })
 
     implementation(libs.vineflower)
-    implementation(libs.fabric.loader)
-    modImplementation("net.fabricmc.fabric-api:fabric-api:$fapiVersion")
-    modImplementation("net.fabricmc:fabric-language-kotlin:$flkVersion")
+
+    if (isFabric) {
+        implementation(libs.fabric.loader)
+        modImplementation("net.fabricmc.fabric-api:fabric-api:$fapi")
+        modImplementation("net.fabricmc:fabric-language-kotlin:$flk")
+        modImplementation("com.terraformersmc:modmenu:$modmenu")
+    } else {
+        implementation(libs.kotlinx.datetime)
+        include(libs.kotlinx.datetime)
+        "neoForge"("net.neoforged:neoforge:${property("vers.deps.fml")}")
+        implementation("thedarkcolour:kotlinforforge-neoforge:${property("vers.deps.kff")}")
+    }
 
     modImplementation("dev.isxander:yet-another-config-lib:$yaclVersion")
-    modImplementation("com.terraformersmc:modmenu:$modMenuVersion")
 
     modImplementation(libs.konfig)
     include(libs.konfig)
@@ -72,27 +87,34 @@ val modId = property("mod.id").toString()
 val modName = property("mod.name").toString()
 val modDescription = property("mod.description").toString()
 val mcVersionRange = property("vers.mcVersionRange").toString()
+val icon = property("mod.icon").toString()
+val mixinsFile = property("mod.mixins").toString()
+val slug = property("mod.slug").toString()
 tasks {
     processResources {
-        val props = mapOf(
+        val props: Map<String, String?> = mapOf(
             "id" to modId,
             "name" to modName,
             "description" to modDescription,
-            "version" to project.version,
+            "version" to project.version.toString(),
             "github" to githubRepo,
             "mc" to mcVersionRange,
-            "flk" to flkVersion,
-            "fapi" to fapiVersion,
+            "flk" to if (!isFabric) null else flk,
+            "fapi" to if (!isFabric) null else fapi,
             "yacl" to yaclVersion,
-            "modmenu" to modMenuVersion,
-            "repo" to githubRepo
-        )
+            "modmenu" to if (!isFabric) null else modmenu,
+            "repo" to githubRepo,
+            "icon" to icon,
+            "mixins" to mixinsFile,
+            "slug" to slug
+        ).filterNot { it.value == null }
 
         props.forEach(inputs::property)
 
-        filesMatching("fabric.mod.json") {
-            expand(props)
-        }
+        (if (isFabric) listOf("fabric.mod.json") else listOf(
+            "META-INF/mods.toml",
+            "META-INF/neoforge.mods.toml"
+        )).forEach { filesMatching(it) { expand(props) } }
     }
 
     register("releaseMod") {
@@ -127,17 +149,23 @@ publishMods {
     file = tasks.remapJar.get().archiveFile
     changelog = changelogText
     type = if (beta != 0) BETA else STABLE
-    modLoaders.addAll("fabric", "quilt")
+    if (isFabric) modLoaders.addAll("fabric", "quilt")
+    else modLoaders.add("neoforge")
 
     modrinth {
         projectId = "lg17V3i3"
         accessToken = providers.environmentVariable("MODRINTH_API_KEY")
         minecraftVersions.addAll(supportedMcVersions)
 
-        requires { slug = "fabric-api" }
+        if (isFabric) {
+            requires { slug = "fabric-api" }
+            requires { slug = "fabric-language-kotlin" }
+            optional { slug = "modmenu" }
+        } else {
+            requires { slug = "kotlin-for-forge" }
+        }
+
         requires { slug = "yacl" }
-        requires { slug = "fabric-language-kotlin" }
-        optional { slug = "modmenu" }
     }
 
     github {

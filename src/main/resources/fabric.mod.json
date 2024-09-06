@@ -10,7 +10,7 @@
     "authors": [
         "btwonion"
     ],
-    "icon": "assets/autodrop/icon/icon.png",
+    "icon": "${icon}",
     "contributors": [],
     "license": [
         "GNU General Public License v3.0"
@@ -21,7 +21,7 @@
         "fabric-language-kotlin": ">=${flk}",
         "fabric-api": ">=${fapi}",
         "yet_another_config_lib_v3": ">=${yacl}",
-        "minecraft": ">=${mc}"
+        "minecraft": "${mc}"
     },
     "suggests": {
         "modmenu": "${modmenu}"
@@ -30,7 +30,7 @@
         "client": [
             {
                 "adapter": "kotlin",
-                "value": "dev.nyon.autodrop.AutoDrop"
+                "value": "dev.nyon.autodrop.AutoDropEntrypoint"
             }
         ],
         "modmenu": [
@@ -41,7 +41,7 @@
         ]
     },
     "mixins": [
-        "autodrop.mixins.json"
+        "${mixins}"
     ],
     "custom": {
         "modmenu": {
