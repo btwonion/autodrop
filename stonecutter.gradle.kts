@@ -38,6 +38,8 @@ private data class DiscordWebhook(
     val username: String, val avatarUrl: String, val embeds: List<Embed>
 )
 
+val majorVersion = property("mod.major-version").toString()
+val betaVersion = property("mod.beta").toString().toInt()
 val slug = property("mod.slug").toString()
 val repo = property("mod.repo").toString()
 val avatar = property("mod.icon-url").toString()
@@ -45,21 +47,7 @@ val color = property("mod.color").toString().toInt()
 tasks.register("postUpdate") {
     group = "mod"
 
-    val version = project(stonecutter.versions.first().project).version.toString().split('+')[0]
-    val hyphenCount = version.count { it == '-' }
-    val featureVersion = when (hyphenCount) {
-        1 -> version.split("-").first()
-        2 -> {
-            val split = version.split("-")
-            if (split.last().contains("rc") || split.last().contains("pre")) split.first()
-            else "${split.first()}-${split[1]}"
-        }
-        3 -> {
-            val split = version.split("-")
-            "${split.first()}-${split[1]}"
-        }
-        else -> return@register
-    }
+    val featureVersion = "$majorVersion${if (betaVersion != 0) "-beta$betaVersion" else ""}"
 
     val url = providers.environmentVariable("DISCORD_WEBHOOK").orNull ?: return@register
     val roleId = providers.environmentVariable("DISCORD_ROLE_ID").orNull ?: return@register
@@ -71,11 +59,11 @@ tasks.register("postUpdate") {
             timestamp = Instant.now().toString(),
             color = color,
             fields = listOf(Field(
-                "Supported versions", stonecutter.versions.joinToString { it.version.split('-')[0] }, false
+                "Supported versions", stonecutter.versions.toSet().joinToString { it.version }, false
             ),
                 Field(
                     "Supported loaders",
-                    stonecutter.versions.map { it.version.split('-')[1] }.toSet().joinToString { it.capitalized() },
+                    stonecutter.projects.map { it.name.split('-')[1] }.toSet().joinToString { it.capitalized() },
                     false
                 ),
                 Field("Modrinth", "https://modrinth.com/mod/$slug", true),
