@@ -18,7 +18,7 @@ import net.minecraft.world.item.Item
 import java.nio.file.Path
 
 /*? if fabric {*/
-/*import net.fabricmc.api.ClientModInitializer
+import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper
 import net.fabricmc.loader.api.FabricLoader
 
@@ -30,15 +30,15 @@ object AutoDropEntrypoint : ClientModInitializer {
     }
 }
 
-*//*?} else {*/
-import dev.nyon.autodrop.config.screen.createYaclScreen
+/*?} else {*/
+/*import dev.nyon.autodrop.config.screen.createYaclScreen
 import net.neoforged.fml.ModLoadingContext
 import net.neoforged.fml.common.Mod
 import net.neoforged.fml.loading.FMLLoader
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent
 import thedarkcolour.kotlinforforge.neoforge.forge.MOD_BUS
 
-typealias CSF = /*? if <1.20.6 {*/ /*net.neoforged.neoforge.client.ConfigScreenHandler.ConfigScreenFactory *//*?} else {*/ net.neoforged.neoforge.client.gui.IConfigScreenFactory /*?}*/
+typealias CSF = /^? if <1.20.6 {^/ /^net.neoforged.neoforge.client.ConfigScreenHandler.ConfigScreenFactory ^//^?} else {^/ net.neoforged.neoforge.client.gui.IConfigScreenFactory /^?}^/
 
 @Mod("autodrop")
 object AutoDropEntrypoint {
@@ -55,7 +55,7 @@ object AutoDropEntrypoint {
         }
     }
 }
-/*?}*/
+*//*?}*/
 
 private fun initialize(configDir: Path) {
     minecraft = Minecraft.getInstance()

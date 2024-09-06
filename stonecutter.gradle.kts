@@ -11,7 +11,7 @@ import java.time.Instant
 plugins {
     id("dev.kikugie.stonecutter")
 }
-stonecutter active "1.21-neoforge" /* [SC] DO NOT EDIT */
+stonecutter active "1.21-fabric" /* [SC] DO NOT EDIT */
 
 stonecutter configureEach {
     val platforms = listOf("fabric", "neoforge").map { it to current.project.contains(it) }
