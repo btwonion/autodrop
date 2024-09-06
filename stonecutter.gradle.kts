@@ -38,13 +38,12 @@ private data class DiscordWebhook(
     val username: String, val avatarUrl: String, val embeds: List<Embed>
 )
 
+val slug = property("mod.slug").toString()
+val repo = property("mod.repo").toString()
+val avatar = property("mod.icon-url").toString()
+val color = property("mod.color").toString().toInt()
 tasks.register("postUpdate") {
     group = "mod"
-
-    val slug = property("mod.slug").toString()
-    val repo = property("mod.repo").toString()
-    val avatar = property("mod.icon-url").toString()
-    val color = property("mod.color").toString().toInt()
 
     val version = project(stonecutter.versions.first().project).version.toString().split('+')[0]
     val hyphenCount = version.count { it == '-' }
