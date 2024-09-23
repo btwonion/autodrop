@@ -15,7 +15,7 @@ import net.minecraft.world.item.Items
 import kotlin.math.max
 import dev.nyon.autodrop.minecraft as internalMinecraft
 
-class ArchiveItemsWidget(var archive: Archive, private val parent: ArchiveScreen) :
+class ArchiveItemsWidget(var archive: Archive?, private val parent: ArchiveScreen) :
     ObjectSelectionList<ArchiveItemEntry>(
         internalMinecraft, 0, 0, OUTER_PAD, internalMinecraft.font.lineHeight * 3 + 4 * INNER_PAD
     ) {
@@ -48,9 +48,10 @@ class ArchiveItemsWidget(var archive: Archive, private val parent: ArchiveScreen
     fun refreshEntries() {
         scrollAmount = 0.0
         clearEntries()
-        archive.entries.map {
+        if (archive == null) return
+        archive!!.entries.map {
             ArchiveItemEntry(it, parent) {
-                archive.entries.remove(it)
+                archive!!.entries.remove(it)
                 refreshEntries()
             }
         }.forEach(::addEntry)

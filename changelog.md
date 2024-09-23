@@ -1,2 +1,2 @@
-- update build logic to make updating versions easier
-- add neoforge support!
+- allow more versions of Minecraft in mod metadata
+- fix crash when no archive exists in config screen - (https://github.com/btwonion/autodrop/issues/16)[#17] by btwonion and Jonathan
