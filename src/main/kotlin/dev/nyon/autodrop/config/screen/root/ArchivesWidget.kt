@@ -61,7 +61,7 @@ class ArchivesWidgetEntry(private val archive: Archive, private val archiveScree
         isSelected: Boolean,
         delta: Float
     ) {
-        if (archiveScreen.selected.name == archive.name) guiGraphics.fill(
+        if ((archiveScreen.selected ?: return).name == archive.name) guiGraphics.fill(
             x - 3, y - 2, x + width - 2, y + height + 2, 0xFF404040.toInt()
         )
 

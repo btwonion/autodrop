@@ -20,7 +20,7 @@ const val INNER_PAD = 5
 const val OUTER_PAD = 10
 
 class ArchiveScreen(private val parent: Screen?) : Screen(screenComponent("title")) {
-    var selected: Archive = config.archives.first()
+    var selected: Archive? = config.archives.firstOrNull()
 
     private val archivesWidget = ArchivesWidget(this).also {
         it.refreshEntries()
@@ -35,19 +35,29 @@ class ArchiveScreen(private val parent: Screen?) : Screen(screenComponent("title
     }.build()
 
     private val setIgnoredSlotsButton = Button.builder(screenComponent("ignored")) {
-        internalMinecraft.setScreen(IgnoredSlotsScreen(selected, this@ArchiveScreen))
+        internalMinecraft.setScreen(IgnoredSlotsScreen(selected ?: return@builder, this@ArchiveScreen))
     }.build()
 
     private val createArchiveButton = Button.builder(screenComponent("create")) {
         internalMinecraft.setScreen(CreateArchiveScreen(this@ArchiveScreen) {
             archivesWidget.refreshEntries()
             select(it)
+            setIgnoredSlotsButton.active = true
+            addIdentifierButton.active = true
+            deleteArchiveButton.active = true
         })
     }.build()
 
     private val deleteArchiveButton = Button.builder(screenComponent("delete").withStyle(ChatFormatting.DARK_RED)) {
         config.archives.remove(selected)
-        selected = config.archives.first()
+        selected = config.archives.firstOrNull()
+
+        if (selected == null) {
+            setIgnoredSlotsButton.active = false
+            addIdentifierButton.active = false
+            it.active = true
+        }
+
         archivesWidget.refreshEntries()
         archiveItemsWidget.refreshEntries()
     }.build()
@@ -55,7 +65,7 @@ class ArchiveScreen(private val parent: Screen?) : Screen(screenComponent("title
     private val addIdentifierButton = Button.builder(screenComponent("identifier")) {
         val newIdentifier = ItemIdentifier(null, emptyStoredComponents, 1)
 
-        selected.entries.add(newIdentifier)
+        selected?.entries?.add(newIdentifier) ?: return@builder
         internalMinecraft.setScreen(
             ModifyIdentifierScreen(
                 this@ArchiveScreen, newIdentifier
