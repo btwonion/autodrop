@@ -1,2 +1,2 @@
-- allow more versions of Minecraft in mod metadata
-- fix crash when no archive exists in config screen - (https://github.com/btwonion/autodrop/issues/16)[#17] by btwonion and Jonathan
+- fix visual bug in ignored slots screen in archive - reported by MikeT28
+- migrate ignored slots to set to prevent duplicate entries
