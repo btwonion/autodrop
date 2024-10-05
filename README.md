@@ -3,7 +3,13 @@
 This mod provides a function to automatically drop items from the
 inventory if they are blacklisted. You can easily disable it by pressing a hotkey (`default: j`).
 
+<!-- modrinth_exclude.start -->
+### - [Download on Modrinth](https://modrinth.com/mod/autodrop) -
+<!-- modrinth_exclude.end -->
+
 ## Managing items
+
+![Config screen sample](media/config-screen.gif)
 
 - press the keybinding for the config GUI (`default: o`)
 - use the configuration section of the modmenu integration
@@ -11,7 +17,7 @@ inventory if they are blacklisted. You can easily disable it by pressing a hotke
 
 ### Component/Nbt filtering
 
-*You have to be careful: Setting the item to null and leaving an empty component will cause the mod to drop every item.*
+*You have to be careful: Setting the item to air and leaving an empty component will cause the mod to drop every item.*
 
 The format of the components/nbt is always the item command syntax of the version of Minecraft you're playing on.
 Unless you know the syntax by heart, you can simply use
