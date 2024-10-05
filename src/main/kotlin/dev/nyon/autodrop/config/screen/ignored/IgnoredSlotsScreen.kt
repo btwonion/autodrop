@@ -28,8 +28,8 @@ class IgnoredSlotsScreen(private val archive: Archive, private val parent: Scree
 
     private val ignoredSlotsEditBox =
         EditBox(internalMinecraft.font, 0, 0, 20, 20, screenComponent("ignored.empty")).also {
+            it.setMaxLength(500)
             it.value = archive.ignoredSlots.joinToString(separator = ",") { input -> input.toString() }
-            it.setMaxLength(136)
             it.setFilter(matcher)
             it.onClick(10.0, 10.0)
             it.cursorPosition = 0
