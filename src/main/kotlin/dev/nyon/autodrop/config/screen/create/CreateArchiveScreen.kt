@@ -67,7 +67,7 @@ class CreateArchiveScreen(private val parent: Screen?, private val onClose: (Arc
 
     override fun onClose() {
         val archive = Archive(
-            true, archiveNameEditBox.value, mutableListOf(), mutableListOf()
+            true, archiveNameEditBox.value, mutableListOf(), mutableSetOf()
         )
         config.archives.add(archive)
         onClose(archive)

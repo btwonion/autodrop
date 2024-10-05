@@ -39,7 +39,7 @@ internal fun migrate(
                     }?.toMutableList() ?: return null,
                     archiveObject["lockedSlots"]?.jsonArray?.map secMap@{ content ->
                         content.jsonPrimitive.content.toIntOrNull() ?: return null
-                    }?.toMutableList() ?: return null
+                    }?.toMutableSet() ?: return null
                 )
             }?.toMutableList() ?: return null,
             jsonObject["dropDelay"]?.jsonPrimitive?.longOrNull ?: return null
