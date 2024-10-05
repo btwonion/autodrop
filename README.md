@@ -3,10 +3,6 @@
 This mod provides a function to automatically drop items from the
 inventory if they are blacklisted. You can easily disable it by pressing a hotkey (`default: j`).
 
-<!-- modrinth_exclude.start -->
-### - [Download on Modrinth](https://modrinth.com/mod/autodrop) -
-<!-- modrinth_exclude.end -->
-
 ## Managing items
 
 ![Config screen sample](https://raw.githubusercontent.com/btwonion/autodrop/refs/heads/main/media/config-screen.gif)
