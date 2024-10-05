@@ -9,7 +9,7 @@ inventory if they are blacklisted. You can easily disable it by pressing a hotke
 
 ## Managing items
 
-![Config screen sample](media/config-screen.gif)
+![Config screen sample](https://raw.githubusercontent.com/btwonion/autodrop/refs/heads/main/media/config-screen.gif)
 
 - press the keybinding for the config GUI (`default: o`)
 - use the configuration section of the modmenu integration
