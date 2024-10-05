@@ -1,2 +1,3 @@
 - fix visual bug in ignored slots screen in archive - reported by MikeT28
 - migrate ignored slots to set to prevent duplicate entries
+- fix misleading description
