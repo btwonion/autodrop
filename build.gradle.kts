@@ -76,7 +76,7 @@ dependencies {
         implementation("thedarkcolour:kotlinforforge-neoforge:${property("vers.deps.kff")}")
     }
 
-    modImplementation("dev.isxander:yet-another-config-lib:$yaclVersion")
+    modCompileOnly("dev.isxander:yet-another-config-lib:$yaclVersion")
 
     modImplementation(libs.konfig)
     include(libs.konfig)

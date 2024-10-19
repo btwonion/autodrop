@@ -20,10 +20,10 @@
     "depends": {
         "fabric-language-kotlin": ">=${flk}",
         "fabric-api": ">=${fapi}",
-        "yet_another_config_lib_v3": ">=${yacl}",
         "minecraft": "${mc}"
     },
     "suggests": {
+        "yet_another_config_lib_v3": ">=${yacl}",
         "modmenu": "${modmenu}"
     },
     "entrypoints": {
