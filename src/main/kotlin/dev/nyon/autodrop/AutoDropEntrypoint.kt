@@ -32,11 +32,11 @@ object AutoDropEntrypoint : ClientModInitializer {
 
 /*?} else {*/
 /*import dev.nyon.autodrop.config.screen.createYaclScreen
+import dev.nyon.klf.MOD_BUS
 import net.neoforged.fml.ModLoadingContext
 import net.neoforged.fml.common.Mod
 import net.neoforged.fml.loading.FMLLoader
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent
-import thedarkcolour.kotlinforforge.neoforge.forge.MOD_BUS
 
 typealias CSF = /^? if <1.20.6 {^/ /^net.neoforged.neoforge.client.ConfigScreenHandler.ConfigScreenFactory ^//^?} else {^/ net.neoforged.neoforge.client.gui.IConfigScreenFactory /^?}^/
 
