@@ -2,6 +2,7 @@ package dev.nyon.autodrop.config.screen.modify
 
 import dev.nyon.autodrop.config.screen.root.INNER_PAD
 import dev.nyon.autodrop.config.screen.root.OUTER_PAD
+import dev.nyon.autodrop.extensions.narration
 import dev.nyon.autodrop.extensions.screenComponent
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.Button
@@ -49,7 +50,7 @@ class ModifyItemsWidget(var input: String, private val onSelect: Item.() -> Unit
         scrollAmount = 0.0
         clearEntries()
         BuiltInRegistries.ITEM.sortedByDescending { item ->
-            val itemDescription = item.description.string
+            val itemDescription = item.narration.string
             val resourceLocationString = BuiltInRegistries.ITEM.getKey(item).toString()
             val cleanedResourceLocation = resourceLocationString.dropWhile { it != ':' }
             if (itemDescription.startsWith(input) || resourceLocationString.startsWith(input) || cleanedResourceLocation.startsWith(
@@ -106,6 +107,6 @@ class ModifyItemsEntry(private val item: Item, private val onSelect: () -> Unit)
     }
 
     override fun getNarration(): Component {
-        return Component.literal(item.description.toString())
+        return item.narration
     }
 }

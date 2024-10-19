@@ -10,7 +10,6 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import net.minecraft.commands.arguments.item.ItemParser
 import net.minecraft.core.registries.BuiltInRegistries
-import net.minecraft.core.registries.Registries
 import net.minecraft.data.registries.VanillaRegistries
 import net.minecraft.world.item.Item
 
@@ -23,8 +22,8 @@ object ItemSerializer : KSerializer<Item> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("item", PrimitiveKind.STRING)
 
     override fun deserialize(decoder: Decoder): Item {
-        val resourceLocation = resourceLocation(decoder.decodeString())
-        return BuiltInRegistries.ITEM.get(resourceLocation)
+        val resourceLocation = resourceLocation(decoder.decodeString())!!
+        return BuiltInRegistries.ITEM.get(resourceLocation)/*? if >=1.21.2 {*/.get().value()/*?}*/
     }
 
     override fun serialize(

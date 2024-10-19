@@ -3,6 +3,7 @@ package dev.nyon.autodrop.config.screen.root
 import dev.nyon.autodrop.config.Archive
 import dev.nyon.autodrop.config.ItemIdentifier
 import dev.nyon.autodrop.config.screen.modify.ModifyIdentifierScreen
+import dev.nyon.autodrop.extensions.narration
 import dev.nyon.autodrop.extensions.screenComponent
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.Button
@@ -125,6 +126,6 @@ class ArchiveItemEntry(
     }
 
     override fun getNarration(): Component {
-        return Component.literal(item.description.toString())
+        return item.narration
     }
 }

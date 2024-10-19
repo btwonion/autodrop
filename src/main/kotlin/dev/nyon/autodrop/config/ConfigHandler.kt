@@ -4,6 +4,7 @@ import dev.nyon.autodrop.extensions.emptyStoredComponents
 import dev.nyon.autodrop.extensions.resourceLocation
 import kotlinx.serialization.json.*
 import net.minecraft.core.registries.BuiltInRegistries
+import kotlin.jvm.optionals.getOrNull
 
 var config: Config = Config()
 var currentItems = mutableSetOf<ItemIdentifier>()
@@ -34,7 +35,7 @@ internal fun migrate(
                     archiveObject["items"]?.jsonArray?.map secMap@{ content ->
                         val resourceLocation = resourceLocation(content.jsonPrimitive.contentOrNull ?: return null)
                         return@secMap ItemIdentifier(
-                            BuiltInRegistries.ITEM.get(resourceLocation), emptyStoredComponents, 1
+                            resourceLocation?.let { BuiltInRegistries.ITEM.get(it)/*? if >=1.21.2 {*/.getOrNull()?.value()/*?}*/ }, emptyStoredComponents, 1
                         )
                     }?.toMutableList() ?: return null,
                     archiveObject["lockedSlots"]?.jsonArray?.map secMap@{ content ->
