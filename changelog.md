@@ -1,3 +1,1 @@
-- update to 1.21.2
-- only suggest yacl from now on
-- switch to kotlin-lang-forge
+- fix mod metadata insertion

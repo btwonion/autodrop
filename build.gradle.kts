@@ -110,6 +110,7 @@ tasks {
         props.forEach(inputs::property)
 
         filesMatching(if (isFabric) "fabric.mod.json" else "META-INF/neoforge.mods.toml") { expand(props) }
+        exclude(if (!isFabric) "fabric.mod.json" else "META-INF/neoforge.mods.toml")
     }
 
     register("releaseMod") {
