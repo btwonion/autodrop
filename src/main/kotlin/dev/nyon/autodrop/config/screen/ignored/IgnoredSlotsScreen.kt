@@ -13,7 +13,7 @@ import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.components.EditBox
 import net.minecraft.client.gui.screens.Screen
 //? if >=1.21.2
-import net.minecraft.client.renderer.CoreShaders
+/*import net.minecraft.client.renderer.CoreShaders*/
 import net.minecraft.client.renderer.GameRenderer
 import net.minecraft.client.renderer.RenderType
 import dev.nyon.autodrop.minecraft as internalMinecraft
@@ -79,7 +79,7 @@ class IgnoredSlotsScreen(private val archive: Archive, private val parent: Scree
             ?: error("Failed to load inventory slot guide image.")
         val imageSize = height / 2
 
-        RenderSystem.setShader(/*? if <1.21.2 {*//*GameRenderer::getPositionTexShader*//*?} else {*/CoreShaders.POSITION_TEX/*?}*/)
+        RenderSystem.setShader(/*? if <1.21.2 {*/GameRenderer::getPositionTexShader/*?} else {*//*CoreShaders.POSITION_TEX*//*?}*/)
 
         RenderSystem.setShaderTexture(0, imageLocation)
         RenderSystem.enableBlend()
@@ -87,7 +87,7 @@ class IgnoredSlotsScreen(private val archive: Archive, private val parent: Scree
         RenderSystem.enableDepthTest()
 
         /*? if >=1.21.2 {*/
-        guiGraphics.blit(
+        /*guiGraphics.blit(
             RenderType::guiTextured,
             imageLocation,
             internalMinecraft.screen!!.width / 2 - imageSize / 2,
@@ -99,8 +99,8 @@ class IgnoredSlotsScreen(private val archive: Archive, private val parent: Scree
             imageSize,
             imageSize
         )
-        /*?} else {*/
-        /*guiGraphics.blit(
+        *//*?} else {*/
+        guiGraphics.blit(
             imageLocation,
             internalMinecraft.screen!!.width / 2 - imageSize / 2,
             OUTER_PAD + INNER_PAD * 2 + internalMinecraft.font.lineHeight + 20,
@@ -112,7 +112,7 @@ class IgnoredSlotsScreen(private val archive: Archive, private val parent: Scree
             imageSize,
             imageSize
         )
-        *//*?}*/
+        /*?}*/
     }
 
     override fun shouldCloseOnEsc(): Boolean {

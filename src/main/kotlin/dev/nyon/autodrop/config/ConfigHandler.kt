@@ -35,7 +35,7 @@ internal fun migrate(
                     archiveObject["items"]?.jsonArray?.map secMap@{ content ->
                         val resourceLocation = resourceLocation(content.jsonPrimitive.contentOrNull ?: return null)
                         return@secMap ItemIdentifier(
-                            resourceLocation?.let { BuiltInRegistries.ITEM.get(it)/*? if >=1.21.2 {*/.getOrNull()?.value()/*?}*/ }, emptyStoredComponents, 1
+                            resourceLocation?.let { BuiltInRegistries.ITEM.get(it)/*? if >=1.21.2 {*//*.getOrNull()?.value()*//*?}*/ }, emptyStoredComponents, 1
                         )
                     }?.toMutableList() ?: return null,
                     archiveObject["lockedSlots"]?.jsonArray?.map secMap@{ content ->

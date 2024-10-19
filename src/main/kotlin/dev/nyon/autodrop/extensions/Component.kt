@@ -11,8 +11,8 @@ fun screenComponent(key: String, vararg objects: Any): MutableComponent {
 val Item.narration: Component
     get() {
         //? if >=1.21.2
-        return this.name
+        /*return this.name*/
 
         //? if <1.21.2
-        /*return Component.literal(this.description.toString())*/
+        return Component.literal(this.description.toString())
     }
