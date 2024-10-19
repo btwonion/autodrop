@@ -70,10 +70,8 @@ dependencies {
         modImplementation("net.fabricmc:fabric-language-kotlin:$flk")
         modImplementation("com.terraformersmc:modmenu:$modmenu")
     } else {
-        implementation(libs.kotlinx.datetime)
-        include(libs.kotlinx.datetime)
         "neoForge"("net.neoforged:neoforge:${property("vers.deps.fml")}")
-        implementation("thedarkcolour:kotlinforforge-neoforge:${property("vers.deps.kff")}")
+        modImplementation("dev.nyon:KotlinLangForge:1.0.3-k${libs.versions.kotlin.orNull}-$mcVersion+${loader.name.lowercase()}")
     }
 
     modCompileOnly("dev.isxander:yet-another-config-lib:$yaclVersion")
@@ -111,10 +109,7 @@ tasks {
 
         props.forEach(inputs::property)
 
-        (if (isFabric) listOf("fabric.mod.json") else listOf(
-            "META-INF/mods.toml",
-            "META-INF/neoforge.mods.toml"
-        )).forEach { filesMatching(it) { expand(props) } }
+        filesMatching(if (isFabric) "fabric.mod.json" else "META-INF/neoforge.mods.toml") { expand(props) }
     }
 
     register("releaseMod") {
@@ -162,10 +157,10 @@ publishMods {
             requires { slug = "fabric-language-kotlin" }
             optional { slug = "modmenu" }
         } else {
-            requires { slug = "kotlin-for-forge" }
+            requires { slug = "kotlin-lang-forge" }
         }
 
-        requires { slug = "yacl" }
+        optional { slug = "yacl" }
     }
 
     github {
