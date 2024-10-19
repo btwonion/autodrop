@@ -1,10 +1,10 @@
 [versions]
-kotlin = "2.0.20"
+kotlin = "2.0.21"
 kotlinx-datetime = "0.6.1"
-mod-publish = "0.5.+"
+mod-publish = "0.7.4"
 architectury-loom = "1.7-SNAPSHOT"
-fabric-loader = "0.16.4"
-fabric-language-kotlin = "1.12.1+kotlin."
+fabric-loader = "0.16.7"
+fabric-language-kotlin = "1.12.3+kotlin."
 vineflower = "1.10.1"
 konfig = "2.0.2-1.20.4"
 
