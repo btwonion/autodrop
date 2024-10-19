@@ -80,7 +80,7 @@ dependencies {
     include(libs.konfig)
 }
 
-val javaVersion = property("vers.javaVer").toString()
+val javaVersion = if (stonecutter.eval(mcVersion, ">=1.20.6")) 21 else 17
 val modId = property("mod.id").toString()
 val modName = property("mod.name").toString()
 val modDescription = property("mod.description").toString()
@@ -125,7 +125,7 @@ tasks {
 
     withType<KotlinCompile> {
         compilerOptions {
-            jvmTarget = JvmTarget.fromTarget(javaVersion)
+            jvmTarget = JvmTarget.fromTarget(javaVersion.toString())
         }
     }
 }
