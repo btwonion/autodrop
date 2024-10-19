@@ -1,7 +1,8 @@
 # autodrop
 
 This mod provides a function to automatically drop items from the
-inventory if they are blacklisted. You can easily disable it by pressing a hotkey (`default: j`).
+inventory if they are blacklisted.
+You can disable it by pressing a hotkey (`default: j`).
 
 ## Managing items
 
@@ -16,10 +17,10 @@ inventory if they are blacklisted. You can easily disable it by pressing a hotke
 *You have to be careful: Setting the item to air and leaving an empty component will cause the mod to drop every item.*
 
 The format of the components/nbt is always the item command syntax of the version of Minecraft you're playing on.
-Unless you know the syntax by heart, you can simply use
+Unless you know the syntax by heart, you can use
 a [give command generator](https://www.gamergeeks.net/apps/minecraft/give-command-generator) and copy the component
 part (enclosed by `{}` or `[]`).
 
 ### Other
 
-If you need help with any of my mods just join my [discord server](https://nyon.dev/discord).
+If you need help with any of my mods, join my [discord server](https://nyon.dev/discord).

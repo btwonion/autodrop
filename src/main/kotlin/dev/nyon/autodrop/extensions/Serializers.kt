@@ -9,6 +9,7 @@ import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import net.minecraft.commands.arguments.item.ItemParser
+import net.minecraft.core.registries.Registries
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.data.registries.VanillaRegistries
 import net.minecraft.world.item.Item
