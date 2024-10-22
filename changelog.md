@@ -1,1 +1,1 @@
-- fix mod metadata insertion
+- add support for 1.21.2 neoforge
