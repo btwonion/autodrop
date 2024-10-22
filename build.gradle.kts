@@ -71,7 +71,7 @@ dependencies {
         modImplementation("com.terraformersmc:modmenu:$modmenu")
     } else {
         "neoForge"("net.neoforged:neoforge:${property("vers.deps.fml")}")
-        modImplementation("dev.nyon:KotlinLangForge:1.0.3-k${libs.versions.kotlin.orNull}-$mcVersion+${loader.name.lowercase()}")
+        modImplementation("dev.nyon:KotlinLangForge:1.1.0-k${libs.versions.kotlin.orNull}-$mcVersion+${loader.name.lowercase()}")
     }
 
     modCompileOnly("dev.isxander:yet-another-config-lib:$yaclVersion")
