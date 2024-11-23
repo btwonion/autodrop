@@ -161,7 +161,7 @@ publishMods {
             requires { slug = "kotlin-lang-forge" }
         }
 
-        optional { slug = "yacl" }
+        requires { slug = "yacl" }
     }
 
     github {

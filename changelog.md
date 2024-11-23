@@ -2,3 +2,4 @@
 - correctly deactivate buttons in the config screen
 - update config screen translations
 - fix log spam when items affected by autodrop where moved into your inventory while having a container opened
+- re-require yacl
