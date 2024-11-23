@@ -14,7 +14,7 @@
     "menu.autodrop.screen.widget.items.remove": "Remove",
     "menu.autodrop.screen.widget.items.modify": "Modify",
     "menu.autodrop.screen.ignored.title": "Ignored Slots",
-    "menu.autodrop.screen.ignored.description": "Edit ignored slots (every slots should be seperated by a comma)",
+    "menu.autodrop.screen.ignored.description": "Edit ignored slots (every slot should be seperated by a comma)",
     "menu.autodrop.screen.ignored.empty": "e.g. 1,15,6",
     "menu.autodrop.screen.create.title": "Create new archive",
     "menu.autodrop.screen.create.description": "Enter the new archive's name below.",
