@@ -13,11 +13,11 @@ plugins {
 }
 stonecutter active "1.21-fabric" /* [SC] DO NOT EDIT */
 
-stonecutter configureEach {
-    val platforms = listOf("fabric", "neoforge").map { it to current.project.contains(it) }
+stonecutter parameters {
+    val platform = node!!.property("loom.platform")
+    val platforms = listOf("fabric", "neoforge").map { it to (platform == it) }
     consts(platforms)
 }
-
 stonecutter registerChiseled tasks.register("buildAllVersions", stonecutter.chiseled) {
     group = "mod"
     ofTask("build")
@@ -63,7 +63,8 @@ tasks.register("postUpdate") {
                 color = color,
                 fields = listOf(
                     Field(
-                        "Supported versions", stonecutter.projects.map { it.property("vers.supportedMcVersions").toString().split(',') }.flatten().toSet().joinToString(), false
+                        "Supported versions", stonecutter.tree.nodes.map { it.property("vers.supportedMcVersions").toString().split(',') }
+                            .flatten().toSet().joinToString(), false
                     ),
                     Field(
                         "Supported loaders", supportedLoaders.joinToString(), false

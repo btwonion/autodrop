@@ -1,5 +1,3 @@
-import dev.kikugie.stonecutter.StonecutterSettings
-
 rootProject.name = "autodrop"
 
 pluginManagement {
@@ -9,11 +7,12 @@ pluginManagement {
         maven("https://maven.architectury.dev")
         maven("https://maven.neoforged.net/releases/")
         maven("https://maven.kikugie.dev/releases")
+        maven("https://maven.kikugie.dev/snapshots")
     }
 }
 
 plugins {
-    id("dev.kikugie.stonecutter") version "0.4.+"
+    id("dev.kikugie.stonecutter") version "0.5-beta.5"
 }
 
 
@@ -24,7 +23,7 @@ buildscript {
     }
 }
 
-extensions.configure<StonecutterSettings> {
+stonecutter {
     kotlinController = true
     centralScript = "build.gradle.kts"
     shared {
@@ -34,8 +33,9 @@ extensions.configure<StonecutterSettings> {
         vers("1.20.6-fabric", "1.20.6")
         vers("1.21-fabric", "1.21")
         vers("1.21-neoforge", "1.21")
-        vers("1.21.2-fabric", "1.21.2")
-        vers("1.21.2-neoforge", "1.21.2")
+        vers("1.21.3-fabric", "1.21.3")
+        vers("1.21.3-neoforge", "1.21.3")
+        //vers("1.21.4-fabric", "1.21.4")
         vcsVersion = "1.21-fabric"
     }
     create(rootProject)
