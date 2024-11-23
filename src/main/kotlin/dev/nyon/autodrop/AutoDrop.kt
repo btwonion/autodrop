@@ -49,7 +49,6 @@ object AutoDrop {
                     val amountValid = itemStack.count >= identifier.amount
 
                     /*? if >=1.21 {*/
-                    
                     val componentValid =
                         identifier.components.isEmpty || identifier.components.entrySet().all { (key, component) ->
                             val identifierComponent = component.get()
@@ -90,11 +89,7 @@ object AutoDrop {
                 }
 
 
-                if (!isValid) return@forEach
-
-                minecraft.gameMode?.handleInventoryMouseClick(
-                    screen.menu.containerId, slot.index, 1, ClickType.THROW, player
-                )
+                if (isValid) minecraft.gameMode?.handleInventoryMouseClick(player.containerMenu.containerId, slot.index, 1, ClickType.THROW, player)
             }
 
             jobWaiting = false

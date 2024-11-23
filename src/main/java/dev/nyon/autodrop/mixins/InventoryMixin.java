@@ -40,4 +40,18 @@ public class InventoryMixin {
             .getTriggerConfig()
             .getOnPickup()) AutoDrop.INSTANCE.invokeAutodrop();
     }
+
+    @Inject(
+        method = "addResource(ILnet/minecraft/world/item/ItemStack;)I",
+        at = @At("RETURN")
+    )
+    public void invokeOnResourceTake(
+        int slot,
+        ItemStack stack,
+        CallbackInfoReturnable<Integer> cir
+    ){
+        if (ConfigHandlerKt.getConfig()
+            .getTriggerConfig()
+            .getOnPickup()) AutoDrop.INSTANCE.invokeAutodrop();
+    }
 }
