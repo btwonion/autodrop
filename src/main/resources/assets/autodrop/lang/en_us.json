@@ -6,7 +6,7 @@
     "menu.autodrop.screen.done": "Done",
     "menu.autodrop.screen.ignored": "Set ignored slots",
     "menu.autodrop.screen.create": "Create archive",
-    "menu.autodrop.screen.delete": "Delete selected archive",
+    "menu.autodrop.screen.delete": "Delete archive",
     "menu.autodrop.screen.identifier": "Add item identifier",
     "menu.autodrop.screen.widget.items.component.true": "Component Filter: Yes",
     "menu.autodrop.screen.widget.items.component.false": "Component Filter: No",

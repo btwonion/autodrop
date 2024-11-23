@@ -36,7 +36,7 @@ class ArchiveScreen(private val parent: Screen?) : Screen(screenComponent("title
 
     private val setIgnoredSlotsButton = Button.builder(screenComponent("ignored")) {
         internalMinecraft.setScreen(IgnoredSlotsScreen(selected ?: return@builder, this@ArchiveScreen))
-    }.build()
+    }.build().also { it.active = selected != null}
 
     private val createArchiveButton = Button.builder(screenComponent("create")) {
         internalMinecraft.setScreen(CreateArchiveScreen(this@ArchiveScreen) {
@@ -55,12 +55,13 @@ class ArchiveScreen(private val parent: Screen?) : Screen(screenComponent("title
         if (selected == null) {
             setIgnoredSlotsButton.active = false
             addIdentifierButton.active = false
-            it.active = true
+            it.active = false
         }
 
         archivesWidget.refreshEntries()
+        archiveItemsWidget.archive = selected
         archiveItemsWidget.refreshEntries()
-    }.build()
+    }.build().also { it.active = selected != null}
 
     private val addIdentifierButton = Button.builder(screenComponent("identifier")) {
         val newIdentifier = ItemIdentifier(null, emptyStoredComponents, 1)

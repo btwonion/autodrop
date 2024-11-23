@@ -1,1 +1,3 @@
-- add support for 1.21.2 neoforge
+- add support for 1.21.4 fabric
+- correctly deactivate buttons in the config screen
+- update button translations

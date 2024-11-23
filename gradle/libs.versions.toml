@@ -1,9 +1,8 @@
 [versions]
 kotlin = "2.0.21"
-kotlinx-datetime = "0.6.1"
 mod-publish = "0.7.4"
 architectury-loom = "1.7-SNAPSHOT"
-fabric-loader = "0.16.7"
+fabric-loader = "0.16.9"
 fabric-language-kotlin = "1.12.3+kotlin."
 vineflower = "1.10.1"
 konfig = "2.0.2-1.20.4"
@@ -12,7 +11,6 @@ konfig = "2.0.2-1.20.4"
 vineflower = { module = "org.vineflower:vineflower", version.ref = "vineflower" }
 konfig = { module = "dev.nyon:konfig", version.ref = "konfig" }
 fabric-loader = { module = "net.fabricmc:fabric-loader", version.ref = "fabric-loader" }
-kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
 
 [plugins]
 kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }

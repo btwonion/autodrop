@@ -31,13 +31,14 @@ class ModifyItemsWidget(var input: String, private val onSelect: Item.() -> Unit
         return getWidth() - 2 * INNER_PAD
     }
 
+    /*? if <1.21.4 {*/
     override fun getScrollbarPosition(): Int {
         return right - 7
     }
 
     override fun getMaxScroll(): Int {
         return max(0, maxPosition - getHeight() + INNER_PAD)
-    }
+    }/*?}*/
 
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
         width = internalMinecraft.screen!!.width / 2
@@ -47,7 +48,7 @@ class ModifyItemsWidget(var input: String, private val onSelect: Item.() -> Unit
     }
 
     fun refreshEntries() {
-        scrollAmount = 0.0
+        /*? if <1.21.4 {*/ scrollAmount = 0.0 /*?} else {*/ /*setScrollAmount(0.0) *//*?}*/
         clearEntries()
         BuiltInRegistries.ITEM.sortedByDescending { item ->
             val itemDescription = item.narration.string

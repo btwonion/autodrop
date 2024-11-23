@@ -32,13 +32,14 @@ class ArchiveItemsWidget(var archive: Archive?, private val parent: ArchiveScree
         return getWidth() - 2 * INNER_PAD
     }
 
+    /*? if <1.21.4 {*/
     override fun getScrollbarPosition(): Int {
         return right - 7
     }
 
     override fun getMaxScroll(): Int {
         return max(0, maxPosition - getHeight() + INNER_PAD)
-    }
+    }/*?}*/
 
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
         width = (internalMinecraft.screen!!.width / 4) * 3 - 2 * OUTER_PAD
@@ -47,7 +48,7 @@ class ArchiveItemsWidget(var archive: Archive?, private val parent: ArchiveScree
     }
 
     fun refreshEntries() {
-        scrollAmount = 0.0
+        /*? if <1.21.4 {*/ scrollAmount = 0.0 /*?} else {*/ /*setScrollAmount(0.0) *//*?}*/
         clearEntries()
         if (archive == null) return
         archive!!.entries.map {
