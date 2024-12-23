@@ -1,6 +1,7 @@
 package dev.nyon.autodrop
 
 import com.mojang.blaze3d.platform.InputConstants
+import dev.nyon.autodrop.config.ItemIdentifier
 import dev.nyon.autodrop.config.config
 import dev.nyon.autodrop.config.currentItems
 import dev.nyon.autodrop.config.ignoredSlots
@@ -17,6 +18,7 @@ import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
 import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.inventory.ClickType
+import net.minecraft.world.item.ItemStack
 //? if >=1.20.5
 import net.minecraft.world.item.enchantment.ItemEnchantments
 import org.lwjgl.glfw.GLFW
@@ -47,51 +49,14 @@ object AutoDrop {
                 val isValid = currentItems.any { identifier ->
                     val typeValid = identifier.type == null || itemStack.item == identifier.type
                     val amountValid = itemStack.count >= identifier.amount
+                    val componentValid = isComponentValid(itemStack, identifier)
 
-                    /*? if >=1.21 {*/
-                    val componentValid =
-                        identifier.components.isEmpty || identifier.components.entrySet().all { (key, component) ->
-                            val identifierComponent = component.get()
-                            val itemComponent = itemStack.get(key) ?: return@all false
-
-                            if (identifierComponent as? ItemEnchantments != null && itemComponent as? ItemEnchantments != null) {
-                                return@all identifierComponent.entrySet()
-                                    .all { entry -> // How tf is minecraft too bad to create a simple equals check - or is it me?
-                                        itemComponent.entrySet().map { it.key.value().description.string }
-                                            .contains(entry.key.value().description.string)
-                                    }
-                            }
-
-                            itemComponent == identifierComponent
-                        }
-                    /*?} else if >=1.20.5 {*/
-                    /*val componentValid = identifier.components.isEmpty || identifier.components.all { component ->
-                        val identifierComponent = component.value
-                        val itemComponent = itemStack.get(component.type) ?: return@all false
-
-                        if (identifierComponent as? ItemEnchantments != null && itemComponent as? ItemEnchantments != null) {
-                            return@all identifierComponent.entrySet()
-                                .all { entry -> // How tf is minecraft too bad to create a simple equals check - or is it me?
-                                    itemComponent.entrySet().map { it.key.value().descriptionId }
-                                        .contains(entry.key.value().descriptionId)
-                                }
-                        }
-
-                        itemComponent == identifierComponent
-                    }
-                    *//*?} else {*//*
-                    val componentValid = identifier.components.allKeys.all { key ->
-                        if (itemStack.tag == null) return@all false
-                        itemStack.tag!!.get(key) == identifier.components.get(key)
-                    }
-                    *//*?}*/
                     typeValid && amountValid && componentValid
                 }
 
-
                 if (isValid) minecraft.gameMode?.handleInventoryMouseClick(player.containerMenu.containerId, slot.index, 1, ClickType.THROW, player)
             }
-
+        }.invokeOnCompletion {
             jobWaiting = false
         }
     }
@@ -111,5 +76,47 @@ object AutoDrop {
             if (config.enabled) invokeAutodrop()
         }
         if (menuKeyBind.consumeClick()) client.setScreen(ArchiveScreen(null))
+    }
+
+    fun isComponentValid(itemStack: ItemStack, identifier: ItemIdentifier): Boolean {
+        /*? if >=1.21 {*/
+        val componentValid =
+            identifier.components.isEmpty || identifier.components.entrySet().all { (key, component) ->
+                val identifierComponent = component.get()
+                val itemComponent = itemStack.get(key) ?: return@all false
+
+                if (identifierComponent as? ItemEnchantments != null && itemComponent as? ItemEnchantments != null) {
+                    return@all identifierComponent.entrySet()
+                        .all { entry -> // How tf is minecraft too bad to create a simple equals check - or is it me?
+                            itemComponent.entrySet().map { it.key.value().description.string }
+                                .contains(entry.key.value().description.string)
+                        }
+                }
+
+                itemComponent == identifierComponent
+            }
+        /*?} else if >=1.20.5 {*/
+        /*val componentValid = identifier.components.isEmpty || identifier.components.all { component ->
+            val identifierComponent = component.value
+            val itemComponent = itemStack.get(component.type) ?: return@all false
+
+            if (identifierComponent as? ItemEnchantments != null && itemComponent as? ItemEnchantments != null) {
+                return@all identifierComponent.entrySet()
+                    .all { entry -> // How tf is minecraft too bad to create a simple equals check - or is it me?
+                        itemComponent.entrySet().map { it.key.value().descriptionId }
+                            .contains(entry.key.value().descriptionId)
+                    }
+            }
+
+            itemComponent == identifierComponent
+        }
+        *//*?} else {*//*
+        val componentValid = identifier.components.allKeys.all { key ->
+            if (itemStack.tag == null) return@all false
+            itemStack.tag!!.get(key) == identifier.components.get(key)
+        }
+        *//*?}*/
+
+        return componentValid
     }
 }
