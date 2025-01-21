@@ -27,13 +27,13 @@ class ArchivesWidget(private val archiveScreen: ArchiveScreen) : ObjectSelection
     }
 
     /*? if <1.21.4 {*/
-    override fun getScrollbarPosition(): Int {
+    /*override fun getScrollbarPosition(): Int {
         return right - 7
     }
 
     override fun getMaxScroll(): Int {
         return max(0, maxPosition - getHeight() + INNER_PAD)
-    }/*?}*/
+    }*//*?}*/
 
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
         width = (internalMinecraft.screen!!.width / 4) - OUTER_PAD
@@ -42,7 +42,7 @@ class ArchivesWidget(private val archiveScreen: ArchiveScreen) : ObjectSelection
     }
 
     fun refreshEntries() {
-        /*? if <1.21.4 {*/ scrollAmount = 0.0 /*?} else {*/ /*setScrollAmount(0.0) *//*?}*/
+        /*? if <1.21.4 {*/ /*scrollAmount = 0.0 *//*?} else {*/ setScrollAmount(0.0) /*?}*/
         clearEntries()
         config.archives.map { ArchivesWidgetEntry(it, archiveScreen) }.forEach(::addEntry)
     }

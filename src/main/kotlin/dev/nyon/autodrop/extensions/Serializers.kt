@@ -24,7 +24,7 @@ object ItemSerializer : KSerializer<Item> {
 
     override fun deserialize(decoder: Decoder): Item {
         val resourceLocation = resourceLocation(decoder.decodeString())!!
-        return BuiltInRegistries.ITEM.get(resourceLocation)/*? if >=1.21.2 {*//*.get().value()*//*?}*/
+        return BuiltInRegistries.ITEM.get(resourceLocation)/*? if >=1.21.2 {*/.get().value()/*?}*/
     }
 
     override fun serialize(
