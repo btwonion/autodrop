@@ -12,14 +12,14 @@ pluginManagement {
 }
 
 plugins {
-    id("dev.kikugie.stonecutter") version "0.5-beta.5"
+    id("dev.kikugie.stonecutter") version "0.5.1"
 }
 
 
 buildscript {
     repositories { mavenCentral() }
     dependencies {
-        classpath("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.1")
+        classpath("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
     }
 }
 
@@ -36,6 +36,7 @@ stonecutter {
         vers("1.21.3-fabric", "1.21.3")
         vers("1.21.3-neoforge", "1.21.3")
         vers("1.21.4-fabric", "1.21.4")
+        vers("1.21.4-neoforge", "1.21.4")
         vcsVersion = "1.21-fabric"
     }
     create(rootProject)

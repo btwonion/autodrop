@@ -54,6 +54,7 @@ val yaclVersion = property("vers.deps.yacl").toString()
 val flk: String = "${libs.versions.fabric.language.kotlin.orNull}${libs.versions.kotlin.orNull}"
 val fapi: String by lazy { property("vers.deps.fapi").toString() }
 val modmenu: String by lazy { property("vers.deps.modMenu").toString() }
+val forgeLk: String by lazy { property("vers.deps.klf").toString() }
 dependencies {
     minecraft("com.mojang:minecraft:$mcVersion")
     mappings(loom.layered {
@@ -71,12 +72,11 @@ dependencies {
         modImplementation("com.terraformersmc:modmenu:$modmenu")
     } else {
         "neoForge"("net.neoforged:neoforge:${property("vers.deps.fml")}")
-        modImplementation("dev.nyon:KotlinLangForge:1.2.0-k${libs.versions.kotlin.orNull}-$mcVersion+${loader.name.lowercase()}")
+        modImplementation("dev.nyon:KotlinLangForge:2.4.0-k${libs.versions.kotlin.orNull}-$forgeLk+${loader.name.lowercase()}")
     }
 
     modCompileOnly("dev.isxander:yet-another-config-lib:$yaclVersion")
 
-    modImplementation(libs.konfig)
     include(libs.konfig)
 }
 

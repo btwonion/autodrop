@@ -1,1 +1,2 @@
 - fix item identifiers not allowed being longer than 32 characters - [#21](https://github.com/btwonion/autodrop/issues/21)
+- update konfig inclusion
