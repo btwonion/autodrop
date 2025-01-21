@@ -31,6 +31,7 @@ class ModifyIdentifierScreen(private val parent: ArchiveScreen, private val item
     private val itemEditBox: EditBox =
         EditBox(internalMinecraft.font, 0, 0, 20, 20, screenComponent("modify.empty")).also {
             it.onClick(10.0, 10.0)
+            it.setMaxLength(100)
             it.setResponder { input ->
                 val now = Clock.System.now()
                 if (now - lastIndex > 500.milliseconds) {

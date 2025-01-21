@@ -1,5 +1,1 @@
-- add support for 1.21.4 fabric
-- correctly deactivate buttons in the config screen
-- update config screen translations
-- fix log spam when items affected by autodrop where moved into your inventory while having a container opened
-- re-require yacl
+- fix item identifiers not allowed being longer than 32 characters - [#21](https://github.com/btwonion/autodrop/issues/21)
