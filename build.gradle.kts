@@ -77,6 +77,7 @@ dependencies {
 
     modCompileOnly("dev.isxander:yet-another-config-lib:$yaclVersion")
 
+    implementation(libs.konfig)
     include(libs.konfig)
 }
 
