@@ -1,3 +1,5 @@
+[![Minecraft Storage article banner](https://raw.githubusercontent.com/btwonion/autodrop/refs/heads/main/media/banner_mcstorage.png)](https://minecraftstorage.com/mods/autodrop)
+
 # autodrop
 
 This mod provides a function to automatically drop items from the
