@@ -1,0 +1,1 @@
+- fix bug on "Set ignored slots screen" on 1.21.5 [#23](https://github.com/btwonion/autodrop/issues/23) - reported by @MoontoC
