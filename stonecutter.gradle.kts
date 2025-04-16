@@ -70,6 +70,7 @@ tasks.register("postUpdate") {
                         "Supported loaders", supportedLoaders.joinToString(), false
                     ),
                     Field("Modrinth", "https://modrinth.com/mod/$slug", true),
+                    Field("CurseForge", "https://www.curseforge.com/minecraft/mc-mods/autodrop", true),
                     Field("GitHub", "https://github.com/$repo", true)
                 )
             )

@@ -165,6 +165,22 @@ publishMods {
         requires { slug = "yacl" }
     }
 
+    curseforge {
+        projectId = "1244691"
+        accessToken = providers.environmentVariable("CURSEFORGE_API_KEY")
+        minecraftVersions.addAll(supportedMcVersions)
+
+        if (isFabric) {
+            requires { slug = "fabric-api" }
+            requires { slug = "fabric-language-kotlin" }
+            optional { slug = "modmenu" }
+        } else {
+            requires { slug = "kotlin-lang-forge" }
+        }
+
+        requires { slug = "yacl" }
+    }
+
     github {
         repository = githubRepo
         accessToken = providers.environmentVariable("GITHUB_TOKEN")
