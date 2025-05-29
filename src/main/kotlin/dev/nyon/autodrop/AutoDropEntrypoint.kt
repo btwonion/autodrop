@@ -4,9 +4,7 @@ import dev.nyon.autodrop.config.Config
 import dev.nyon.autodrop.config.config
 import dev.nyon.autodrop.config.migrate
 import dev.nyon.autodrop.config.reloadArchiveProperties
-import dev.nyon.autodrop.extensions.DataComponentPatchSerializer
 import dev.nyon.autodrop.extensions.ItemSerializer
-import dev.nyon.autodrop.extensions.StoredComponents
 import dev.nyon.konfig.config.config
 import dev.nyon.konfig.config.loadConfig
 import kotlinx.coroutines.CoroutineScope
@@ -37,8 +35,7 @@ import net.neoforged.fml.ModLoadingContext
 import net.neoforged.fml.common.Mod
 import net.neoforged.fml.loading.FMLLoader
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent
-
-typealias CSF = /^? if <1.20.6 {^/ /^net.neoforged.neoforge.client.ConfigScreenHandler.ConfigScreenFactory ^//^?} else {^/ net.neoforged.neoforge.client.gui.IConfigScreenFactory /^?}^/
+import net.neoforged.neoforge.client.gui.IConfigScreenFactory
 
 @Mod("autodrop")
 object AutoDropEntrypoint {
@@ -50,8 +47,8 @@ object AutoDropEntrypoint {
             it.register(AutoDrop.toggleKeyBind)
         }
 
-        ModLoadingContext.get().registerExtensionPoint(CSF::class.java) {
-            CSF { _, parent -> createYaclScreen(parent) }
+        ModLoadingContext.get().registerExtensionPoint(IConfigScreenFactory::class.java) {
+            IConfigScreenFactory { _, parent -> createYaclScreen(parent) }
         }
     }
 }
@@ -61,12 +58,11 @@ private fun initialize(configDir: Path) {
     minecraft = Minecraft.getInstance()
     mcScope = CoroutineScope(SupervisorJob() + minecraft.asCoroutineDispatcher())
 
-    config(configDir, 1, Config(), jsonBuilder = {
+    config(configDir, 2, Config(), jsonBuilder = {
         serializersModule = SerializersModule {
             contextual(Item::class, ItemSerializer)
-            contextual(StoredComponents::class, DataComponentPatchSerializer)
         }
-    }) { jsonTree, version -> migrate(jsonTree, version) }
+    }) { json, jsonTree, version -> migrate(json, jsonTree, version) }
     config = loadConfig<Config>()
 
     reloadArchiveProperties()

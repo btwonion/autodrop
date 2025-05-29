@@ -7,7 +7,6 @@ import dev.nyon.autodrop.config.reloadArchiveProperties
 import dev.nyon.autodrop.config.screen.create.CreateArchiveScreen
 import dev.nyon.autodrop.config.screen.ignored.IgnoredSlotsScreen
 import dev.nyon.autodrop.config.screen.modify.ModifyIdentifierScreen
-import dev.nyon.autodrop.extensions.emptyStoredComponents
 import dev.nyon.autodrop.extensions.screenComponent
 import dev.nyon.konfig.config.saveConfig
 import net.minecraft.ChatFormatting
@@ -64,7 +63,7 @@ class ArchiveScreen(private val parent: Screen?) : Screen(screenComponent("title
     }.build().also { it.active = selected != null}
 
     private val addIdentifierButton = Button.builder(screenComponent("identifier")) {
-        val newIdentifier = ItemIdentifier(null, emptyStoredComponents, 1)
+        val newIdentifier = ItemIdentifier(null, "[]", 1)
 
         selected?.entries?.add(newIdentifier) ?: return@builder
         internalMinecraft.setScreen(

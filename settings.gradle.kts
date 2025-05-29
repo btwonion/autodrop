@@ -19,7 +19,7 @@ plugins {
 buildscript {
     repositories { mavenCentral() }
     dependencies {
-        classpath("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
+        classpath("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
     }
 }
 
@@ -27,8 +27,6 @@ stonecutter {
     kotlinController = true
     centralScript = "build.gradle.kts"
     shared {
-        vers("1.20.4-neoforge", "1.20.4")
-        vers("1.20.4-fabric", "1.20.4")
         vers("1.20.6-neoforge", "1.20.6")
         vers("1.20.6-fabric", "1.20.6")
         vers("1.21-fabric", "1.21")

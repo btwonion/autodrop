@@ -16,10 +16,12 @@ You can disable it by pressing a hotkey (`default: j`).
 
 *You have to be careful: Setting the item to air and leaving an empty component will cause the mod to drop every item.*
 
-The format of the components/nbt is always the item command syntax of the version of Minecraft you're playing on.
+The format of the components/nbt is always the item predicate syntax of the version of Minecraft you're playing on.
 Unless you know the syntax by heart, you can use
-a [give command generator](https://www.gamergeeks.net/apps/minecraft/give-command-generator) and copy the component
-part (enclosed by `{}` or `[]`).
+a [give command generator](https://www.gamergeeks.net/apps/minecraft/give-command-generator)
+and copy the component part (enclosed by `{}` or `[]`).
+The syntax is also described on
+this [wiki post](https://minecraft.wiki/w/Argument_types#item_predicate).
 
 ### Other
 

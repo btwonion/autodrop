@@ -6,6 +6,8 @@ import dev.nyon.autodrop.config.config
 import dev.nyon.autodrop.config.currentItems
 import dev.nyon.autodrop.config.ignoredSlots
 import dev.nyon.autodrop.config.screen.root.ArchiveScreen
+import dev.nyon.autodrop.extensions.matchItemPredicate
+import dev.nyon.autodrop.extensions.stringReader
 import dev.nyon.konfig.config.saveConfig
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
@@ -14,13 +16,15 @@ import kotlinx.coroutines.runBlocking
 import net.minecraft.client.KeyMapping
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.screens.inventory.InventoryScreen
+import net.minecraft.commands.CommandBuildContext
+import net.minecraft.commands.arguments.item.ItemPredicateArgument
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
+import net.minecraft.world.flag.FeatureFlags
 import net.minecraft.world.inventory.ClickType
 import net.minecraft.world.inventory.Slot
 import net.minecraft.world.item.ItemStack
-//? if >=1.20.5
-import net.minecraft.world.item.enchantment.ItemEnchantments
+import net.minecraft.world.item.Items
 import org.lwjgl.glfw.GLFW
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -29,10 +33,19 @@ lateinit var minecraft: Minecraft
 
 object AutoDrop {
     private var jobWaiting = false
+    val itemPredicateArgument: ItemPredicateArgument by lazy {
+        ItemPredicateArgument(
+            CommandBuildContext.simple(
+                minecraft.player?.registryAccess() ?: return@lazy error("Cannot load local player."),
+                FeatureFlags.DEFAULT_FLAGS
+            )
+        )
+    }
 
     /**
      * Filters slots for items matching the filter and drops them after a specified delay.
-     * The job is only executed when no other job is currently running and the player matches the configured criteria.
+     * The job is only executed when no other job is currently running
+     * and the player matches the configured criteria.
      */
     fun invokeAutodrop() = runBlocking {
         if (jobWaiting) return@runBlocking
@@ -51,11 +64,12 @@ object AutoDrop {
             }.forEach { slot ->
                 val itemStack = slot.item
                 val isValid = currentItems.any { identifier ->
-                    val typeValid = identifier.type == null || itemStack.item == identifier.type
+                    val typeValid =
+                        identifier.type == null || identifier.type == Items.AIR || itemStack.item == identifier.type
                     val amountValid = itemStack.count >= identifier.amount
-                    val componentValid = isComponentValid(itemStack, identifier)
+                    val predicateValid = isPredicateValid(itemStack, identifier)
 
-                    typeValid && amountValid && componentValid
+                    typeValid && amountValid && predicateValid
                 }
 
                 if (isValid) minecraft.gameMode?.handleInventoryMouseClick(
@@ -98,46 +112,9 @@ object AutoDrop {
     /**
      * Checks whether the components of the item stack match the identifier.
      */
-    fun isComponentValid(itemStack: ItemStack, identifier: ItemIdentifier): Boolean {
-        /*? if >=1.21 {*/
-        val componentValid =
-            identifier.components.isEmpty || identifier.components.entrySet().all { (key, component) ->
-                val identifierComponent = component.get()
-                val itemComponent = itemStack.get(key) ?: return@all false
-
-                if (identifierComponent as? ItemEnchantments != null && itemComponent as? ItemEnchantments != null) {
-                    return@all identifierComponent.entrySet()
-                        .all { entry -> // How tf is minecraft too bad to create a simple equals check - or is it me?
-                            itemComponent.entrySet().map { it.key.value().description.string }
-                                .contains(entry.key.value().description.string)
-                        }
-                }
-
-                itemComponent == identifierComponent
-            }
-        /*?} else if >=1.20.5 {*/
-        /*val componentValid = identifier.components.isEmpty || identifier.components.all { component ->
-            val identifierComponent = component.value
-            val itemComponent = itemStack.get(component.type) ?: return@all false
-
-            if (identifierComponent as? ItemEnchantments != null && itemComponent as? ItemEnchantments != null) {
-                return@all identifierComponent.entrySet()
-                    .all { entry -> // How tf is minecraft too bad to create a simple equals check - or is it me?
-                        itemComponent.entrySet().map { it.key.value().descriptionId }
-                            .contains(entry.key.value().descriptionId)
-                    }
-            }
-
-            itemComponent == identifierComponent
-        }
-        *//*?} else {*//*
-        val componentValid = identifier.components.allKeys.all { key ->
-            if (itemStack.tag == null) return@all false
-            itemStack.tag!!.get(key) == identifier.components.get(key)
-        }
-        *//*?}*/
-
-        return componentValid
+    fun isPredicateValid(itemStack: ItemStack, identifier: ItemIdentifier): Boolean {
+        val predicateResult = itemPredicateArgument.parse(identifier.predicate.matchItemPredicate().stringReader())
+        return predicateResult.test(itemStack)
     }
 
     /**

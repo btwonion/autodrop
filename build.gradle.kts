@@ -81,7 +81,7 @@ dependencies {
     include(libs.konfig)
 }
 
-val javaVersion = if (stonecutter.eval(mcVersion, ">=1.20.6")) 21 else 17
+val javaVersion = 21
 val modId = property("mod.id").toString()
 val modName = property("mod.name").toString()
 val modDescription = property("mod.description").toString()
@@ -122,7 +122,7 @@ tasks {
     }
 
     withType<JavaCompile> {
-        options.release = javaVersion.toInt()
+        options.release = javaVersion
     }
 
     withType<KotlinCompile> {
@@ -212,7 +212,7 @@ publishing {
 java {
     withSourcesJar()
 
-    javaVersion.toInt().let { JavaVersion.values()[it - 1] }.let {
+    javaVersion.let { JavaVersion.values()[it - 1] }.let {
         sourceCompatibility = it
         targetCompatibility = it
     }

@@ -1,7 +1,5 @@
 import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.*
-import org.gradle.configurationcache.extensions.capitalized
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest

@@ -98,7 +98,7 @@ class ArchiveItemEntry(
 
         guiGraphics.drawString(
             internalMinecraft.font,
-            screenComponent("widget.items.component.${!itemIdentifier.components.isEmpty}"),
+            screenComponent("widget.items.component.${itemIdentifier.predicate.length > 2}"),
             textX,
             y + internalMinecraft.font.lineHeight + INNER_PAD * 2,
             0xFFFFFF

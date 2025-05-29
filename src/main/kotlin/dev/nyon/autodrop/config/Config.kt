@@ -1,6 +1,5 @@
 package dev.nyon.autodrop.config
 
-import dev.nyon.autodrop.extensions.StoredComponents
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 import net.minecraft.world.item.Item
@@ -53,10 +52,10 @@ data class Archive(
  * Represents and entry of an archive for identification of items that are valid to be dropped.
  *
  * @param type is the type of the item and serialized as a [net.minecraft.resources.ResourceLocation], e.g. minecraft:stone.
- * @param components is the item data. The format should match the item argument in the commands, that are read through [net.minecraft.commands.arguments.item.ItemParser].
+ * @param predicate is the item data to be filtered for. The format should match the syntax of the item predicate.
  * @param amount is the amount of the item that is required for the item to be dropped.
  */
 @Serializable
 data class ItemIdentifier(
-    var type: @Contextual Item?, var components: @Contextual StoredComponents, var amount: Int
+    var type: @Contextual Item?, var predicate: String, var amount: Int
 )

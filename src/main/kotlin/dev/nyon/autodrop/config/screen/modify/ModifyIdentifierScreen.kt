@@ -1,13 +1,15 @@
 package dev.nyon.autodrop.config.screen.modify
 
+import dev.nyon.autodrop.AutoDrop
 import dev.nyon.autodrop.config.ItemIdentifier
 import dev.nyon.autodrop.config.config
 import dev.nyon.autodrop.config.screen.root.ArchiveScreen
 import dev.nyon.autodrop.config.screen.root.INNER_PAD
 import dev.nyon.autodrop.config.screen.root.OUTER_PAD
-import dev.nyon.autodrop.extensions.DataComponentPatchSerializer
+import dev.nyon.autodrop.extensions.matchItemPredicate
 import dev.nyon.autodrop.extensions.resourceLocation
 import dev.nyon.autodrop.extensions.screenComponent
+import dev.nyon.autodrop.extensions.stringReader
 import dev.nyon.konfig.config.saveConfig
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
@@ -23,7 +25,7 @@ class ModifyIdentifierScreen(private val parent: ArchiveScreen, private val item
     Screen(screenComponent("modify.title")) {
     private val matcher: () -> Boolean = {
         (itemEditBox.value.isBlank() || BuiltInRegistries.ITEM.getOptional(resourceLocation(itemEditBox.value)).isPresent) && kotlin.runCatching {
-            DataComponentPatchSerializer.toPatch(componentsEditBox.value)
+            AutoDrop.itemPredicateArgument.parse(componentsEditBox.value.matchItemPredicate().stringReader())
         }.isSuccess && amountEditBox.value.toIntOrNull().let { it != null && it in 0 .. 64 }
     }
 
@@ -48,7 +50,7 @@ class ModifyIdentifierScreen(private val parent: ArchiveScreen, private val item
         EditBox(internalMinecraft.font, 0, 0, 20, 20, screenComponent("modify.empty")).also {
             it.onClick(10.0, 10.0)
             it.setMaxLength(300)
-            it.value = DataComponentPatchSerializer.toString(itemIdentifier.components)
+            it.value = itemIdentifier.predicate
             it.cursorPosition = 0
             it.setHighlightPos(0)
         }
@@ -147,7 +149,7 @@ class ModifyIdentifierScreen(private val parent: ArchiveScreen, private val item
     }
 
     override fun onClose() {
-        itemIdentifier.components = DataComponentPatchSerializer.toPatch(componentsEditBox.value)
+        itemIdentifier.predicate = componentsEditBox.value
         itemIdentifier.amount = amountEditBox.value.toInt()
         internalMinecraft.setScreen(parent)
         saveConfig(config)
