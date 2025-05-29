@@ -16,8 +16,8 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.screens.inventory.InventoryScreen
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
-import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.inventory.ClickType
+import net.minecraft.world.inventory.Slot
 import net.minecraft.world.item.ItemStack
 //? if >=1.20.5
 import net.minecraft.world.item.enchantment.ItemEnchantments
@@ -30,6 +30,10 @@ lateinit var minecraft: Minecraft
 object AutoDrop {
     private var jobWaiting = false
 
+    /**
+     * Filters slots for items matching the filter and drops them after a specified delay.
+     * The job is only executed when no other job is currently running and the player matches the configured criteria.
+     */
     fun invokeAutodrop() = runBlocking {
         if (jobWaiting) return@runBlocking
         if (!config.enabled) return@runBlocking
@@ -43,7 +47,7 @@ object AutoDrop {
 
             val screen = InventoryScreen(player)
             screen.menu.slots.filter {
-                it.hasItem() && !ignoredSlots.contains(it.index) && it.container is Inventory
+                it.hasItem() && !ignoredSlots.contains(it.correctSlotId())
             }.forEach { slot ->
                 val itemStack = slot.item
                 val isValid = currentItems.any { identifier ->
@@ -54,16 +58,29 @@ object AutoDrop {
                     typeValid && amountValid && componentValid
                 }
 
-                if (isValid) minecraft.gameMode?.handleInventoryMouseClick(player.containerMenu.containerId, slot.index, 1, ClickType.THROW, player)
+                if (isValid) minecraft.gameMode?.handleInventoryMouseClick(
+                    player.containerMenu.containerId, slot.correctSlotId(), 1, ClickType.THROW, player
+                )
             }
         }.invokeOnCompletion {
             jobWaiting = false
         }
     }
 
-    val toggleKeyBind by lazy { KeyMapping("key.autodrop.toggle", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_J, "key.autodrop.category") }
-    val menuKeyBind by lazy { KeyMapping("key.autodrop.gui", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_O, "key.autodrop.category") }
+    val toggleKeyBind by lazy {
+        KeyMapping(
+            "key.autodrop.toggle", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_J, "key.autodrop.category"
+        )
+    }
+    val menuKeyBind by lazy {
+        KeyMapping(
+            "key.autodrop.gui", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_O, "key.autodrop.category"
+        )
+    }
 
+    /**
+     * Handles the keybinds.
+     */
     fun tick(client: Minecraft) {
         if (toggleKeyBind.consumeClick()) {
             config.enabled = !config.enabled
@@ -78,6 +95,9 @@ object AutoDrop {
         if (menuKeyBind.consumeClick()) client.setScreen(ArchiveScreen(null))
     }
 
+    /**
+     * Checks whether the components of the item stack match the identifier.
+     */
     fun isComponentValid(itemStack: ItemStack, identifier: ItemIdentifier): Boolean {
         /*? if >=1.21 {*/
         val componentValid =
@@ -118,5 +138,22 @@ object AutoDrop {
         *//*?}*/
 
         return componentValid
+    }
+
+    /**
+     * Transforms the requested slot index to the index matching the schema of the player's inventory.
+     */
+    private fun Slot.correctSlotId(): Int { // The number of slots that are currently accessible to the player.
+        // If no container is opened, it is expected to be a player's inventory menu with the inventory's index starting at 0.
+        val openedContainerSize = minecraft.player?.containerMenu?.slots?.size ?: (0 + index)
+
+        // The starting index of the actual inventory of the player.
+        // In the case of the Crafter's and the player's inventory menu, the last slot is placed incorrectly, leading to wrong slot identification.
+        // -> start slot is 9
+        val invStartIndex = if (openedContainerSize == 46) 9 else openedContainerSize - 36
+
+        // The index of the slot subtracted by the above 9 slots of the player's inventory menu.
+        val flattenedInvIndex = index - 9
+        return invStartIndex + flattenedInvIndex
     }
 }
