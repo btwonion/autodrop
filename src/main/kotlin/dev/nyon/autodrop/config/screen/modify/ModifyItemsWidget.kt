@@ -94,7 +94,7 @@ class ModifyItemsEntry(private val item: Item, private val onSelect: () -> Unit)
             itemLocationString,
             x + INNER_PAD + internalMinecraft.font.lineHeight * 2,
             y + height / 2 - internalMinecraft.font.lineHeight / 2,
-            0xFFFFFF
+            0xFFFFFFFF.toInt()
         )
 
         selectButton.height = min(20, internalMinecraft.screen!!.height / 15)

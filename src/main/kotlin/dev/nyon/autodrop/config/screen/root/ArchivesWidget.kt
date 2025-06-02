@@ -73,7 +73,7 @@ class ArchivesWidgetEntry(private val archive: Archive, private val archiveScree
             Component.literal(archive.name),
             x,
             y + height / 2 - internalMinecraft.font.lineHeight / 2,
-            0xFFFFFF
+            0xFFFFFFFF.toInt()
         )
 
         // tick box - outer rectangle

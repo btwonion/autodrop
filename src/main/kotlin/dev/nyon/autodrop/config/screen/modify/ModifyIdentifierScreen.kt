@@ -122,7 +122,7 @@ class ModifyIdentifierScreen(private val parent: ArchiveScreen, private val item
             screenComponent("modify.item.description"),
             internalMinecraft.screen!!.width / 2,
             OUTER_PAD,
-            0xFFFFFF
+            0xFFFFFFFF.toInt()
         )
 
         // render components text and edit box
@@ -131,7 +131,7 @@ class ModifyIdentifierScreen(private val parent: ArchiveScreen, private val item
             screenComponent("modify.components.description"),
             internalMinecraft.screen!!.width / 2,
             OUTER_PAD * 2 + INNER_PAD * 2 + internalMinecraft.font.lineHeight + 20 + internalMinecraft.screen!!.height / 6,
-            0xFFFFFF
+            0xFFFFFFFF.toInt()
         )
 
         // render amount text and edit box
@@ -140,7 +140,7 @@ class ModifyIdentifierScreen(private val parent: ArchiveScreen, private val item
             screenComponent("modify.amount.description"),
             internalMinecraft.screen!!.width / 2,
             OUTER_PAD * 3 + INNER_PAD * 3 + internalMinecraft.font.lineHeight * 2 + 20 * 2 + internalMinecraft.screen!!.height / 6,
-            0xFFFFFF
+            0xFFFFFFFF.toInt()
         )
     }
 

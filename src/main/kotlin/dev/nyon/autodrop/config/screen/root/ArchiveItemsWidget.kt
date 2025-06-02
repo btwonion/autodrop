@@ -93,7 +93,7 @@ class ArchiveItemEntry(
         val textX = x + internalMinecraft.font.lineHeight * 3 + INNER_PAD
         guiGraphics.renderItem(ItemStack(item), x + INNER_PAD, y + INNER_PAD + internalMinecraft.font.lineHeight)
         guiGraphics.drawString(
-            internalMinecraft.font, itemLocationString, textX, y + INNER_PAD, 0xFFFFFF
+            internalMinecraft.font, itemLocationString, textX, y + INNER_PAD, 0xFFFFFFFF.toInt()
         )
 
         guiGraphics.drawString(
@@ -101,14 +101,14 @@ class ArchiveItemEntry(
             screenComponent("widget.items.component.${itemIdentifier.predicate.length > 2}"),
             textX,
             y + internalMinecraft.font.lineHeight + INNER_PAD * 2,
-            0xFFFFFF
+            0xFFFFFFFF.toInt()
         )
         guiGraphics.drawString(
             internalMinecraft.font,
             screenComponent("widget.items.amount", itemIdentifier.amount.toString()),
             textX,
             y + internalMinecraft.font.lineHeight * 2 + INNER_PAD * 3,
-            0xFFFFFF
+            0xFFFFFFFF.toInt()
         )
 
         removeButton.setPosition(x + width - removeButton.width - INNER_PAD, y + height / 2 - 10)

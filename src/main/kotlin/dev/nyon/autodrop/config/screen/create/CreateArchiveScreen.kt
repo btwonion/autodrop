@@ -57,7 +57,7 @@ class CreateArchiveScreen(private val parent: Screen?, private val onClose: (Arc
             screenComponent("create.description"),
             internalMinecraft.screen!!.width / 2,
             OUTER_PAD,
-            0xFFFFFF
+            0xFFFFFFFF.toInt()
         )
     }
 

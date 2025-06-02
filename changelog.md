@@ -4,3 +4,4 @@
   - syntax is described here: https://minecraft.wiki/w/Argument_types#item_predicate
   - bumps config version to 2
 - drop 1.20.4 support
+- add support for 1.21.6-pre1

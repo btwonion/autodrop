@@ -2,6 +2,7 @@ package dev.nyon.autodrop.config.screen.ignored
 
 import dev.nyon.autodrop.config.Archive
 import dev.nyon.autodrop.config.config
+import dev.nyon.autodrop.minecraft as internalMinecraft
 import dev.nyon.autodrop.config.screen.root.INNER_PAD
 import dev.nyon.autodrop.config.screen.root.OUTER_PAD
 import dev.nyon.autodrop.extensions.resourceLocation
@@ -17,8 +18,11 @@ import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.renderer.CoreShaders
 import net.minecraft.client.renderer.GameRenderer
 *//*?}*/
-import net.minecraft.client.renderer.RenderType
-import dev.nyon.autodrop.minecraft as internalMinecraft
+//? if <1.21.6 {
+/*import net.minecraft.client.renderer.RenderType*/
+//?} else {
+import net.minecraft.client.renderer.RenderPipelines
+//?}
 
 class IgnoredSlotsScreen(private val archive: Archive, private val parent: Screen?) :
     Screen(screenComponent("ignored.title")) {
@@ -73,7 +77,7 @@ class IgnoredSlotsScreen(private val archive: Archive, private val parent: Scree
             screenComponent("ignored.description"),
             internalMinecraft.screen!!.width / 2,
             OUTER_PAD,
-            0xFFFFFF
+            0xFFFFFFFF.toInt()
         )
 
         // render image
@@ -92,7 +96,7 @@ class IgnoredSlotsScreen(private val archive: Archive, private val parent: Scree
 
         /*? if >=1.21.2 {*/
         guiGraphics.blit(
-            RenderType::guiTextured,
+            /*? if <1.21.6 {*//* RenderType::guiTextured *//*?} else {*/ RenderPipelines.GUI_TEXTURED /*?}*/,
             imageLocation,
             internalMinecraft.screen!!.width / 2 - imageSize / 2,
             OUTER_PAD + INNER_PAD * 2 + internalMinecraft.font.lineHeight + 20,
