@@ -175,7 +175,7 @@ publishMods {
             requires { slug = "fabric-language-kotlin" }
             optional { slug = "modmenu" }
         } else {
-            requires { slug = "kotlin-lang-forge" }
+            requires { slug = "kotlinlangforge" }
         }
 
         requires { slug = "yacl" }
