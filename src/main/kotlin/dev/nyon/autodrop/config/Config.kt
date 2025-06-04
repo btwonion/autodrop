@@ -37,14 +37,14 @@ data class TriggerConfig(
  *
  * @param enabled defines whether the archive is enabled.
  * @param name is the identifier of the archive.
- * @param entries define the entries of the archive. Those are represented by [dev.nyon.autodrop.config.ItemIdentifier].
+ * @param entries define the entries of the archive. Those are represented by [dev.nyon.autodrop.config.ArchiveEntry].
  * @param ignoredSlots define the slots that are ignored by the mod and thus don't get cleared automatically.
  */
 @Serializable
 data class Archive(
     var enabled: Boolean = true,
     val name: String,
-    var entries: MutableList<ItemIdentifier>,
+    var entries: MutableList<ArchiveEntry>,
     var ignoredSlots: MutableSet<Int>
 )
 
@@ -56,6 +56,9 @@ data class Archive(
  * @param amount is the amount of the item that is required for the item to be dropped.
  */
 @Serializable
-data class ItemIdentifier(
-    var type: @Contextual Item?, var predicate: String, var amount: Int
+data class ArchiveEntry(
+    var type: @Contextual Item?,
+    var predicate: String,
+    var amount: Int,
+    var dropEverything: Boolean = true
 )

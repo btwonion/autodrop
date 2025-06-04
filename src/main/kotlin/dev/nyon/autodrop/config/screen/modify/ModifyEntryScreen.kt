@@ -1,7 +1,7 @@
 package dev.nyon.autodrop.config.screen.modify
 
 import dev.nyon.autodrop.AutoDrop
-import dev.nyon.autodrop.config.ItemIdentifier
+import dev.nyon.autodrop.config.ArchiveEntry
 import dev.nyon.autodrop.config.config
 import dev.nyon.autodrop.config.screen.root.ArchiveScreen
 import dev.nyon.autodrop.config.screen.root.INNER_PAD
@@ -21,7 +21,7 @@ import net.minecraft.core.registries.BuiltInRegistries
 import kotlin.time.Duration.Companion.milliseconds
 import dev.nyon.autodrop.minecraft as internalMinecraft
 
-class ModifyIdentifierScreen(private val parent: ArchiveScreen, private val itemIdentifier: ItemIdentifier) :
+class ModifyEntryScreen(private val parent: ArchiveScreen, private val archiveEntry: ArchiveEntry) :
     Screen(screenComponent("modify.title")) {
     private val matcher: () -> Boolean = {
         (itemEditBox.value.isBlank() || BuiltInRegistries.ITEM.getOptional(resourceLocation(itemEditBox.value)).isPresent) && kotlin.runCatching {
@@ -41,7 +41,7 @@ class ModifyIdentifierScreen(private val parent: ArchiveScreen, private val item
                     itemListWidget.refreshEntries()
                 }
             }
-            it.value = itemIdentifier.type?.let { item -> BuiltInRegistries.ITEM.getKey(item).toString() } ?: ""
+            it.value = archiveEntry.type?.let { item -> BuiltInRegistries.ITEM.getKey(item).toString() } ?: ""
             it.cursorPosition = 0
             it.setHighlightPos(0)
         }
@@ -50,7 +50,7 @@ class ModifyIdentifierScreen(private val parent: ArchiveScreen, private val item
         EditBox(internalMinecraft.font, 0, 0, 20, 20, screenComponent("modify.empty")).also {
             it.onClick(10.0, 10.0)
             it.setMaxLength(300)
-            it.value = itemIdentifier.predicate
+            it.value = archiveEntry.predicate
             it.cursorPosition = 0
             it.setHighlightPos(0)
         }
@@ -59,7 +59,7 @@ class ModifyIdentifierScreen(private val parent: ArchiveScreen, private val item
         EditBox(internalMinecraft.font, 0, 0, 20, 20, screenComponent("modify.empty")).also {
             it.onClick(10.0, 10.0)
             it.setMaxLength(2)
-            it.value = itemIdentifier.amount.toString()
+            it.value = archiveEntry.amount.toString()
             it.setFilter { input ->
                 val int = input.toIntOrNull() ?: return@setFilter false
                 int in 0 .. 64
@@ -69,10 +69,14 @@ class ModifyIdentifierScreen(private val parent: ArchiveScreen, private val item
         }
 
     private val itemListWidget: ModifyItemsWidget = ModifyItemsWidget(itemEditBox.value) item@{
-        itemIdentifier.type = this@item
+        archiveEntry.type = this@item
         itemEditBox.value = BuiltInRegistries.ITEM.getKey(this@item).toString()
     }.also {
         it.refreshEntries()
+    }
+
+    private val dropEverythingTickBox: DropEverythingWidget = DropEverythingWidget(0, 0, 20, 20, archiveEntry.dropEverything) {
+        archiveEntry.dropEverything = this@DropEverythingWidget
     }
 
     private val doneButton = Button.builder(screenComponent("done")) {
@@ -84,6 +88,7 @@ class ModifyIdentifierScreen(private val parent: ArchiveScreen, private val item
         addRenderableWidget(componentsEditBox)
         addRenderableWidget(amountEditBox)
         addRenderableWidget(itemListWidget)
+        addRenderableWidget(dropEverythingTickBox)
         addRenderableWidget(doneButton)
         super.init()
     }
@@ -106,6 +111,13 @@ class ModifyIdentifierScreen(private val parent: ArchiveScreen, private val item
             OUTER_PAD * 3 + INNER_PAD * 4 + internalMinecraft.font.lineHeight * 3 + 20 * 2 + internalMinecraft.screen!!.height / 6
         )
         amountEditBox.width = internalMinecraft.screen!!.width / 2
+
+        dropEverythingTickBox.setPosition(
+            internalMinecraft.screen!!.width / 4,
+            OUTER_PAD * 4 + INNER_PAD * 6 + internalMinecraft.font.lineHeight * 4 + 20 * 2 + internalMinecraft.screen!!.height / 6
+        )
+        dropEverythingTickBox.width = internalMinecraft.screen!!.width / 2
+        dropEverythingTickBox.height = internalMinecraft.font.lineHeight * 2
 
         // render done button
         doneButton.setPosition(
@@ -149,8 +161,8 @@ class ModifyIdentifierScreen(private val parent: ArchiveScreen, private val item
     }
 
     override fun onClose() {
-        itemIdentifier.predicate = componentsEditBox.value
-        itemIdentifier.amount = amountEditBox.value.toInt()
+        archiveEntry.predicate = componentsEditBox.value
+        archiveEntry.amount = amountEditBox.value.toInt()
         internalMinecraft.setScreen(parent)
         saveConfig(config)
         parent.archiveItemsWidget.refreshEntries()

@@ -1,7 +1,2 @@
-- fix items not dropping when inside of gui - [#22](https://github.com/btwonion/autodrop/issues/22), [#20](https://github.com/btwonion/autodrop/issues/20)
-- use item predicate as way to filter for the nbt of an item - [#24](https://github.com/btwonion/autodrop/issues/24)
-  - _This change may break some existing nbt filters_
-  - syntax is described here: https://minecraft.wiki/w/Argument_types#item_predicate
-  - bumps config version to 2
-- drop 1.20.4 support
-- add support for 1.21.6-pre1
+- add option to retain items inside of the slot by dropping only half of the stack at a time
+  - this can be configured per item identifier

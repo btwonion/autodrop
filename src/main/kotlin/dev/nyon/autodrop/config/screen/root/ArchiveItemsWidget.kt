@@ -1,8 +1,8 @@
 package dev.nyon.autodrop.config.screen.root
 
 import dev.nyon.autodrop.config.Archive
-import dev.nyon.autodrop.config.ItemIdentifier
-import dev.nyon.autodrop.config.screen.modify.ModifyIdentifierScreen
+import dev.nyon.autodrop.config.ArchiveEntry
+import dev.nyon.autodrop.config.screen.modify.ModifyEntryScreen
 import dev.nyon.autodrop.extensions.narration
 import dev.nyon.autodrop.extensions.screenComponent
 import net.minecraft.client.gui.GuiGraphics
@@ -61,9 +61,9 @@ class ArchiveItemsWidget(var archive: Archive?, private val parent: ArchiveScree
 }
 
 class ArchiveItemEntry(
-    private val itemIdentifier: ItemIdentifier, private val parent: ArchiveScreen, private val onRemove: () -> Unit
+    private val archiveEntry: ArchiveEntry, private val parent: ArchiveScreen, private val onRemove: () -> Unit
 ) : ObjectSelectionList.Entry<ArchiveItemEntry>() {
-    private val item: Item = itemIdentifier.type ?: Items.AIR
+    private val item: Item = archiveEntry.type ?: Items.AIR
     private val itemLocationString = BuiltInRegistries.ITEM.getKey(item).run {
         val string = toString()
         if (string.length > 25) return@run "${string.take(22)}..."
@@ -75,7 +75,7 @@ class ArchiveItemEntry(
     }.width(75).build()
 
     private val modifyButton = Button.builder(screenComponent("widget.items.modify")) {
-        internalMinecraft.setScreen(ModifyIdentifierScreen(parent, itemIdentifier))
+        internalMinecraft.setScreen(ModifyEntryScreen(parent, archiveEntry))
     }.width(75).build()
 
     override fun render(
@@ -98,14 +98,14 @@ class ArchiveItemEntry(
 
         guiGraphics.drawString(
             internalMinecraft.font,
-            screenComponent("widget.items.component.${itemIdentifier.predicate.length > 2}"),
+            screenComponent("widget.items.component.${archiveEntry.predicate.length > 2}"),
             textX,
             y + internalMinecraft.font.lineHeight + INNER_PAD * 2,
             0xFFFFFFFF.toInt()
         )
         guiGraphics.drawString(
             internalMinecraft.font,
-            screenComponent("widget.items.amount", itemIdentifier.amount.toString()),
+            screenComponent("widget.items.amount", archiveEntry.amount.toString()),
             textX,
             y + internalMinecraft.font.lineHeight * 2 + INNER_PAD * 3,
             0xFFFFFFFF.toInt()

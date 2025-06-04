@@ -25,6 +25,7 @@
     "menu.autodrop.screen.modify.amount.description": "Enter the minimum amount of the item you are filtering for",
     "menu.autodrop.screen.modify.empty": "Enter something",
     "menu.autodrop.screen.modify.items.select": "Select",
+    "menu.autodrop.screen.modify.drop.description": "Drop everything",
     "key.autodrop.toggle": "Toggle AutoDrop",
     "key.autodrop.gui": "Open GUI",
     "key.autodrop.category": "AutoDrop",

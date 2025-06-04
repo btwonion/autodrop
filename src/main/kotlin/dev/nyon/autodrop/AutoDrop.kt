@@ -1,7 +1,7 @@
 package dev.nyon.autodrop
 
 import com.mojang.blaze3d.platform.InputConstants
-import dev.nyon.autodrop.config.ItemIdentifier
+import dev.nyon.autodrop.config.ArchiveEntry
 import dev.nyon.autodrop.config.config
 import dev.nyon.autodrop.config.currentItems
 import dev.nyon.autodrop.config.ignoredSlots
@@ -63,18 +63,34 @@ object AutoDrop {
                 it.hasItem() && !ignoredSlots.contains(it.correctSlotId())
             }.forEach { slot ->
                 val itemStack = slot.item
-                val isValid = currentItems.any { identifier ->
+                val validIdentifiers = currentItems.mapNotNull { identifier ->
                     val typeValid =
                         identifier.type == null || identifier.type == Items.AIR || itemStack.item == identifier.type
                     val amountValid = itemStack.count >= identifier.amount
                     val predicateValid = isPredicateValid(itemStack, identifier)
 
-                    typeValid && amountValid && predicateValid
+                    if (typeValid && amountValid && predicateValid) identifier
+                    else null
                 }
+                val isValid = validIdentifiers.isNotEmpty()
 
-                if (isValid) minecraft.gameMode?.handleInventoryMouseClick(
-                    player.containerMenu.containerId, slot.correctSlotId(), 1, ClickType.THROW, player
-                )
+                if (isValid) {
+                    val shouldDropEverything = validIdentifiers.all(ArchiveEntry::dropEverything)
+                    if (shouldDropEverything) {
+                        minecraft.gameMode?.handleInventoryMouseClick(
+                            player.containerMenu.containerId, slot.correctSlotId(), 1, ClickType.THROW, player
+                        )
+                        return@forEach
+                    }
+                    if (itemStack.count > 1) {
+                        minecraft.gameMode?.handleInventoryMouseClick(
+                            player.containerMenu.containerId, slot.correctSlotId(), 1, ClickType.PICKUP, player
+                        )
+                        minecraft.gameMode?.handleInventoryMouseClick(
+                            player.containerMenu.containerId, -999, 0, ClickType.PICKUP, player
+                        )
+                    }
+                }
             }
         }.invokeOnCompletion {
             jobWaiting = false
@@ -112,7 +128,7 @@ object AutoDrop {
     /**
      * Checks whether the components of the item stack match the identifier.
      */
-    fun isPredicateValid(itemStack: ItemStack, identifier: ItemIdentifier): Boolean {
+    fun isPredicateValid(itemStack: ItemStack, identifier: ArchiveEntry): Boolean {
         val predicateResult = itemPredicateArgument.parse(identifier.predicate.matchItemPredicate().stringReader())
         return predicateResult.test(itemStack)
     }

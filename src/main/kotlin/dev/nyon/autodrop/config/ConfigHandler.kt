@@ -6,7 +6,7 @@ import net.minecraft.core.registries.BuiltInRegistries
 import kotlin.jvm.optionals.getOrNull
 
 var config: Config = Config()
-var currentItems = mutableSetOf<ItemIdentifier>()
+var currentItems = mutableSetOf<ArchiveEntry>()
 var ignoredSlots = mutableSetOf<Int>()
 
 fun reloadArchiveProperties() {
@@ -33,8 +33,8 @@ internal fun migrate(
                     archiveObject["name"]?.jsonPrimitive?.content ?: return null,
                     archiveObject["items"]?.jsonArray?.map secMap@{ content ->
                         val resourceLocation = resourceLocation(content.jsonPrimitive.contentOrNull ?: return null)
-                        return@secMap ItemIdentifier(
-                            resourceLocation?.let { BuiltInRegistries.ITEM.get(it)/*? if >=1.21.2 {*/.getOrNull()?.value()/*?}*/ }, "", 1
+                        return@secMap ArchiveEntry(
+                            resourceLocation?.let { BuiltInRegistries.ITEM.get(it)/*? if >=1.21.2 {*/.getOrNull()?.value()/*?}*/ }, "", 1, true
                         )
                     }?.toMutableList() ?: return null,
                     archiveObject["lockedSlots"]?.jsonArray?.map secMap@{ content ->
