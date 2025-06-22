@@ -19,8 +19,8 @@ import net.minecraft.client.renderer.CoreShaders
 import net.minecraft.client.renderer.GameRenderer
 *//*?}*/
 //? if <1.21.6 {
-/*import net.minecraft.client.renderer.RenderType*/
-//?} else {
+/*import net.minecraft.client.renderer.RenderType
+*///?} else {
 import net.minecraft.client.renderer.RenderPipelines
 //?}
 
@@ -96,7 +96,7 @@ class IgnoredSlotsScreen(private val archive: Archive, private val parent: Scree
 
         /*? if >=1.21.2 {*/
         guiGraphics.blit(
-            /*? if <1.21.6 {*//* RenderType::guiTextured *//*?} else {*/ RenderPipelines.GUI_TEXTURED /*?}*/,
+            /*? if <1.21.6 {*/ /*RenderType::guiTextured *//*?} else {*/ RenderPipelines.GUI_TEXTURED /*?}*/,
             imageLocation,
             internalMinecraft.screen!!.width / 2 - imageSize / 2,
             OUTER_PAD + INNER_PAD * 2 + internalMinecraft.font.lineHeight + 20,

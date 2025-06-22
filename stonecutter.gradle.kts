@@ -1,5 +1,6 @@
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.*
+import org.gradle.kotlin.dsl.support.uppercaseFirstChar
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
@@ -42,7 +43,7 @@ val slug = property("mod.slug").toString()
 val repo = property("mod.repo").toString()
 val avatar = property("mod.icon-url").toString()
 val color = property("mod.color").toString().toInt()
-val supportedLoaders = property("mod.supported-loaders").toString().split(',').map { it.replaceFirstChar { it.uppercase() } }
+val supportedLoaders = property("mod.supported-loaders").toString().split(',').map(String::uppercaseFirstChar)
 tasks.register("postUpdate") {
     group = "mod"
 
