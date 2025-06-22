@@ -1,2 +1,3 @@
-- add option to retain items inside of the slot by dropping only half of the stack at a time
-  - this can be configured per item identifier
+- fix icon
+- add 1.21.6 support for NeoForge
+- fix done button in modify screen not being active - fix [**#26**](https://github.com/btwonion/autodrop/issues/26)

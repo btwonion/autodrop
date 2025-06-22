@@ -24,9 +24,9 @@ import dev.nyon.autodrop.minecraft as internalMinecraft
 class ModifyEntryScreen(private val parent: ArchiveScreen, private val archiveEntry: ArchiveEntry) :
     Screen(screenComponent("modify.title")) {
     private val matcher: () -> Boolean = {
-        (itemEditBox.value.isBlank() || BuiltInRegistries.ITEM.getOptional(resourceLocation(itemEditBox.value)).isPresent) && kotlin.runCatching {
+        (itemEditBox.value.isBlank() || BuiltInRegistries.ITEM.getOptional(resourceLocation(itemEditBox.value)).isPresent) && (componentsEditBox.value.isBlank() || kotlin.runCatching {
             AutoDrop.itemPredicateArgument.parse(componentsEditBox.value.matchItemPredicate().stringReader())
-        }.isSuccess && amountEditBox.value.toIntOrNull().let { it != null && it in 0 .. 64 }
+        }.isSuccess) && amountEditBox.value.toIntOrNull().let { it != null && it in 0 .. 64 }
     }
 
     private val lastIndex: Instant = Clock.System.now()
@@ -75,9 +75,10 @@ class ModifyEntryScreen(private val parent: ArchiveScreen, private val archiveEn
         it.refreshEntries()
     }
 
-    private val dropEverythingTickBox: DropEverythingWidget = DropEverythingWidget(0, 0, 20, 20, archiveEntry.dropEverything) {
-        archiveEntry.dropEverything = this@DropEverythingWidget
-    }
+    private val dropEverythingTickBox: DropEverythingWidget =
+        DropEverythingWidget(0, 0, 20, 20, archiveEntry.dropEverything) {
+            archiveEntry.dropEverything = this@DropEverythingWidget
+        }
 
     private val doneButton = Button.builder(screenComponent("done")) {
         onClose()
@@ -95,8 +96,7 @@ class ModifyEntryScreen(private val parent: ArchiveScreen, private val archiveEn
 
     override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, tickDelta: Float) { // render item edit box
         itemEditBox.setPosition(
-            internalMinecraft.screen!!.width / 4,
-            OUTER_PAD + INNER_PAD + internalMinecraft.font.lineHeight
+            internalMinecraft.screen!!.width / 4, OUTER_PAD + INNER_PAD + internalMinecraft.font.lineHeight
         )
         itemEditBox.width = internalMinecraft.screen!!.width / 2
 
@@ -121,8 +121,7 @@ class ModifyEntryScreen(private val parent: ArchiveScreen, private val archiveEn
 
         // render done button
         doneButton.setPosition(
-            internalMinecraft.screen!!.width / 3,
-            internalMinecraft.screen!!.height - OUTER_PAD - doneButton.height
+            internalMinecraft.screen!!.width / 3, internalMinecraft.screen!!.height - OUTER_PAD - doneButton.height
         )
         doneButton.width = internalMinecraft.screen!!.width / 3
         doneButton.active = matcher()
@@ -161,7 +160,7 @@ class ModifyEntryScreen(private val parent: ArchiveScreen, private val archiveEn
     }
 
     override fun onClose() {
-        archiveEntry.predicate = componentsEditBox.value
+        archiveEntry.predicate = componentsEditBox.value.let { it.ifBlank { "[]" } }
         archiveEntry.amount = amountEditBox.value.toInt()
         internalMinecraft.setScreen(parent)
         saveConfig(config)
