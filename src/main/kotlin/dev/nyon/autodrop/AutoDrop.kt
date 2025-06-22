@@ -1,31 +1,24 @@
 package dev.nyon.autodrop
 
-import com.mojang.blaze3d.platform.InputConstants
 import dev.nyon.autodrop.config.ArchiveEntry
 import dev.nyon.autodrop.config.config
 import dev.nyon.autodrop.config.currentItems
 import dev.nyon.autodrop.config.ignoredSlots
-import dev.nyon.autodrop.config.screen.root.ArchiveScreen
 import dev.nyon.autodrop.extensions.matchItemPredicate
 import dev.nyon.autodrop.extensions.stringReader
-import dev.nyon.konfig.config.saveConfig
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import net.minecraft.client.KeyMapping
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.screens.inventory.InventoryScreen
 import net.minecraft.commands.CommandBuildContext
 import net.minecraft.commands.arguments.item.ItemPredicateArgument
-import net.minecraft.network.chat.Component
-import net.minecraft.network.chat.Style
 import net.minecraft.world.flag.FeatureFlags
 import net.minecraft.world.inventory.ClickType
 import net.minecraft.world.inventory.Slot
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
-import org.lwjgl.glfw.GLFW
 import kotlin.time.Duration.Companion.milliseconds
 
 lateinit var mcScope: CoroutineScope
@@ -95,34 +88,6 @@ object AutoDrop {
         }.invokeOnCompletion {
             jobWaiting = false
         }
-    }
-
-    val toggleKeyBind by lazy {
-        KeyMapping(
-            "key.autodrop.toggle", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_J, "key.autodrop.category"
-        )
-    }
-    val menuKeyBind by lazy {
-        KeyMapping(
-            "key.autodrop.gui", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_O, "key.autodrop.category"
-        )
-    }
-
-    /**
-     * Handles the keybinds.
-     */
-    fun tick(client: Minecraft) {
-        if (toggleKeyBind.consumeClick()) {
-            config.enabled = !config.enabled
-            saveConfig(config)
-            client.gui.setOverlayMessage(
-                Component.translatable("menu.autodrop.name").append(" ").append(
-                    Component.translatable(if (config.enabled) "menu.autodrop.overlay.enabled" else "menu.autodrop.overlay.disabled")
-                ).withStyle(Style.EMPTY.withColor(0xF99147)), false
-            )
-            if (config.enabled) invokeAutodrop()
-        }
-        if (menuKeyBind.consumeClick()) client.setScreen(ArchiveScreen(null))
     }
 
     /**

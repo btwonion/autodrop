@@ -2,6 +2,7 @@
     "key.autodrop.category": "AutoDrop",
     "key.autodrop.gui": "Öffne das GUI",
     "key.autodrop.toggle": "De-/Aktiviere AutoDrop",
+    "key.autodrop.trigger": "Löse Autodrop aus",
     "menu.autodrop.name": "AutoDrop",
     "menu.autodrop.overlay.disabled": "deaktiviert",
     "menu.autodrop.overlay.enabled": "aktiviert",

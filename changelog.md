@@ -1,3 +1,6 @@
 - fix icon
 - add 1.21.6 support for NeoForge
 - fix done button in modify screen not being active - fix [**#26**](https://github.com/btwonion/autodrop/issues/26)
+- cleanup code
+- add keybinding for triggering autodrop
+  - by default: k

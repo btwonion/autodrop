@@ -28,6 +28,7 @@
     "menu.autodrop.screen.modify.drop.description": "Drop everything",
     "key.autodrop.toggle": "Toggle AutoDrop",
     "key.autodrop.gui": "Open GUI",
+    "key.autodrop.trigger": "Trigger GUI",
     "key.autodrop.category": "AutoDrop",
     "yacl3.config.autodrop.title": "AutoDrop",
     "yacl3.config.autodrop.category.general": "General",

@@ -22,8 +22,7 @@ import net.fabricmc.loader.api.FabricLoader
 
 object AutoDropEntrypoint : ClientModInitializer {
     override fun onInitializeClient() {
-        KeyBindingHelper.registerKeyBinding(AutoDrop.menuKeyBind)
-        KeyBindingHelper.registerKeyBinding(AutoDrop.toggleKeyBind)
+        KeyBindings.keyBinds.keys.forEach(KeyBindingHelper::registerKeyBinding)
         initialize(FabricLoader.getInstance().configDir.resolve("autodrop.json"))
     }
 }
@@ -43,8 +42,7 @@ object AutoDropEntrypoint {
         initialize(FMLLoader.getGamePath().resolve("config/autodrop.json"))
 
         MOD_BUS.addListener<RegisterKeyMappingsEvent> {
-            it.register(AutoDrop.menuKeyBind)
-            it.register(AutoDrop.toggleKeyBind)
+            KeyBindings.keyBinds.keys.forEach(it::register)
         }
 
         ModLoadingContext.get().registerExtensionPoint(IConfigScreenFactory::class.java) {
