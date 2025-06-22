@@ -61,6 +61,7 @@ class ModifyEntryScreen(private val parent: ArchiveScreen, private val archiveEn
             it.setMaxLength(2)
             it.value = archiveEntry.amount.toString()
             it.setFilter { input ->
+                if (input.isEmpty()) return@setFilter true
                 val int = input.toIntOrNull() ?: return@setFilter false
                 int in 0 .. 64
             }
@@ -161,7 +162,7 @@ class ModifyEntryScreen(private val parent: ArchiveScreen, private val archiveEn
 
     override fun onClose() {
         archiveEntry.predicate = componentsEditBox.value.let { it.ifBlank { "[]" } }
-        archiveEntry.amount = amountEditBox.value.toInt()
+        archiveEntry.amount = amountEditBox.value.toIntOrNull() ?: 1
         internalMinecraft.setScreen(parent)
         saveConfig(config)
         parent.archiveItemsWidget.refreshEntries()
