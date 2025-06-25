@@ -46,7 +46,6 @@ repositories {
     maven("https://maven.quiltmc.org/repository/release/")
     maven("https://repo.nyon.dev/releases")
     maven("https://maven.isxander.dev/releases")
-    maven("https://thedarkcolour.github.io/KotlinForForge/")
     maven("https://maven.neoforged.net/releases/")
 }
 
@@ -72,7 +71,7 @@ dependencies {
         modCompileOnly("com.terraformersmc:modmenu:$modmenu")
     } else {
         "neoForge"("net.neoforged:neoforge:${property("vers.deps.fml")}")
-        modImplementation("dev.nyon:KotlinLangForge:2.7.1-k${libs.versions.kotlin.orNull}-$forgeLk+${loader.name.lowercase()}")
+        modImplementation("dev.nyon:KotlinLangForge:2.7.1-k${libs.versions.kotlin.orNull}-$forgeLk+neoforge")
     }
 
     modImplementation("dev.isxander:yet-another-config-lib:$yaclVersion")
@@ -81,7 +80,6 @@ dependencies {
     include(libs.konfig)
 }
 
-val javaVersion = 21
 val modId = property("mod.id").toString()
 val modName = property("mod.name").toString()
 val modDescription = property("mod.description").toString()
@@ -122,12 +120,12 @@ tasks {
     }
 
     withType<JavaCompile> {
-        options.release = javaVersion
+        options.release = 21
     }
 
     withType<KotlinCompile> {
         compilerOptions {
-            jvmTarget = JvmTarget.fromTarget(javaVersion.toString())
+            jvmTarget = JvmTarget.JVM_21
         }
     }
 }
@@ -212,7 +210,7 @@ publishing {
 java {
     withSourcesJar()
 
-    javaVersion.let { JavaVersion.values()[it - 1] }.let {
+    JavaVersion.VERSION_21.let {
         sourceCompatibility = it
         targetCompatibility = it
     }
