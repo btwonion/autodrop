@@ -13,7 +13,7 @@ import net.minecraft.ChatFormatting
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.screens.Screen
-import dev.nyon.autodrop.minecraft as internalMinecraft
+import dev.nyon.autodrop.AutoDrop.minecraft as internalMinecraft
 
 const val INNER_PAD = 5
 const val OUTER_PAD = 10

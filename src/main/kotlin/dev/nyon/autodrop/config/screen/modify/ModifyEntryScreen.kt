@@ -19,14 +19,14 @@ import net.minecraft.client.gui.components.EditBox
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.core.registries.BuiltInRegistries
 import kotlin.time.Duration.Companion.milliseconds
-import dev.nyon.autodrop.minecraft as internalMinecraft
+import dev.nyon.autodrop.AutoDrop.minecraft as internalMinecraft
 
 class ModifyEntryScreen(private val parent: ArchiveScreen, private val archiveEntry: ArchiveEntry) :
     Screen(screenComponent("modify.title")) {
     private val matcher: () -> Boolean = {
         (itemEditBox.value.isBlank() || BuiltInRegistries.ITEM.getOptional(resourceLocation(itemEditBox.value)).isPresent) && (componentsEditBox.value.isBlank() || kotlin.runCatching {
             AutoDrop.itemPredicateArgument.parse(componentsEditBox.value.matchItemPredicate().stringReader())
-        }.isSuccess) && amountEditBox.value.toIntOrNull().let { it != null && it in 0 .. 64 }
+        }.onFailure { println(it) }.isSuccess) && amountEditBox.value.toIntOrNull().let { it != null && it in 0 .. 64 }
     }
 
     private val lastIndex: Instant = Clock.System.now()

@@ -1,1 +1,3 @@
 - fix weird typing behaviour in amount edit box on ItemModifyScreen
+- fix startup on NeoForge
+- fix an error on the ModifyItemScreen, when the done button could not be pressed when outside a world

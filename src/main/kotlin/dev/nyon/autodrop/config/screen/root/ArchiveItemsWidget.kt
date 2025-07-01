@@ -14,7 +14,7 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import kotlin.math.max
-import dev.nyon.autodrop.minecraft as internalMinecraft
+import dev.nyon.autodrop.AutoDrop.minecraft as internalMinecraft
 
 class ArchiveItemsWidget(var archive: Archive?, private val parent: ArchiveScreen) :
     ObjectSelectionList<ArchiveItemEntry>(

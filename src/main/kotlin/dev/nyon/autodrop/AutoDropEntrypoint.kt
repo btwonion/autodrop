@@ -7,11 +7,7 @@ import dev.nyon.autodrop.config.reloadArchiveProperties
 import dev.nyon.autodrop.extensions.ItemSerializer
 import dev.nyon.konfig.config.config
 import dev.nyon.konfig.config.loadConfig
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.serialization.modules.SerializersModule
-import net.minecraft.client.Minecraft
 import net.minecraft.world.item.Item
 import java.nio.file.Path
 
@@ -53,9 +49,6 @@ object AutoDropEntrypoint {
 *//*?}*/
 
 private fun initialize(configDir: Path) {
-    minecraft = Minecraft.getInstance()
-    mcScope = CoroutineScope(SupervisorJob() + minecraft.asCoroutineDispatcher())
-
     config(configDir, 2, Config(), jsonBuilder = {
         serializersModule = SerializersModule {
             contextual(Item::class, ItemSerializer)

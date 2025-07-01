@@ -10,7 +10,7 @@ import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.components.EditBox
 import net.minecraft.client.gui.screens.Screen
-import dev.nyon.autodrop.minecraft as internalMinecraft
+import dev.nyon.autodrop.AutoDrop.minecraft as internalMinecraft
 
 class CreateArchiveScreen(private val parent: Screen?, private val onClose: (Archive) -> Unit) :
     Screen(screenComponent("create.title")) {

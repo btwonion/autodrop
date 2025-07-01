@@ -4,7 +4,7 @@ import dev.isxander.yacl3.dsl.*
 import dev.nyon.autodrop.config.config
 import dev.nyon.autodrop.config.reloadArchiveProperties
 import dev.nyon.autodrop.config.screen.root.ArchiveScreen
-import dev.nyon.autodrop.minecraft
+import dev.nyon.autodrop.AutoDrop.minecraft
 import dev.nyon.konfig.config.saveConfig
 import net.minecraft.client.gui.screens.Screen
 

@@ -7,6 +7,8 @@ import dev.nyon.autodrop.config.ignoredSlots
 import dev.nyon.autodrop.extensions.matchItemPredicate
 import dev.nyon.autodrop.extensions.stringReader
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -14,6 +16,8 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.screens.inventory.InventoryScreen
 import net.minecraft.commands.CommandBuildContext
 import net.minecraft.commands.arguments.item.ItemPredicateArgument
+import net.minecraft.core.RegistryAccess
+import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.world.flag.FeatureFlags
 import net.minecraft.world.inventory.ClickType
 import net.minecraft.world.inventory.Slot
@@ -21,15 +25,28 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import kotlin.time.Duration.Companion.milliseconds
 
-lateinit var mcScope: CoroutineScope
-lateinit var minecraft: Minecraft
-
 object AutoDrop {
+    val mcScope: CoroutineScope by lazy {
+        CoroutineScope(SupervisorJob() + minecraft.asCoroutineDispatcher())
+    }
+    val minecraft: Minecraft by lazy {
+        Minecraft.getInstance()
+    }
+
     private var jobWaiting = false
     val itemPredicateArgument: ItemPredicateArgument by lazy {
         ItemPredicateArgument(
             CommandBuildContext.simple(
-                minecraft.player?.registryAccess() ?: return@lazy error("Cannot load local player."),
+                RegistryAccess.ImmutableRegistryAccess(
+                    listOf(
+                        BuiltInRegistries.ITEM,
+                        BuiltInRegistries.DATA_COMPONENT_TYPE,
+                        //? if >1.21.4
+                        /*BuiltInRegistries.DATA_COMPONENT_PREDICATE_TYPE*/
+                        //? if <=1.21.4
+                        BuiltInRegistries.ITEM_SUB_PREDICATE_TYPE
+                    )
+                ),
                 FeatureFlags.DEFAULT_FLAGS
             )
         )

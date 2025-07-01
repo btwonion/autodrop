@@ -1,7 +1,7 @@
 package dev.nyon.autodrop.config.screen.modify
 
 import dev.nyon.autodrop.extensions.screenComponent
-import dev.nyon.autodrop.minecraft
+import dev.nyon.autodrop.AutoDrop.minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.narration.NarrationElementOutput

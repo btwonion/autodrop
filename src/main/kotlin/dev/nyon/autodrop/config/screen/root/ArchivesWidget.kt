@@ -9,7 +9,7 @@ import net.minecraft.client.gui.components.ObjectSelectionList
 import net.minecraft.network.chat.Component
 import kotlin.math.max
 import kotlin.time.Duration.Companion.milliseconds
-import dev.nyon.autodrop.minecraft as internalMinecraft
+import dev.nyon.autodrop.AutoDrop.minecraft as internalMinecraft
 
 class ArchivesWidget(private val archiveScreen: ArchiveScreen) : ObjectSelectionList<ArchivesWidgetEntry>(
     internalMinecraft, 0, 0, OUTER_PAD, internalMinecraft.font.lineHeight + 2 * INNER_PAD

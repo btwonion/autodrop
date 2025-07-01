@@ -2,7 +2,7 @@ package dev.nyon.autodrop.config.screen.ignored
 
 import dev.nyon.autodrop.config.Archive
 import dev.nyon.autodrop.config.config
-import dev.nyon.autodrop.minecraft as internalMinecraft
+import dev.nyon.autodrop.AutoDrop.minecraft as internalMinecraft
 import dev.nyon.autodrop.config.screen.root.INNER_PAD
 import dev.nyon.autodrop.config.screen.root.OUTER_PAD
 import dev.nyon.autodrop.extensions.resourceLocation
@@ -13,16 +13,16 @@ import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.components.EditBox
 import net.minecraft.client.gui.screens.Screen
 /*? if <1.21.5 {*/
-/*import com.mojang.blaze3d.systems.RenderSystem
+import com.mojang.blaze3d.systems.RenderSystem
 //? if >=1.21.2
 import net.minecraft.client.renderer.CoreShaders
 import net.minecraft.client.renderer.GameRenderer
-*//*?}*/
+/*?}*/
 //? if <1.21.6 {
-/*import net.minecraft.client.renderer.RenderType
-*///?} else {
-import net.minecraft.client.renderer.RenderPipelines
-//?}
+import net.minecraft.client.renderer.RenderType
+//?} else {
+/*import net.minecraft.client.renderer.RenderPipelines
+*///?}
 
 class IgnoredSlotsScreen(private val archive: Archive, private val parent: Screen?) :
     Screen(screenComponent("ignored.title")) {
@@ -86,17 +86,17 @@ class IgnoredSlotsScreen(private val archive: Archive, private val parent: Scree
         val imageSize = height / 2
 
         /*? if <1.21.5 {*/
-        /*RenderSystem.setShader(/^? if <1.21.2 {^//^GameRenderer::getPositionTexShader^//^?} else {^/CoreShaders.POSITION_TEX/^?}^/)
+        RenderSystem.setShader(/*? if <1.21.2 {*//*GameRenderer::getPositionTexShader*//*?} else {*/CoreShaders.POSITION_TEX/*?}*/)
 
         RenderSystem.setShaderTexture(0, imageLocation)
         RenderSystem.enableBlend()
         RenderSystem.defaultBlendFunc()
         RenderSystem.enableDepthTest()
-        *//*?}*/
+        /*?}*/
 
         /*? if >=1.21.2 {*/
         guiGraphics.blit(
-            /*? if <1.21.6 {*/ /*RenderType::guiTextured *//*?} else {*/ RenderPipelines.GUI_TEXTURED /*?}*/,
+            /*? if <1.21.6 {*/ RenderType::guiTextured /*?} else {*/ /*RenderPipelines.GUI_TEXTURED *//*?}*/,
             imageLocation,
             internalMinecraft.screen!!.width / 2 - imageSize / 2,
             OUTER_PAD + INNER_PAD * 2 + internalMinecraft.font.lineHeight + 20,

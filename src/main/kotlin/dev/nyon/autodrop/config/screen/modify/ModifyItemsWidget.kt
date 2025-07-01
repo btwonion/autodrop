@@ -13,7 +13,7 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import kotlin.math.max
 import kotlin.math.min
-import dev.nyon.autodrop.minecraft as internalMinecraft
+import dev.nyon.autodrop.AutoDrop.minecraft as internalMinecraft
 
 class ModifyItemsWidget(var input: String, private val onSelect: Item.() -> Unit) :
     ObjectSelectionList<ModifyItemsEntry>(

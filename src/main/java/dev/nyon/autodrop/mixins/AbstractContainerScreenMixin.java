@@ -1,6 +1,6 @@
 package dev.nyon.autodrop.mixins;
 
-import dev.nyon.autodrop.AutoDropKt;
+import dev.nyon.autodrop.AutoDrop;
 import dev.nyon.autodrop.KeyBindings;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import org.spongepowered.asm.mixin.Mixin;
@@ -23,7 +23,7 @@ public class AbstractContainerScreenMixin {
     ) {
         KeyBindings.INSTANCE.getKeyBinds()
             .forEach((mapping, function) -> {
-                if (mapping.matches(keyCode, scanCode)) function.invoke(AutoDropKt.getMinecraft());
+                if (mapping.matches(keyCode, scanCode)) function.invoke(AutoDrop.INSTANCE.getMinecraft());
             });
     }
 }
