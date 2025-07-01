@@ -42,9 +42,9 @@ object AutoDrop {
                         BuiltInRegistries.ITEM,
                         BuiltInRegistries.DATA_COMPONENT_TYPE,
                         //? if >1.21.4
-                        /*BuiltInRegistries.DATA_COMPONENT_PREDICATE_TYPE*/
+                        BuiltInRegistries.DATA_COMPONENT_PREDICATE_TYPE
                         //? if <=1.21.4
-                        BuiltInRegistries.ITEM_SUB_PREDICATE_TYPE
+                        /*BuiltInRegistries.ITEM_SUB_PREDICATE_TYPE*/
                     )
                 ),
                 FeatureFlags.DEFAULT_FLAGS
