@@ -69,7 +69,7 @@ dependencies {
         implementation(libs.fabric.loader)
         modImplementation("net.fabricmc.fabric-api:fabric-api:$fapi")
         modImplementation("net.fabricmc:fabric-language-kotlin:$flk")
-        modCompileOnly("com.terraformersmc:modmenu:$modmenu")
+        modImplementation("com.terraformersmc:modmenu:$modmenu")
     } else {
         "neoForge"("net.neoforged:neoforge:${property("vers.deps.fml")}")
         modImplementation("dev.nyon:KotlinLangForge:2.7.1-k${libs.versions.kotlin.orNull}-$forgeLk+neoforge")
