@@ -12,21 +12,6 @@ plugins {
 }
 stonecutter active "1.21.6-fabric" /* [SC] DO NOT EDIT */
 
-stonecutter parameters {
-    val platform = node!!.property("loom.platform")
-    val platforms = listOf("fabric", "neoforge").map { it to (platform == it) }
-    consts(platforms)
-}
-stonecutter registerChiseled tasks.register("buildAllVersions", stonecutter.chiseled) {
-    group = "mod"
-    ofTask("build")
-}
-
-stonecutter registerChiseled tasks.register("releaseAllVersions", stonecutter.chiseled) {
-    group = "mod"
-    ofTask("releaseMod")
-}
-
 private data class Field(val name: String, val value: String, val inline: Boolean)
 
 private data class Embed(
@@ -62,7 +47,7 @@ tasks.register("postUpdate") {
                 color = color,
                 fields = listOf(
                     Field(
-                        "Supported versions", stonecutter.tree.nodes.map { it.property("vers.supportedMcVersions").toString().split(',') }
+                        "Supported versions", stonecutter.tree.nodes.map { it.project.property("vers.supportedMcVersions").toString().split(',') }
                             .flatten().toSet().joinToString(), false
                     ),
                     Field(
