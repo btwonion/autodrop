@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalTime::class)
+
 package dev.nyon.autodrop.config.screen.modify
 
 import dev.nyon.autodrop.AutoDrop
@@ -11,14 +13,15 @@ import dev.nyon.autodrop.extensions.resourceLocation
 import dev.nyon.autodrop.extensions.screenComponent
 import dev.nyon.autodrop.extensions.stringReader
 import dev.nyon.konfig.config.saveConfig
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.components.EditBox
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.core.registries.BuiltInRegistries
+import kotlin.time.Clock
 import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 import dev.nyon.autodrop.AutoDrop.minecraft as internalMinecraft
 
 class ModifyEntryScreen(private val parent: ArchiveScreen, private val archiveEntry: ArchiveEntry) :

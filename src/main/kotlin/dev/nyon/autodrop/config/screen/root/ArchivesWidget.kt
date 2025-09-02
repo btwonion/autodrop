@@ -1,14 +1,17 @@
+@file:OptIn(ExperimentalTime::class)
+
 package dev.nyon.autodrop.config.screen.root
 
 import dev.nyon.autodrop.config.Archive
 import dev.nyon.autodrop.config.config
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.ObjectSelectionList
 import net.minecraft.network.chat.Component
 import kotlin.math.max
+import kotlin.time.Clock
 import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 import dev.nyon.autodrop.AutoDrop.minecraft as internalMinecraft
 
 class ArchivesWidget(private val archiveScreen: ArchiveScreen) : ObjectSelectionList<ArchivesWidgetEntry>(
