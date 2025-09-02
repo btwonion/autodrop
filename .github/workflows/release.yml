@@ -23,7 +23,7 @@ jobs:
       - name: Build with Gradle
         uses: Wandalen/wretry.action@master
         with:
-          command: ./gradlew buildAllVersions --stacktrace
+          command: ./gradlew build --stacktrace
       - name: Release with Gradle
         run: ./gradlew releaseMod postUpdate --stacktrace
         env:
