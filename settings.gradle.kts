@@ -27,18 +27,18 @@ stonecutter {
     kotlinController = true
     centralScript = "build.gradle.kts"
     shared {
-        vers("1.20.6-neoforge", "1.20.6")
-        vers("1.20.6-fabric", "1.20.6")
-        vers("1.21-fabric", "1.21")
-        vers("1.21-neoforge", "1.21")
-        vers("1.21.3-fabric", "1.21.3")
-        vers("1.21.3-neoforge", "1.21.3")
-        vers("1.21.4-fabric", "1.21.4")
-        vers("1.21.4-neoforge", "1.21.4")
-        vers("1.21.5-fabric", "1.21.5")
-        vers("1.21.5-neoforge", "1.21.5")
-        vers("1.21.6-fabric", "1.21.6")
-        vers("1.21.6-neoforge", "1.21.6")
+        version("1.20.6-neoforge", "1.20.6")
+        version("1.20.6-fabric", "1.20.6")
+        version("1.21-fabric", "1.21")
+        version("1.21-neoforge", "1.21")
+        version("1.21.3-fabric", "1.21.3")
+        version("1.21.3-neoforge", "1.21.3")
+        version("1.21.4-fabric", "1.21.4")
+        version("1.21.4-neoforge", "1.21.4")
+        version("1.21.5-fabric", "1.21.5")
+        version("1.21.5-neoforge", "1.21.5")
+        version("1.21.6-fabric", "1.21.6")
+        version("1.21.6-neoforge", "1.21.6")
         vcsVersion = "1.21.6-fabric"
     }
     create(rootProject)
