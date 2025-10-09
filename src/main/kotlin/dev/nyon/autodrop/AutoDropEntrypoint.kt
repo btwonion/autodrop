@@ -35,7 +35,8 @@ import net.neoforged.neoforge.client.gui.IConfigScreenFactory
 @Mod("autodrop")
 object AutoDropEntrypoint {
     init {
-        initialize(FMLLoader.getGamePath().resolve("config/autodrop.json"))
+        val gamePath = /^? if >1.21.8 {^/ FMLLoader.getCurrent().gameDir /^?} else {^/ /^FMLLoader.getGamePath() ^//^?}^/
+        initialize(gamePath.resolve("config/autodrop.json"))
 
         MOD_BUS.addListener<RegisterKeyMappingsEvent> {
             KeyBindings.keyBinds.keys.forEach(it::register)

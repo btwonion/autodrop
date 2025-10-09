@@ -5,11 +5,18 @@ import dev.nyon.autodrop.config.config
 import dev.nyon.autodrop.config.screen.root.INNER_PAD
 import dev.nyon.autodrop.config.screen.root.OUTER_PAD
 import dev.nyon.autodrop.extensions.screenComponent
+import dev.nyon.autodrop.extensions.screenHeight
+import dev.nyon.autodrop.extensions.screenWidth
+import dev.nyon.autodrop.extensions.select
 import dev.nyon.konfig.config.saveConfig
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.components.EditBox
 import net.minecraft.client.gui.screens.Screen
+//? if >1.21.8 {
+import net.minecraft.client.input.MouseButtonEvent
+import net.minecraft.client.input.MouseButtonInfo
+//?}
 import dev.nyon.autodrop.AutoDrop.minecraft as internalMinecraft
 
 class CreateArchiveScreen(private val parent: Screen?, private val onClose: (Archive) -> Unit) :
@@ -20,7 +27,7 @@ class CreateArchiveScreen(private val parent: Screen?, private val onClose: (Arc
 
     private val archiveNameEditBox =
         EditBox(internalMinecraft.font, 0, 0, 20, 20, screenComponent("create.empty")).also {
-            it.onClick(10.0, 10.0)
+            it.select(10.0, 10.0)
             it.cursorPosition = 0
             it.setHighlightPos(0)
         }
@@ -37,16 +44,16 @@ class CreateArchiveScreen(private val parent: Screen?, private val onClose: (Arc
 
     override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, tickDelta: Float) {
         archiveNameEditBox.setPosition(
-            internalMinecraft.screen!!.width / 4,
+            screenWidth / 4,
             OUTER_PAD + INNER_PAD + internalMinecraft.font.lineHeight
         )
-        archiveNameEditBox.width = internalMinecraft.screen!!.width / 2
+        archiveNameEditBox.width = screenWidth / 2
 
         doneButton.setPosition(
-            internalMinecraft.screen!!.width / 3,
-            internalMinecraft.screen!!.height - OUTER_PAD - doneButton.height
+            screenWidth / 3,
+            screenHeight - OUTER_PAD - doneButton.height
         )
-        doneButton.width = internalMinecraft.screen!!.width / 3
+        doneButton.width = screenWidth / 3
         doneButton.active = matcher(archiveNameEditBox.value)
 
         super.render(guiGraphics, mouseX, mouseY, tickDelta)
@@ -55,7 +62,7 @@ class CreateArchiveScreen(private val parent: Screen?, private val onClose: (Arc
         guiGraphics.drawCenteredString(
             internalMinecraft.font,
             screenComponent("create.description"),
-            internalMinecraft.screen!!.width / 2,
+            screenWidth / 2,
             OUTER_PAD,
             0xFFFFFFFF.toInt()
         )

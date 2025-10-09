@@ -7,6 +7,9 @@ import dev.nyon.autodrop.config.screen.root.INNER_PAD
 import dev.nyon.autodrop.config.screen.root.OUTER_PAD
 import dev.nyon.autodrop.extensions.resourceLocation
 import dev.nyon.autodrop.extensions.screenComponent
+import dev.nyon.autodrop.extensions.screenHeight
+import dev.nyon.autodrop.extensions.screenWidth
+import dev.nyon.autodrop.extensions.select
 import dev.nyon.konfig.config.saveConfig
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.Button
@@ -40,7 +43,7 @@ class IgnoredSlotsScreen(private val archive: Archive, private val parent: Scree
             it.setMaxLength(500)
             it.value = archive.ignoredSlots.joinToString(separator = ",") { input -> input.toString() }
             it.setFilter(matcher)
-            it.onClick(10.0, 10.0)
+            it.select(10.0, 10.0)
             it.cursorPosition = 0
             it.setHighlightPos(0)
         }
@@ -57,16 +60,16 @@ class IgnoredSlotsScreen(private val archive: Archive, private val parent: Scree
 
     override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, tickDelta: Float) {
         ignoredSlotsEditBox.setPosition(
-            internalMinecraft.screen!!.width / 4,
+            screenWidth / 4,
             OUTER_PAD + INNER_PAD + internalMinecraft.font.lineHeight
         )
-        ignoredSlotsEditBox.width = internalMinecraft.screen!!.width / 2
+        ignoredSlotsEditBox.width = screenWidth / 2
 
         doneButton.setPosition(
-            internalMinecraft.screen!!.width / 3,
-            internalMinecraft.screen!!.height - OUTER_PAD - doneButton.height
+            screenWidth / 3,
+            screenHeight - OUTER_PAD - doneButton.height
         )
-        doneButton.width = internalMinecraft.screen!!.width / 3
+        doneButton.width = screenWidth / 3
         doneButton.active = matcher(ignoredSlotsEditBox.value)
 
         super.render(guiGraphics, mouseX, mouseY, tickDelta)
@@ -75,7 +78,7 @@ class IgnoredSlotsScreen(private val archive: Archive, private val parent: Scree
         guiGraphics.drawCenteredString(
             internalMinecraft.font,
             screenComponent("ignored.description"),
-            internalMinecraft.screen!!.width / 2,
+            screenWidth / 2,
             OUTER_PAD,
             0xFFFFFFFF.toInt()
         )
@@ -98,7 +101,7 @@ class IgnoredSlotsScreen(private val archive: Archive, private val parent: Scree
         guiGraphics.blit(
             /*? if <1.21.6 {*/ /*RenderType::guiTextured *//*?} else {*/ RenderPipelines.GUI_TEXTURED /*?}*/,
             imageLocation,
-            internalMinecraft.screen!!.width / 2 - imageSize / 2,
+            screenWidth / 2 - imageSize / 2,
             OUTER_PAD + INNER_PAD * 2 + internalMinecraft.font.lineHeight + 20,
             0F,
             0F,
@@ -110,7 +113,7 @@ class IgnoredSlotsScreen(private val archive: Archive, private val parent: Scree
         /*?} else {*/
         /*guiGraphics.blit(
             imageLocation,
-            internalMinecraft.screen!!.width / 2 - imageSize / 2,
+            screenWidth / 2 - imageSize / 2,
             OUTER_PAD + INNER_PAD * 2 + internalMinecraft.font.lineHeight + 20,
             0,
             0F,

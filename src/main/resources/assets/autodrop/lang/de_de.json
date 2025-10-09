@@ -1,5 +1,5 @@
 {
-    "key.autodrop.category": "AutoDrop",
+    "key.category.autodrop.main": "AutoDrop",
     "key.autodrop.gui": "Öffne das GUI",
     "key.autodrop.toggle": "De-/Aktiviere AutoDrop",
     "key.autodrop.trigger": "Löse Autodrop aus",
@@ -26,8 +26,8 @@
     "menu.autodrop.screen.modify.title": "Neue Liste erstellen",
     "menu.autodrop.screen.title": "AutoDrop",
     "menu.autodrop.screen.widget.items.amount": "Mindestanzahl: %d",
-    "menu.autodrop.screen.widget.items.component.false": "Komponenten Filter: Nein",
-    "menu.autodrop.screen.widget.items.component.true": "Komponenten Filter: Ja",
+    "menu.autodrop.screen.widget.items.component.false": "Komponenten: Nein",
+    "menu.autodrop.screen.widget.items.component.true": "Komponenten: Ja",
     "menu.autodrop.screen.widget.items.modify": "Ändern",
     "menu.autodrop.screen.widget.items.remove": "Entfernen",
     "yacl3.config.autodrop.title": "AutoDrop",

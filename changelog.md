@@ -1,1 +1,3 @@
-- migrate to new `kotlin.time` API to resolve conflicts with newer `kotlinx.datetime` versions
+- do not print item predicate exceptions
+- hide "Select" button in item selection list when not moving the mouse for 2 seconds
+- update translations to better fit some screens

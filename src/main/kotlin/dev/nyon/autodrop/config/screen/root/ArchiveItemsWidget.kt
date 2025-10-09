@@ -5,9 +5,13 @@ import dev.nyon.autodrop.config.ArchiveEntry
 import dev.nyon.autodrop.config.screen.modify.ModifyEntryScreen
 import dev.nyon.autodrop.extensions.narration
 import dev.nyon.autodrop.extensions.screenComponent
+import dev.nyon.autodrop.extensions.screenHeight
+import dev.nyon.autodrop.extensions.screenWidth
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.components.ObjectSelectionList
+//? if >1.21.8
+import net.minecraft.client.input.MouseButtonEvent
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.chat.Component
 import net.minecraft.world.item.Item
@@ -18,10 +22,14 @@ import dev.nyon.autodrop.AutoDrop.minecraft as internalMinecraft
 
 class ArchiveItemsWidget(var archive: Archive?, private val parent: ArchiveScreen) :
     ObjectSelectionList<ArchiveItemEntry>(
-        internalMinecraft, 0, 0, OUTER_PAD, internalMinecraft.font.lineHeight * 3 + 4 * INNER_PAD
+        internalMinecraft,
+        (screenWidth / 4) * 3 - 2 * OUTER_PAD,
+        screenHeight - 2 * OUTER_PAD,
+        OUTER_PAD,
+        internalMinecraft.font.lineHeight * 3 + 4 * INNER_PAD
     ) {
     override fun getX(): Int {
-        return internalMinecraft.screen!!.width / 4 + OUTER_PAD
+        return screenWidth / 4 + OUTER_PAD
     }
 
     override fun getRowLeft(): Int {
@@ -29,7 +37,7 @@ class ArchiveItemsWidget(var archive: Archive?, private val parent: ArchiveScree
     }
 
     override fun getRowWidth(): Int {
-        return getWidth() - 2 * INNER_PAD
+        return width - 2 * INNER_PAD
     }
 
     /*? if <1.21.4 {*/
@@ -42,8 +50,8 @@ class ArchiveItemsWidget(var archive: Archive?, private val parent: ArchiveScree
     }*//*?}*/
 
     override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
-        width = (internalMinecraft.screen!!.width / 4) * 3 - 2 * OUTER_PAD
-        height = internalMinecraft.screen!!.height - 2 * OUTER_PAD
+        width = (screenWidth / 4) * 3 - 2 * OUTER_PAD
+        height = screenHeight - 2 * OUTER_PAD
         super.renderWidget(guiGraphics, i, j, f)
     }
 
@@ -78,7 +86,12 @@ class ArchiveItemEntry(
         internalMinecraft.setScreen(ModifyEntryScreen(parent, archiveEntry))
     }.width(75).build()
 
-    override fun render(
+    //? if >1.21.8 {
+    override fun renderContent(graphics: GuiGraphics, mouseX: Int, mouseY: Int, hovered: Boolean, delta: Float) {
+        renderAdItems(graphics, mouseX, mouseY, delta)
+    }
+    //?} else {
+    /*override fun render(
         guiGraphics: GuiGraphics,
         index: Int,
         y: Int,
@@ -90,6 +103,11 @@ class ArchiveItemEntry(
         isSelected: Boolean,
         delta: Float
     ) {
+        renderAdItems(guiGraphics, mouseX, mouseY, delta, x, y, width, height)
+    }
+    *///?}
+
+    private fun renderAdItems(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float/*? if <=1.21.8 {*//*, x: Int, y: Int, width: Int, height: Int*//*?}*/) {
         val textX = x + internalMinecraft.font.lineHeight * 3 + INNER_PAD
         guiGraphics.renderItem(ItemStack(item), x + INNER_PAD, y + INNER_PAD + internalMinecraft.font.lineHeight)
         guiGraphics.drawString(
@@ -120,11 +138,19 @@ class ArchiveItemEntry(
         modifyButton.render(guiGraphics, mouseX, mouseY, delta)
     }
 
-    override fun mouseClicked(d: Double, e: Double, i: Int): Boolean {
+    //? if >1.21.8 {
+    override fun mouseClicked(mouseButtonEvent: MouseButtonEvent, bl: Boolean): Boolean {
+        if (removeButton.isMouseOver(mouseButtonEvent.x, mouseButtonEvent.y)) return removeButton.mouseClicked(mouseButtonEvent, bl)
+        if (modifyButton.isMouseOver(mouseButtonEvent.x, mouseButtonEvent.y)) return modifyButton.mouseClicked(mouseButtonEvent, bl)
+        return super.mouseClicked(mouseButtonEvent, bl)
+    }
+    //?} else {
+    /*override fun mouseClicked(d: Double, e: Double, i: Int): Boolean {
         if (removeButton.isMouseOver(d, e)) return removeButton.mouseClicked(d, e, i)
         if (modifyButton.isMouseOver(d, e)) return modifyButton.mouseClicked(d, e, i)
         return super.mouseClicked(d, e, i)
     }
+    *///?}
 
     override fun getNarration(): Component {
         return item.narration

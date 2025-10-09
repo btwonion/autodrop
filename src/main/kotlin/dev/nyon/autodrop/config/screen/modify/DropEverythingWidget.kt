@@ -5,6 +5,8 @@ import dev.nyon.autodrop.AutoDrop.minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.narration.NarrationElementOutput
+//? if >1.21.8
+import net.minecraft.client.input.MouseButtonEvent
 
 class DropEverythingWidget(x: Int, y: Int, width: Int, height: Int, var bool: Boolean, val onTick: Boolean.() -> Unit) : AbstractWidget(
     x, y, width, height, screenComponent("modify.drop.description")
@@ -29,12 +31,21 @@ class DropEverythingWidget(x: Int, y: Int, width: Int, height: Int, var bool: Bo
         )
     }
 
-    override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
+    //? if >1.21.8 {
+    override fun mouseClicked(mouseButtonEvent: MouseButtonEvent, bl: Boolean): Boolean {
+        bool = !bool
+        onTick(bool)
+
+        return super.mouseClicked(mouseButtonEvent, bl)
+    }
+    //?} else {
+    /*override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
         bool = !bool
         onTick(bool)
 
         return super.mouseClicked(mouseX, mouseY, button)
     }
+    *///?}
 
     override fun updateWidgetNarration(narrationElementOutput: NarrationElementOutput) {}
 }

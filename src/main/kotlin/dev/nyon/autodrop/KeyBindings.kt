@@ -1,9 +1,9 @@
 package dev.nyon.autodrop
 
-import com.mojang.blaze3d.platform.InputConstants
 import dev.nyon.autodrop.AutoDrop.invokeAutodrop
 import dev.nyon.autodrop.config.config
 import dev.nyon.autodrop.config.screen.root.ArchiveScreen
+import dev.nyon.autodrop.extensions.keyMapping
 import dev.nyon.konfig.config.saveConfig
 import net.minecraft.client.KeyMapping
 import net.minecraft.client.Minecraft
@@ -13,19 +13,13 @@ import org.lwjgl.glfw.GLFW
 
 object KeyBindings {
     private val toggleKeyBind by lazy {
-        KeyMapping(
-            "key.autodrop.toggle", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_J, "key.autodrop.category"
-        )
+        keyMapping("key.autodrop.toggle", GLFW.GLFW_KEY_J)
     }
     private val menuKeyBind by lazy {
-        KeyMapping(
-            "key.autodrop.gui", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_O, "key.autodrop.category"
-        )
+        keyMapping("key.autodrop.gui", GLFW.GLFW_KEY_O)
     }
     private val triggerKeyBind by lazy {
-        KeyMapping(
-            "key.autodrop.trigger", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_K, "key.autodrop.category"
-        )
+        keyMapping("key.autodrop.trigger", GLFW.GLFW_KEY_K)
     }
     val keyBinds: Map<KeyMapping, (Minecraft) -> Unit> = mapOf(
         toggleKeyBind to { client ->
@@ -45,6 +39,6 @@ object KeyBindings {
     )
 
     fun handleKeybindings(client: Minecraft) {
-        keyBinds.forEach { bind, function -> if (bind.consumeClick()) function(client) }
+        keyBinds.forEach { (bind, function) -> if (bind.consumeClick()) function(client) }
     }
 }

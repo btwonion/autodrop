@@ -8,6 +8,8 @@ import dev.nyon.autodrop.config.screen.create.CreateArchiveScreen
 import dev.nyon.autodrop.config.screen.ignored.IgnoredSlotsScreen
 import dev.nyon.autodrop.config.screen.modify.ModifyEntryScreen
 import dev.nyon.autodrop.extensions.screenComponent
+import dev.nyon.autodrop.extensions.screenHeight
+import dev.nyon.autodrop.extensions.screenWidth
 import dev.nyon.konfig.config.saveConfig
 import net.minecraft.ChatFormatting
 import net.minecraft.client.gui.GuiGraphics
@@ -91,20 +93,20 @@ class ArchiveScreen(private val parent: Screen?) : Screen(screenComponent("title
     }
 
     override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, tickDelta: Float) {
-        doneButton.setPosition(OUTER_PAD, internalMinecraft.screen!!.height - OUTER_PAD - 20)
-        doneButton.width = internalMinecraft.screen!!.width / 4 - OUTER_PAD
+        doneButton.setPosition(OUTER_PAD, screenHeight - OUTER_PAD - 20)
+        doneButton.width = screenWidth / 4 - OUTER_PAD
 
-        setIgnoredSlotsButton.setPosition(OUTER_PAD, internalMinecraft.screen!!.height - OUTER_PAD - 2 * 20 - 3)
-        setIgnoredSlotsButton.width = internalMinecraft.screen!!.width / 4 - OUTER_PAD
+        setIgnoredSlotsButton.setPosition(OUTER_PAD, screenHeight - OUTER_PAD - 2 * 20 - 3)
+        setIgnoredSlotsButton.width = screenWidth / 4 - OUTER_PAD
 
-        createArchiveButton.setPosition(OUTER_PAD, internalMinecraft.screen!!.height - OUTER_PAD - 3 * 20 - 6)
-        createArchiveButton.width = internalMinecraft.screen!!.width / 4 - OUTER_PAD
+        createArchiveButton.setPosition(OUTER_PAD, screenHeight - OUTER_PAD - 3 * 20 - 6)
+        createArchiveButton.width = screenWidth / 4 - OUTER_PAD
 
-        deleteArchiveButton.setPosition(OUTER_PAD, internalMinecraft.screen!!.height - OUTER_PAD - 4 * 20 - 9)
-        deleteArchiveButton.width = internalMinecraft.screen!!.width / 4 - OUTER_PAD
+        deleteArchiveButton.setPosition(OUTER_PAD, screenHeight - OUTER_PAD - 4 * 20 - 9)
+        deleteArchiveButton.width = screenWidth / 4 - OUTER_PAD
 
-        addIdentifierButton.setPosition(OUTER_PAD, internalMinecraft.screen!!.height - OUTER_PAD - 5 * 20 - 12)
-        addIdentifierButton.width = internalMinecraft.screen!!.width / 4 - OUTER_PAD
+        addIdentifierButton.setPosition(OUTER_PAD, screenHeight - OUTER_PAD - 5 * 20 - 12)
+        addIdentifierButton.width = screenWidth / 4 - OUTER_PAD
 
         super.render(guiGraphics, mouseX, mouseY, tickDelta)
     }
