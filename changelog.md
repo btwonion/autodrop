@@ -1,3 +1,1 @@
-- do not print item predicate exceptions
-- hide "Select" button in item selection list when not moving the mouse for 2 seconds
-- update translations to better fit some screens
+- update to 1.21.11

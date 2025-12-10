@@ -51,7 +51,7 @@ data class Archive(
 /**
  * Represents and entry of an archive for identification of items that are valid to be dropped.
  *
- * @param type is the type of the item and serialized as a [net.minecraft.resources.ResourceLocation], e.g. minecraft:stone.
+ * @param type is the type of the item and serialized as a [dev.nyon.autodrop.extensions.ResourceLocation], e.g. minecraft:stone.
  * @param predicate is the item data to be filtered for. The format should match the syntax of the item predicate.
  * @param amount is the amount of the item that is required for the item to be dropped.
  */

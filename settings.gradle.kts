@@ -41,6 +41,8 @@ stonecutter {
         version("1.21.6-neoforge", "1.21.6")
         version("1.21.9-fabric", "1.21.9")
         version("1.21.9-neoforge", "1.21.9")
+        version("1.21.11-fabric", "1.21.11")
+        version("1.21.11-neoforge", "1.21.11")
         vcsVersion = "1.21.9-fabric"
     }
     create(rootProject)

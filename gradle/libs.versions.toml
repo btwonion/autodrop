@@ -1,11 +1,11 @@
 [versions]
-kotlin = "2.2.10"
-mod-publish = "0.8.4"
-architectury-loom = "1.11-SNAPSHOT"
-fabric-loader = "0.17.2"
-fabric-language-kotlin = "1.13.5+kotlin."
+kotlin = "2.2.21"
+mod-publish = "1.0.0"
+architectury-loom = "1.13-SNAPSHOT"
+fabric-loader = "0.18.0"
+fabric-language-kotlin = "1.13.7+kotlin."
 vineflower = "1.11.1"
-konfig = "3.0.0"
+konfig = "3.0.1"
 
 [libraries]
 vineflower = { module = "org.vineflower:vineflower", version.ref = "vineflower" }

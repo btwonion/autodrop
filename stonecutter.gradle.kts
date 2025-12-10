@@ -10,7 +10,7 @@ import java.time.Instant
 plugins {
     id("dev.kikugie.stonecutter")
 }
-stonecutter active "1.21.9-fabric" /* [SC] DO NOT EDIT */
+stonecutter active "1.21.11-fabric" /* [SC] DO NOT EDIT */
 
 private data class Field(val name: String, val value: String, val inline: Boolean)
 
