@@ -10,7 +10,14 @@ import java.time.Instant
 plugins {
     id("dev.kikugie.stonecutter")
 }
-stonecutter active "1.21.11-fabric" /* [SC] DO NOT EDIT */
+stonecutter active "26.1-fabric" /* [SC] DO NOT EDIT */
+
+buildscript {
+    repositories { mavenCentral() }
+    dependencies {
+        classpath("org.jetbrains.kotlinx:kotlinx-serialization-json:1.10.0")
+    }
+}
 
 private data class Field(val name: String, val value: String, val inline: Boolean)
 

@@ -1,23 +1,23 @@
 {
     "schemaVersion": 1,
-    "id": "${id}",
-    "name": "${name}",
-    "description": "${description}",
+    "id": "${mod_id}",
+    "version": "${mod_version}",
+    "name": "${mod_name}",
+    "description": "${mod_description}",
     "contact": {
         "issues": "https://github.com/${repo}/issues",
         "sources": "https://github.com/${repo}"
     },
     "authors": [
-        "btwonion"
+        "${mod_author}"
     ],
     "icon": "${icon}",
-    "contributors": [],
     "license": [
-        "GNU General Public License v3.0"
+        "${mod_license}"
     ],
-    "version": "${version}",
     "environment": "client",
     "depends": {
+        "fabricloader": ">=${fabric_loader}",
         "fabric-language-kotlin": ">=${flk}",
         "fabric-api": ">=${fapi}",
         "yet_another_config_lib_v3": ">=${yacl}",
@@ -40,9 +40,6 @@
             }
         ]
     },
-    "mixins": [
-        "${mixins}"
-    ],
     "custom": {
         "modmenu": {
             "links": {

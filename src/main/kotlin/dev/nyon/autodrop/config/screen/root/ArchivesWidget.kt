@@ -6,12 +6,10 @@ import dev.nyon.autodrop.config.Archive
 import dev.nyon.autodrop.config.config
 import dev.nyon.autodrop.extensions.screenHeight
 import dev.nyon.autodrop.extensions.screenWidth
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.ObjectSelectionList
-//? if >1.21.8
 import net.minecraft.client.input.MouseButtonEvent
 import net.minecraft.network.chat.Component
-import kotlin.math.max
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.ExperimentalTime
@@ -37,23 +35,14 @@ class ArchivesWidget(private val archiveScreen: ArchiveScreen) : ObjectSelection
         return width - 2 * INNER_PAD
     }
 
-    /*? if <1.21.4 {*/
-    /*override fun getScrollbarPosition(): Int {
-        return right - 7
-    }
-
-    override fun getMaxScroll(): Int {
-        return max(0, maxPosition - getHeight() + INNER_PAD)
-    }*//*?}*/
-
-    override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
+    override fun extractWidgetRenderState(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, a: Float) {
         width = screenWidth / 4 - OUTER_PAD
         height = screenHeight - 3 * OUTER_PAD - 12 - 5 * 20
-        super.renderWidget(guiGraphics, i, j, f)
+        super.extractWidgetRenderState(graphics, mouseX, mouseY, a)
     }
 
     fun refreshEntries() {
-        /*? if <1.21.4 {*/ /*scrollAmount = 0.0 *//*?} else {*/ setScrollAmount(0.0) /*?}*/
+        setScrollAmount(0.0)
         clearEntries()
         config.archives.map { ArchivesWidgetEntry(it, archiveScreen) }.forEach(::addEntry)
     }
@@ -62,35 +51,16 @@ class ArchivesWidget(private val archiveScreen: ArchiveScreen) : ObjectSelection
 class ArchivesWidgetEntry(private val archive: Archive, private val archiveScreen: ArchiveScreen) :
     ObjectSelectionList.Entry<ArchivesWidgetEntry>() {
 
-    //? if >1.21.8 {
-    override fun renderContent(graphics: GuiGraphics, mouseX: Int, mouseY: Int, hovered: Boolean, delta: Float) {
-        renderAdItems(graphics)
-    }
-    //?} else {
-    /*override fun render(
-        guiGraphics: GuiGraphics,
-        index: Int,
-        y: Int,
-        x: Int,
-        width: Int,
-        height: Int,
-        mouseX: Int,
-        mouseY: Int,
-        isSelected: Boolean,
-        delta: Float
+    override fun extractContent(
+        guiGraphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, hovered: Boolean, a: Float
     ) {
-        renderAdItems(guiGraphics, x, y, width, height)
-    }
-    *///?}
-
-    private fun renderAdItems(guiGraphics: GuiGraphics/*? if <=1.21.8 {*//*, x: Int, y: Int, width: Int, height: Int*//*?}*/) {
         if ((archiveScreen.selected ?: return).name == archive.name) guiGraphics.fill(
             x - 3, y - 2, x + width, y + height, 0xFF404040.toInt()
         )
 
         // Draw archive name
         val hundredPercentAlphaWhite = 0xFFFFFFFF.toInt()
-        guiGraphics.drawString(
+        guiGraphics.text(
             internalMinecraft.font,
             Component.literal(archive.name),
             x,
@@ -101,10 +71,10 @@ class ArchivesWidgetEntry(private val archive: Archive, private val archiveScree
         // tick box - outer rectangle
         val rightX = x + width - INNER_PAD - 2
         val size = height - 2
-        guiGraphics.hLine(rightX, rightX - size, y, hundredPercentAlphaWhite)
-        guiGraphics.hLine(rightX, rightX - size, y + size - 1, hundredPercentAlphaWhite)
-        guiGraphics.vLine(rightX, y, y + size - 1, hundredPercentAlphaWhite)
-        guiGraphics.vLine(rightX - size, y, y + size - 1, hundredPercentAlphaWhite)
+        guiGraphics.horizontalLine(rightX, rightX - size, y, hundredPercentAlphaWhite)
+        guiGraphics.horizontalLine(rightX, rightX - size, y + size - 1, hundredPercentAlphaWhite)
+        guiGraphics.verticalLine(rightX, y, y + size - 1, hundredPercentAlphaWhite)
+        guiGraphics.verticalLine(rightX - size, y, y + size - 1, hundredPercentAlphaWhite)
 
         // tick box - inner square
         if (archive.enabled) guiGraphics.fill(
@@ -113,7 +83,9 @@ class ArchivesWidgetEntry(private val archive: Archive, private val archiveScree
     }
 
     private var lastClick: Instant? = null
-    override fun mouseClicked(/*? if >1.21.8 {*/ mouseButtonEvent: MouseButtonEvent, bl: Boolean /*?} else {*/ /*mouseX: Double, mouseY: Double, button: Int *//*?}*/): Boolean {
+    override fun mouseClicked(
+        mouseButtonEvent: MouseButtonEvent, bl: Boolean
+    ): Boolean {
         archiveScreen.select(archive)
         val now = Clock.System.now()
         if (lastClick != null && now - lastClick!! < 200.milliseconds) archive.enabled = !archive.enabled

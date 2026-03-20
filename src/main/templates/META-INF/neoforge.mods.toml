@@ -1,24 +1,20 @@
 modLoader = "klf"
 loaderVersion = "[1,)"
-license = "GPLv3"
+license = "${mod_license}"
 
 issueTrackerURL = "https://github.com/${repo}/issues"
 
 [[mods]]
-modId = "${id}"
-version = "${version}"
-displayName = "${name}"
-displayURL = "https://modrinth.com/mod/${slug}"
-authors = "btwonion"
+modId = "${mod_id}"
+version = "${mod_version}"
+displayName = "${mod_name}"
+authors = "${mod_author}"
 description = '''
-${description}
+${mod_description}
 '''
 logoFile = "${icon}"
 
-[[mixins]]
-config = "${mixins}"
-
-[[dependencies.${id}]]
+[[dependencies.${mod_id}]]
 modId = "minecraft"
 versionRange = "${mc}"
 ordering = "NONE"

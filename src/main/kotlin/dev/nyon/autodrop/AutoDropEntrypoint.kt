@@ -13,12 +13,12 @@ import java.nio.file.Path
 
 /*? if fabric {*/
 import net.fabricmc.api.ClientModInitializer
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper
 import net.fabricmc.loader.api.FabricLoader
 
 object AutoDropEntrypoint : ClientModInitializer {
     override fun onInitializeClient() {
-        KeyBindings.keyBinds.keys.forEach(KeyBindingHelper::registerKeyBinding)
+        KeyBindings.keyBinds.keys.forEach(KeyMappingHelper::registerKeyMapping)
         initialize(FabricLoader.getInstance().configDir.resolve("autodrop.json"))
     }
 }
@@ -35,7 +35,7 @@ import net.neoforged.neoforge.client.gui.IConfigScreenFactory
 @Mod("autodrop")
 object AutoDropEntrypoint {
     init {
-        val gamePath = /^? if >1.21.8 {^/ FMLLoader.getCurrent().gameDir /^?} else {^/ /^FMLLoader.getGamePath() ^//^?}^/
+        val gamePath = FMLLoader.getCurrent().gameDir
         initialize(gamePath.resolve("config/autodrop.json"))
 
         MOD_BUS.addListener<RegisterKeyMappingsEvent> {

@@ -9,14 +9,10 @@ import dev.nyon.autodrop.extensions.screenHeight
 import dev.nyon.autodrop.extensions.screenWidth
 import dev.nyon.autodrop.extensions.select
 import dev.nyon.konfig.config.saveConfig
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.components.EditBox
 import net.minecraft.client.gui.screens.Screen
-//? if >1.21.8 {
-import net.minecraft.client.input.MouseButtonEvent
-import net.minecraft.client.input.MouseButtonInfo
-//?}
 import dev.nyon.autodrop.AutoDrop.minecraft as internalMinecraft
 
 class CreateArchiveScreen(private val parent: Screen?, private val onClose: (Archive) -> Unit) :
@@ -42,24 +38,22 @@ class CreateArchiveScreen(private val parent: Screen?, private val onClose: (Arc
         super.init()
     }
 
-    override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, tickDelta: Float) {
+    override fun extractRenderState(guiGraphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, tickDelta: Float) {
         archiveNameEditBox.setPosition(
-            screenWidth / 4,
-            OUTER_PAD + INNER_PAD + internalMinecraft.font.lineHeight
+            screenWidth / 4, OUTER_PAD + INNER_PAD + internalMinecraft.font.lineHeight
         )
         archiveNameEditBox.width = screenWidth / 2
 
         doneButton.setPosition(
-            screenWidth / 3,
-            screenHeight - OUTER_PAD - doneButton.height
+            screenWidth / 3, screenHeight - OUTER_PAD - doneButton.height
         )
         doneButton.width = screenWidth / 3
         doneButton.active = matcher(archiveNameEditBox.value)
 
-        super.render(guiGraphics, mouseX, mouseY, tickDelta)
+        super.extractRenderState(guiGraphics, mouseX, mouseY, tickDelta)
 
         // render description
-        guiGraphics.drawCenteredString(
+        guiGraphics.centeredText(
             internalMinecraft.font,
             screenComponent("create.description"),
             screenWidth / 2,

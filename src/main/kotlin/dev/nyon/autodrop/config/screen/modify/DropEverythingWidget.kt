@@ -1,29 +1,29 @@
 package dev.nyon.autodrop.config.screen.modify
 
-import dev.nyon.autodrop.extensions.screenComponent
 import dev.nyon.autodrop.AutoDrop.minecraft
-import net.minecraft.client.gui.GuiGraphics
+import dev.nyon.autodrop.extensions.screenComponent
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.narration.NarrationElementOutput
-//? if >1.21.8
 import net.minecraft.client.input.MouseButtonEvent
 
-class DropEverythingWidget(x: Int, y: Int, width: Int, height: Int, var bool: Boolean, val onTick: Boolean.() -> Unit) : AbstractWidget(
-    x, y, width, height, screenComponent("modify.drop.description")
-) {
-    override fun renderWidget(
-        guiGraphics: GuiGraphics, i: Int, j: Int, f: Float
+class DropEverythingWidget(x: Int, y: Int, width: Int, height: Int, var bool: Boolean, val onTick: Boolean.() -> Unit) :
+    AbstractWidget(
+        x, y, width, height, screenComponent("modify.drop.description")
+    ) {
+    override fun extractWidgetRenderState(
+        guiGraphics: GuiGraphicsExtractor, i: Int, j: Int, f: Float
     ) {
         val hundredPercentAlphaWhite = 0xFFFFFFFF.toInt()
         val component = screenComponent("modify.drop.description")
-        guiGraphics.drawString(minecraft.font, component, x, y + height / 4, hundredPercentAlphaWhite)
+        guiGraphics.text(minecraft.font, component, x, y + height / 4, hundredPercentAlphaWhite)
 
         // tick box - outer rectangle
         val rightX = x + width
-        guiGraphics.hLine(rightX, rightX - height, y, hundredPercentAlphaWhite)
-        guiGraphics.hLine(rightX, rightX - height, y + height - 1, hundredPercentAlphaWhite)
-        guiGraphics.vLine(rightX, y, y + height - 1, hundredPercentAlphaWhite)
-        guiGraphics.vLine(rightX - height, y, y + height - 1, hundredPercentAlphaWhite)
+        guiGraphics.horizontalLine(rightX, rightX - height, y, hundredPercentAlphaWhite)
+        guiGraphics.horizontalLine(rightX, rightX - height, y + height - 1, hundredPercentAlphaWhite)
+        guiGraphics.verticalLine(rightX, y, y + height - 1, hundredPercentAlphaWhite)
+        guiGraphics.verticalLine(rightX - height, y, y + height - 1, hundredPercentAlphaWhite)
 
         // tick box - inner square
         if (bool) guiGraphics.fill(
@@ -31,21 +31,12 @@ class DropEverythingWidget(x: Int, y: Int, width: Int, height: Int, var bool: Bo
         )
     }
 
-    //? if >1.21.8 {
     override fun mouseClicked(mouseButtonEvent: MouseButtonEvent, bl: Boolean): Boolean {
         bool = !bool
         onTick(bool)
 
         return super.mouseClicked(mouseButtonEvent, bl)
     }
-    //?} else {
-    /*override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
-        bool = !bool
-        onTick(bool)
-
-        return super.mouseClicked(mouseX, mouseY, button)
-    }
-    *///?}
 
     override fun updateWidgetNarration(narrationElementOutput: NarrationElementOutput) {}
 }

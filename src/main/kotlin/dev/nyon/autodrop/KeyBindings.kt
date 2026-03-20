@@ -33,7 +33,7 @@ object KeyBindings {
             if (config.enabled) invokeAutodrop()
         },
         menuKeyBind to { client ->
-            client.setScreen(ArchiveScreen(null))
+            if (Minecraft.getInstance().connection != null) client.setScreen(ArchiveScreen(null))
         },
         triggerKeyBind to { invokeAutodrop() }
     )

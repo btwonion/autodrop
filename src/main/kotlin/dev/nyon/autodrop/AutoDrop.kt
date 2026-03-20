@@ -7,18 +7,13 @@ import dev.nyon.autodrop.config.ignoredSlots
 import dev.nyon.autodrop.extensions.VanillaRegistryAccess
 import dev.nyon.autodrop.extensions.matchItemPredicate
 import dev.nyon.autodrop.extensions.stringReader
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.asCoroutineDispatcher
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.screens.inventory.InventoryScreen
 import net.minecraft.commands.CommandBuildContext
 import net.minecraft.commands.arguments.item.ItemPredicateArgument
 import net.minecraft.world.flag.FeatureFlags
-import net.minecraft.world.inventory.ClickType
+import net.minecraft.world.inventory.ContainerInput
 import net.minecraft.world.inventory.Slot
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
@@ -38,8 +33,7 @@ object AutoDrop {
             return ItemPredicateArgument(
                 CommandBuildContext.simple(
                     if (minecraft.connection != null) minecraft.connection!!.registryAccess()
-                    else VanillaRegistryAccess.createVanillaRegistryAccess(),
-                    FeatureFlags.DEFAULT_FLAGS
+                    else VanillaRegistryAccess.createVanillaRegistryAccess(), FeatureFlags.DEFAULT_FLAGS
                 )
             )
         }
@@ -79,17 +73,18 @@ object AutoDrop {
                 if (isValid) {
                     val shouldDropEverything = validIdentifiers.all(ArchiveEntry::dropEverything)
                     if (shouldDropEverything) {
-                        minecraft.gameMode?.handleInventoryMouseClick(
-                            player.containerMenu.containerId, slot.correctSlotId(), 1, ClickType.THROW, player
+                        minecraft.gameMode?.handleContainerInput(
+                            player.containerMenu.containerId, slot.correctSlotId(), 1, ContainerInput.THROW, player
                         )
                         return@forEach
                     }
-                    if (itemStack.count > 1) {
-                        minecraft.gameMode?.handleInventoryMouseClick(
-                            player.containerMenu.containerId, slot.correctSlotId(), 1, ClickType.PICKUP, player
+                    if (itemStack.count > 1) { // When the stack count is bigger than one, the whole stack will be dropped like a player would do in-game.
+                        // First the stack is picked up with the mouse, and in a second packets dropped out of the inventory.
+                        minecraft.gameMode?.handleContainerInput(
+                            player.containerMenu.containerId, slot.correctSlotId(), 1, ContainerInput.PICKUP, player
                         )
-                        minecraft.gameMode?.handleInventoryMouseClick(
-                            player.containerMenu.containerId, -999, 0, ClickType.PICKUP, player
+                        minecraft.gameMode?.handleContainerInput(
+                            player.containerMenu.containerId, -999, 0, ContainerInput.PICKUP, player
                         )
                     }
                 }

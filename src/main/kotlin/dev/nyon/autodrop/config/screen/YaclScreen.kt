@@ -22,6 +22,7 @@ fun createYaclScreen(parent: Screen? = null): Screen = YetAnotherConfigLib("auto
             action { parent, _ ->
                 minecraft.setScreen(ArchiveScreen(parent))
             }
+            available(minecraft.connection != null)
 
             descriptionBuilder {
                 addDefaultText(1)
