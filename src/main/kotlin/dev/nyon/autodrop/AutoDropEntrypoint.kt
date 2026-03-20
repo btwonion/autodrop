@@ -12,7 +12,7 @@ import net.minecraft.world.item.Item
 import java.nio.file.Path
 
 /*? if fabric {*/
-/*import net.fabricmc.api.ClientModInitializer
+import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper
 import net.fabricmc.loader.api.FabricLoader
 
@@ -23,8 +23,8 @@ object AutoDropEntrypoint : ClientModInitializer {
     }
 }
 
-*//*?} else {*/
-import dev.nyon.autodrop.config.screen.createYaclScreen
+/*?} else {*/
+/*import dev.nyon.autodrop.config.screen.createYaclScreen
 import dev.nyon.klf.MOD_BUS
 import net.neoforged.fml.ModLoadingContext
 import net.neoforged.fml.common.Mod
@@ -47,7 +47,7 @@ object AutoDropEntrypoint {
         }
     }
 }
-/*?}*/
+*//*?}*/
 
 private fun initialize(configDir: Path) {
     config(configDir, 2, Config(), jsonBuilder = {

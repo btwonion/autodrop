@@ -66,6 +66,16 @@ modstitch {
         prop("vers.deps.fml") { neoForgeVersion = it }
 
         configureNeoForge {
+            runs {
+                register("mainClient") {
+                    client()
+                    sourceSet = sourceSets.main.get()
+                    gameDirectory = layout.projectDirectory.dir("../../run")
+                    environment("WAYLAND_DISPLAY", "")
+                    environment("XDG_SESSION_TYPE", "x11")
+                }
+            }
+
             mods {
                 register("main") {
                     sourceSet(sourceSets.main.get())
@@ -102,12 +112,13 @@ val fabric_language_kotlin: String = "${libs.versions.fabric.language.kotlin.orN
 dependencies {
     fun modDependency(
         artifact: String,
-        requiredByDependants: Boolean = false
+        compileOnly: Boolean = false,
+        api: Boolean = false
     ) {
-        val configuration = if (requiredByDependants) {
-            "modstitchModApi"
+        val configuration = if (api) {
+            if (compileOnly) "modstitchModCompileOnly" else "modstitchModApi"
         } else {
-            "modstitchModImplementation"
+            if (compileOnly) "modstitchModCompileOnlyApi" else "modstitchModImplementation"
         }
 
         configuration(artifact)
@@ -116,22 +127,24 @@ dependencies {
     fun propModDependency(
         id: String,
         artifactGetter: (String) -> String,
-        requiredByDependants: Boolean = false
+        compileOnly: Boolean = false,
+        api: Boolean = false
     ) {
         prop("vers.deps.$id") { modVersion ->
             modDependency(
                 artifactGetter(modVersion),
-                requiredByDependants
+                compileOnly,
+                api
             )
         }
     }
 
     if (isFabric) {
-        propModDependency("fapi", { "net.fabricmc.fabric-api:fabric-api:$it" }, requiredByDependants = true)
+        propModDependency("fapi", { "net.fabricmc.fabric-api:fabric-api:$it" }, api = true)
         modDependency("net.fabricmc:fabric-language-kotlin:$fabric_language_kotlin")
         propModDependency("modMenu", { "com.terraformersmc:modmenu:$it" })
     } else {
-        propModDependency("klf", { "dev.nyon:KotlinLangForge:2.11.2-k${libs.versions.kotlin.orNull}-$it+neoforge" }, requiredByDependants = true)
+        propModDependency("klf", { "dev.nyon:KotlinLangForge:2.11.2-k${libs.versions.kotlin.orNull}-$it+neoforge" }, api = true)
     }
 
     propModDependency("yacl", { "dev.isxander:yet-another-config-lib:$it" })

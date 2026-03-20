@@ -10,7 +10,7 @@ import java.time.Instant
 plugins {
     id("dev.kikugie.stonecutter")
 }
-stonecutter active "26.1-neoforge" /* [SC] DO NOT EDIT */
+stonecutter active "26.1-fabric" /* [SC] DO NOT EDIT */
 
 buildscript {
     repositories { mavenCentral() }
