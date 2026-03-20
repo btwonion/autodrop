@@ -44,5 +44,5 @@
     "yacl3.config.autodrop.category.general.root.option.enabled": "Aktiviert",
     "yacl3.config.autodrop.category.general.root.option.enabled.description": "De-/Aktiviert die Funktionalität der Mod.",
     "yacl3.config.autodrop.category.general.root.option.screen": "Öffne Listeneditor",
-    "yacl3.config.autodrop.category.general.root.option.screen.description": "Öffnet den Bilschirm, bei dem du deine Listen bearbeiten kannst."
+    "yacl3.config.autodrop.category.general.root.option.screen.description": "Öffnet den Bilschirm, in dem du deine Listen bearbeiten kannst.\nHINWEIS: Aufgrund von Limitationen von Minecraft kannst du den Editor nur öffnen, wenn du dich in einer Welt befindest."
 }

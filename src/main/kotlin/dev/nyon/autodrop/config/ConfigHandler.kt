@@ -1,6 +1,6 @@
 package dev.nyon.autodrop.config
 
-import dev.nyon.autodrop.extensions.resourceLocation
+import dev.nyon.autodrop.extensions.identifier
 import kotlinx.serialization.json.*
 import net.minecraft.core.registries.BuiltInRegistries
 import kotlin.jvm.optionals.getOrNull
@@ -32,9 +32,9 @@ internal fun migrate(
                     true,
                     archiveObject["name"]?.jsonPrimitive?.content ?: return null,
                     archiveObject["items"]?.jsonArray?.map secMap@{ content ->
-                        val resourceLocation = resourceLocation(content.jsonPrimitive.contentOrNull ?: return null)
+                        val resourceLocation = identifier(content.jsonPrimitive.contentOrNull ?: return null)
                         return@secMap ArchiveEntry(
-                            resourceLocation?.let { BuiltInRegistries.ITEM.get(it)/*? if >=1.21.2 {*/.getOrNull()?.value()/*?}*/ }, "", 1, true
+                            resourceLocation?.let { BuiltInRegistries.ITEM.get(it).getOrNull()?.value() }, "", 1, true
                         )
                     }?.toMutableList() ?: return null,
                     archiveObject["lockedSlots"]?.jsonArray?.map secMap@{ content ->

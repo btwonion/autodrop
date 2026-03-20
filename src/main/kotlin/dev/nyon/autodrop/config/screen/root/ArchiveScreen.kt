@@ -12,7 +12,7 @@ import dev.nyon.autodrop.extensions.screenHeight
 import dev.nyon.autodrop.extensions.screenWidth
 import dev.nyon.konfig.config.saveConfig
 import net.minecraft.ChatFormatting
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.screens.Screen
 import dev.nyon.autodrop.AutoDrop.minecraft as internalMinecraft
@@ -92,7 +92,7 @@ class ArchiveScreen(private val parent: Screen?) : Screen(screenComponent("title
         reloadArchiveProperties()
     }
 
-    override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, tickDelta: Float) {
+    override fun extractRenderState(guiGraphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, tickDelta: Float) {
         doneButton.setPosition(OUTER_PAD, screenHeight - OUTER_PAD - 20)
         doneButton.width = screenWidth / 4 - OUTER_PAD
 
@@ -108,7 +108,7 @@ class ArchiveScreen(private val parent: Screen?) : Screen(screenComponent("title
         addIdentifierButton.setPosition(OUTER_PAD, screenHeight - OUTER_PAD - 5 * 20 - 12)
         addIdentifierButton.width = screenWidth / 4 - OUTER_PAD
 
-        super.render(guiGraphics, mouseX, mouseY, tickDelta)
+        super.extractRenderState(guiGraphics, mouseX, mouseY, tickDelta)
     }
 
     fun select(archive: Archive) {

@@ -10,7 +10,7 @@ import dev.nyon.autodrop.config.screen.root.INNER_PAD
 import dev.nyon.autodrop.config.screen.root.OUTER_PAD
 import dev.nyon.autodrop.extensions.*
 import dev.nyon.konfig.config.saveConfig
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.components.EditBox
 import net.minecraft.client.gui.screens.Screen
@@ -24,7 +24,7 @@ import dev.nyon.autodrop.AutoDrop.minecraft as internalMinecraft
 class ModifyEntryScreen(private val parent: ArchiveScreen, private val archiveEntry: ArchiveEntry) :
     Screen(screenComponent("modify.title")) {
     private val matcher: () -> Boolean = {
-        (itemEditBox.value.isBlank() || BuiltInRegistries.ITEM.getOptional(resourceLocation(itemEditBox.value)).isPresent) && amountEditBox.value.toIntOrNull()
+        (itemEditBox.value.isBlank() || BuiltInRegistries.ITEM.getOptional(identifier(itemEditBox.value)).isPresent) && amountEditBox.value.toIntOrNull()
             .let { it != null && it in 0 .. 64 }
     }
 
@@ -65,10 +65,9 @@ class ModifyEntryScreen(private val parent: ArchiveScreen, private val archiveEn
             it.select(10.0, 10.0)
             it.setMaxLength(2)
             it.value = archiveEntry.amount.toString()
-            it.setFilter { input ->
-                if (input.isEmpty()) return@setFilter true
-                val int = input.toIntOrNull() ?: return@setFilter false
-                int in 0 .. 64
+            it.setResponder { input ->
+                val valid = input.isBlank() || input.toIntOrNull() != null && input.toInt() in 0 .. 64
+                it.setTextColor(if (valid) 0xFFFFFFFF.toInt() else 0xFFFF0000.toInt())
             }
             it.cursorPosition = 0
             it.setHighlightPos(0)
@@ -100,7 +99,13 @@ class ModifyEntryScreen(private val parent: ArchiveScreen, private val archiveEn
         super.init()
     }
 
-    override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, tickDelta: Float) { // render item edit box
+    override fun extractRenderState(
+        guiGraphics: GuiGraphicsExtractor,
+        mouseX: Int,
+        mouseY: Int,
+        tickDelta: Float
+    ) {
+        // render item edit box
         itemEditBox.setPosition(
             screenWidth / 4, OUTER_PAD + INNER_PAD + internalMinecraft.font.lineHeight
         )
@@ -111,15 +116,6 @@ class ModifyEntryScreen(private val parent: ArchiveScreen, private val archiveEn
             OUTER_PAD * 2 + INNER_PAD * 3 + internalMinecraft.font.lineHeight * 2 + 20 + screenHeight / 6
         )
         componentsEditBox.width = screenWidth / 2
-        if (internalMinecraft.connection == null) {
-            guiGraphics.drawCenteredString(
-                internalMinecraft.font,
-                screenComponent("modify.components.enchantment_warning"),
-                screenWidth / 2,
-                OUTER_PAD * 2 + INNER_PAD * 3 + internalMinecraft.font.lineHeight * 2 + 40 + screenHeight / 6,
-                0xFFFF0000.toInt()
-            )
-        }
 
         amountEditBox.setPosition(
             screenWidth / 4,
@@ -140,10 +136,10 @@ class ModifyEntryScreen(private val parent: ArchiveScreen, private val archiveEn
         )
         doneButton.width = screenWidth / 3
         doneButton.active = matcher()
-        super.render(guiGraphics, mouseX, mouseY, tickDelta)
+        super.extractRenderState(guiGraphics, mouseX, mouseY, tickDelta)
 
         // render description
-        guiGraphics.drawCenteredString(
+        guiGraphics.centeredText(
             internalMinecraft.font,
             screenComponent("modify.item.description"),
             screenWidth / 2,
@@ -152,7 +148,7 @@ class ModifyEntryScreen(private val parent: ArchiveScreen, private val archiveEn
         )
 
         // render components text and edit box
-        guiGraphics.drawCenteredString(
+        guiGraphics.centeredText(
             internalMinecraft.font,
             screenComponent("modify.components.description"),
             screenWidth / 2,
@@ -161,7 +157,7 @@ class ModifyEntryScreen(private val parent: ArchiveScreen, private val archiveEn
         )
 
         // render amount text and edit box
-        guiGraphics.drawCenteredString(
+        guiGraphics.centeredText(
             internalMinecraft.font,
             screenComponent("modify.amount.description"),
             screenWidth / 2,

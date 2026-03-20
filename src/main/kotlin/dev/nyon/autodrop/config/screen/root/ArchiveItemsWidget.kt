@@ -7,17 +7,14 @@ import dev.nyon.autodrop.extensions.narration
 import dev.nyon.autodrop.extensions.screenComponent
 import dev.nyon.autodrop.extensions.screenHeight
 import dev.nyon.autodrop.extensions.screenWidth
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.components.ObjectSelectionList
-//? if >1.21.8
 import net.minecraft.client.input.MouseButtonEvent
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.chat.Component
 import net.minecraft.world.item.Item
-import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
-import kotlin.math.max
 import dev.nyon.autodrop.AutoDrop.minecraft as internalMinecraft
 
 class ArchiveItemsWidget(var archive: Archive?, private val parent: ArchiveScreen) :
@@ -40,23 +37,14 @@ class ArchiveItemsWidget(var archive: Archive?, private val parent: ArchiveScree
         return width - 2 * INNER_PAD
     }
 
-    /*? if <1.21.4 {*/
-    /*override fun getScrollbarPosition(): Int {
-        return right - 7
-    }
-
-    override fun getMaxScroll(): Int {
-        return max(0, maxPosition - getHeight() + INNER_PAD)
-    }*//*?}*/
-
-    override fun renderWidget(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
+    override fun extractWidgetRenderState(guiGraphics: GuiGraphicsExtractor, i: Int, j: Int, f: Float) {
         width = (screenWidth / 4) * 3 - 2 * OUTER_PAD
         height = screenHeight - 2 * OUTER_PAD
-        super.renderWidget(guiGraphics, i, j, f)
+        super.extractWidgetRenderState(guiGraphics, i, j, f)
     }
 
     fun refreshEntries() {
-        /*? if <1.21.4 {*/ /*scrollAmount = 0.0 *//*?} else {*/ setScrollAmount(0.0) /*?}*/
+        setScrollAmount(0.0)
         clearEntries()
         if (archive == null) return
         archive!!.entries.map {
@@ -86,42 +74,27 @@ class ArchiveItemEntry(
         internalMinecraft.setScreen(ModifyEntryScreen(parent, archiveEntry))
     }.width(75).build()
 
-    //? if >1.21.8 {
-    override fun renderContent(graphics: GuiGraphics, mouseX: Int, mouseY: Int, hovered: Boolean, delta: Float) {
-        renderAdItems(graphics, mouseX, mouseY, delta)
-    }
-    //?} else {
-    /*override fun render(
-        guiGraphics: GuiGraphics,
-        index: Int,
-        y: Int,
-        x: Int,
-        width: Int,
-        height: Int,
+    override fun extractContent(
+        guiGraphics: GuiGraphicsExtractor,
         mouseX: Int,
         mouseY: Int,
-        isSelected: Boolean,
+        hovered: Boolean,
         delta: Float
     ) {
-        renderAdItems(guiGraphics, mouseX, mouseY, delta, x, y, width, height)
-    }
-    *///?}
-
-    private fun renderAdItems(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float/*? if <=1.21.8 {*//*, x: Int, y: Int, width: Int, height: Int*//*?}*/) {
         val textX = x + internalMinecraft.font.lineHeight * 3 + INNER_PAD
-        guiGraphics.renderItem(ItemStack(item), x + INNER_PAD, y + INNER_PAD + internalMinecraft.font.lineHeight)
-        guiGraphics.drawString(
+        guiGraphics.item(item.defaultInstance, x + INNER_PAD, y + INNER_PAD + internalMinecraft.font.lineHeight)
+        guiGraphics.text(
             internalMinecraft.font, itemLocationString, textX, y + INNER_PAD, 0xFFFFFFFF.toInt()
         )
 
-        guiGraphics.drawString(
+        guiGraphics.text(
             internalMinecraft.font,
             screenComponent("widget.items.component.${archiveEntry.predicate.length > 2}"),
             textX,
             y + internalMinecraft.font.lineHeight + INNER_PAD * 2,
             0xFFFFFFFF.toInt()
         )
-        guiGraphics.drawString(
+        guiGraphics.text(
             internalMinecraft.font,
             screenComponent("widget.items.amount", archiveEntry.amount.toString()),
             textX,
@@ -130,27 +103,24 @@ class ArchiveItemEntry(
         )
 
         removeButton.setPosition(x + width - removeButton.width - INNER_PAD, y + height / 2 - 10)
-        removeButton.render(guiGraphics, mouseX, mouseY, delta)
+        removeButton.extractRenderState(guiGraphics, mouseX, mouseY, delta)
         modifyButton.setPosition(
-            x + width - removeButton.width - INNER_PAD * 2 - modifyButton.width,
-            y + height / 2 - 10
+            x + width - removeButton.width - INNER_PAD * 2 - modifyButton.width, y + height / 2 - 10
         )
-        modifyButton.render(guiGraphics, mouseX, mouseY, delta)
+        modifyButton.extractRenderState(guiGraphics, mouseX, mouseY, delta)
     }
 
-    //? if >1.21.8 {
     override fun mouseClicked(mouseButtonEvent: MouseButtonEvent, bl: Boolean): Boolean {
-        if (removeButton.isMouseOver(mouseButtonEvent.x, mouseButtonEvent.y)) return removeButton.mouseClicked(mouseButtonEvent, bl)
-        if (modifyButton.isMouseOver(mouseButtonEvent.x, mouseButtonEvent.y)) return modifyButton.mouseClicked(mouseButtonEvent, bl)
+        if (removeButton.isMouseOver(mouseButtonEvent.x, mouseButtonEvent.y)) return removeButton.mouseClicked(
+            mouseButtonEvent,
+            bl
+        )
+        if (modifyButton.isMouseOver(mouseButtonEvent.x, mouseButtonEvent.y)) return modifyButton.mouseClicked(
+            mouseButtonEvent,
+            bl
+        )
         return super.mouseClicked(mouseButtonEvent, bl)
     }
-    //?} else {
-    /*override fun mouseClicked(d: Double, e: Double, i: Int): Boolean {
-        if (removeButton.isMouseOver(d, e)) return removeButton.mouseClicked(d, e, i)
-        if (modifyButton.isMouseOver(d, e)) return modifyButton.mouseClicked(d, e, i)
-        return super.mouseClicked(d, e, i)
-    }
-    *///?}
 
     override fun getNarration(): Component {
         return item.narration
