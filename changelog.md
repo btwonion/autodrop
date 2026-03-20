@@ -1,1 +1,3 @@
-- update to 1.21.11
+- config screen:
+  - Add a hint for enchantment predicates in ModifyScreen
+  - allow saving an identifier with an invalid predicate [**#31**](https://github.com/btwonion/autodrop/issues/31)

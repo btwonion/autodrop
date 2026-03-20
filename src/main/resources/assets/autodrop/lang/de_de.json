@@ -19,6 +19,7 @@
     "menu.autodrop.screen.ignored.title": "Ignorierte Plätze",
     "menu.autodrop.screen.modify.amount.description": "Gebe die geringste Anzahl des Items ein, welches gefiltert werden soll",
     "menu.autodrop.screen.modify.components.description": "Gebe die Komponenten ein, welche du filtern willst (das Format entspricht dem des Command-Syntax)",
+    "menu.autodrop.screen.modify.components.enchantment_warning": "Verzauberungs-Vorraussetzungen werden nur richtig angezeigt, wenn du auf einer Welt spielst.",
     "menu.autodrop.screen.modify.empty": "Gebe deinen Wert ein",
     "menu.autodrop.screen.modify.item.description": "Wähle das Item aus, welches du filtern willst (optional)",
     "menu.autodrop.screen.modify.items.select": "Auswählen",

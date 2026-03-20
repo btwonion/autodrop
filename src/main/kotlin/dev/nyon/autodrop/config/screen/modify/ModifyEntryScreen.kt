@@ -8,13 +8,7 @@ import dev.nyon.autodrop.config.config
 import dev.nyon.autodrop.config.screen.root.ArchiveScreen
 import dev.nyon.autodrop.config.screen.root.INNER_PAD
 import dev.nyon.autodrop.config.screen.root.OUTER_PAD
-import dev.nyon.autodrop.extensions.matchItemPredicate
-import dev.nyon.autodrop.extensions.resourceLocation
-import dev.nyon.autodrop.extensions.screenComponent
-import dev.nyon.autodrop.extensions.screenHeight
-import dev.nyon.autodrop.extensions.screenWidth
-import dev.nyon.autodrop.extensions.select
-import dev.nyon.autodrop.extensions.stringReader
+import dev.nyon.autodrop.extensions.*
 import dev.nyon.konfig.config.saveConfig
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.Button
@@ -30,9 +24,8 @@ import dev.nyon.autodrop.AutoDrop.minecraft as internalMinecraft
 class ModifyEntryScreen(private val parent: ArchiveScreen, private val archiveEntry: ArchiveEntry) :
     Screen(screenComponent("modify.title")) {
     private val matcher: () -> Boolean = {
-        (itemEditBox.value.isBlank() || BuiltInRegistries.ITEM.getOptional(resourceLocation(itemEditBox.value)).isPresent) && (componentsEditBox.value.isBlank() || kotlin.runCatching {
-            AutoDrop.itemPredicateArgument.parse(componentsEditBox.value.matchItemPredicate().stringReader())
-        }.isSuccess) && amountEditBox.value.toIntOrNull().let { it != null && it in 0 .. 64 }
+        (itemEditBox.value.isBlank() || BuiltInRegistries.ITEM.getOptional(resourceLocation(itemEditBox.value)).isPresent) && amountEditBox.value.toIntOrNull()
+            .let { it != null && it in 0 .. 64 }
     }
 
     private val lastIndex: Instant = Clock.System.now()
@@ -59,6 +52,12 @@ class ModifyEntryScreen(private val parent: ArchiveScreen, private val archiveEn
             it.value = archiveEntry.predicate
             it.cursorPosition = 0
             it.setHighlightPos(0)
+            it.setResponder { input ->
+                val valid = input.isBlank() || kotlin.runCatching {
+                    AutoDrop.itemPredicateArgument.parse(input.matchItemPredicate().stringReader())
+                }.isSuccess
+                it.setTextColor(if (valid) 0xFFFFFFFF.toInt() else 0xFFFF0000.toInt())
+            }
         }
 
     private val amountEditBox: EditBox =
@@ -112,6 +111,15 @@ class ModifyEntryScreen(private val parent: ArchiveScreen, private val archiveEn
             OUTER_PAD * 2 + INNER_PAD * 3 + internalMinecraft.font.lineHeight * 2 + 20 + screenHeight / 6
         )
         componentsEditBox.width = screenWidth / 2
+        if (internalMinecraft.connection == null) {
+            guiGraphics.drawCenteredString(
+                internalMinecraft.font,
+                screenComponent("modify.components.enchantment_warning"),
+                screenWidth / 2,
+                OUTER_PAD * 2 + INNER_PAD * 3 + internalMinecraft.font.lineHeight * 2 + 40 + screenHeight / 6,
+                0xFFFF0000.toInt()
+            )
+        }
 
         amountEditBox.setPosition(
             screenWidth / 4,

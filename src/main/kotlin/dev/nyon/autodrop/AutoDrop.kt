@@ -4,6 +4,7 @@ import dev.nyon.autodrop.config.ArchiveEntry
 import dev.nyon.autodrop.config.config
 import dev.nyon.autodrop.config.currentItems
 import dev.nyon.autodrop.config.ignoredSlots
+import dev.nyon.autodrop.extensions.VanillaRegistryAccess
 import dev.nyon.autodrop.extensions.matchItemPredicate
 import dev.nyon.autodrop.extensions.stringReader
 import kotlinx.coroutines.CoroutineScope
@@ -16,8 +17,6 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.screens.inventory.InventoryScreen
 import net.minecraft.commands.CommandBuildContext
 import net.minecraft.commands.arguments.item.ItemPredicateArgument
-import net.minecraft.core.RegistryAccess
-import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.world.flag.FeatureFlags
 import net.minecraft.world.inventory.ClickType
 import net.minecraft.world.inventory.Slot
@@ -34,23 +33,16 @@ object AutoDrop {
     }
 
     private var jobWaiting = false
-    val itemPredicateArgument: ItemPredicateArgument by lazy {
-        ItemPredicateArgument(
-            CommandBuildContext.simple(
-                RegistryAccess.ImmutableRegistryAccess(
-                    listOf(
-                        BuiltInRegistries.ITEM,
-                        BuiltInRegistries.DATA_COMPONENT_TYPE,
-                        //? if >1.21.4
-                        BuiltInRegistries.DATA_COMPONENT_PREDICATE_TYPE
-                        //? if <=1.21.4
-                        /*BuiltInRegistries.ITEM_SUB_PREDICATE_TYPE*/
-                    )
-                ),
-                FeatureFlags.DEFAULT_FLAGS
+    val itemPredicateArgument: ItemPredicateArgument
+        get() {
+            return ItemPredicateArgument(
+                CommandBuildContext.simple(
+                    if (minecraft.connection != null) minecraft.connection!!.registryAccess()
+                    else VanillaRegistryAccess.createVanillaRegistryAccess(),
+                    FeatureFlags.DEFAULT_FLAGS
+                )
             )
-        )
-    }
+        }
 
     /**
      * Filters slots for items matching the filter and drops them after a specified delay.

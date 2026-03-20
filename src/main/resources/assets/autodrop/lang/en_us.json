@@ -22,6 +22,7 @@
     "menu.autodrop.screen.modify.title": "Create new archive",
     "menu.autodrop.screen.modify.item.description": "Select the item you want to filter for (can also be empty)",
     "menu.autodrop.screen.modify.components.description": "Enter components you want to filter for (should match the item command syntax)",
+    "menu.autodrop.screen.modify.components.enchantment_warning": "Enchantments predicates are only highlighted correctly when in-game.",
     "menu.autodrop.screen.modify.amount.description": "Enter the minimum amount of the item you are filtering for",
     "menu.autodrop.screen.modify.empty": "Enter something",
     "menu.autodrop.screen.modify.items.select": "Select",
