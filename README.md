@@ -22,6 +22,12 @@ and copy the component part (enclosed by `{}` or `[]`).
 The syntax is also described on
 this [wiki post](https://minecraft.wiki/w/Argument_types#item_predicate).
 
+<br>
+
+**How to drop everything except a specific item?** 
+
+A string like this: `[!minecraft:stored_enchantments={mending:1}]` will do the trick. It will drop every item that does not have Mending enchanted. If you want to only drop enchanted books that do not have Mending enchanted you have to add an item identifier for it as well.
+
 ### Other
 
 If you need help with any of my mods, join my [discord server](https://nyon.dev/discord).
