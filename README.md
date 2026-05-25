@@ -20,7 +20,9 @@ Unless you know the syntax by heart, you can use
 a [give command generator](https://www.gamergeeks.net/apps/minecraft/give-command-generator)
 and copy the component part (enclosed by `{}` or `[]`).
 The syntax is also described on
-this [wiki post](https://minecraft.wiki/w/Argument_types#item_predicate).
+this [wiki post](https://minecraft.wiki/w/Argument_types#item_predicate). 
+
+For sub-types of items, such as Bottle of Water (subtype of Potion) use a specialized relevant generator like the [Minecraft Maps Generators](https://www.minecraftmaps.com/tools/give/potions).
 
 <br>
 
