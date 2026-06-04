@@ -211,7 +211,7 @@ publishMods {
     curseforge {
         projectId = "1244691"
         accessToken = providers.environmentVariable("CURSEFORGE_API_KEY")
-        minecraftVersions.addAll(supportedMcVersions.map { if (it.contains('-')) "${it.substringBefore('-')}-Snapshot" else it })
+        minecraftVersions.addAll(supportedMcVersions.mapNotNull { if (it.contains('-')) null else it })
 
         if (isFabric) {
             requires { slug = "fabric-api" }
