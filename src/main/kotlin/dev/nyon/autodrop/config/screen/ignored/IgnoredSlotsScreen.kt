@@ -94,7 +94,7 @@ class IgnoredSlotsScreen(private val archive: Archive, private val parent: Scree
     }
 
     override fun onClose() {
-        internalMinecraft.setScreen(parent)
+        internalMinecraft.openScreen(parent)
         archive.ignoredSlots = ignoredSlotsEditBox.value.split(',').mapNotNull { it.toIntOrNull() }.toMutableSet()
         saveConfig(config)
     }

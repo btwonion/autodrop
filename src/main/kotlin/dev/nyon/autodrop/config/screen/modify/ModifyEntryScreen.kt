@@ -178,7 +178,7 @@ class ModifyEntryScreen(private val parent: ArchiveScreen, private val archiveEn
     override fun onClose() {
         archiveEntry.predicate = componentsEditBox.value.let { it.ifBlank { "[]" } }
         archiveEntry.amount = amountEditBox.value.toIntOrNull() ?: 1
-        internalMinecraft.setScreen(parent)
+        internalMinecraft.openScreen(parent)
         saveConfig(config)
         parent.archiveItemsWidget.refreshEntries()
     }

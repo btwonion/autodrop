@@ -49,7 +49,6 @@ modstitch {
         prop("vers.deps.fapi") { replacementProperties.put("fapi", it) }
         prop("vers.deps.yacl") { replacementProperties.put("yacl", it) }
         prop("version.deps.modmenu") { replacementProperties.put("modmenu", it) }
-        prop("mod.mixins") { replacementProperties.put("mixins", it) }
     }
 
     loom {
@@ -106,9 +105,15 @@ repositories {
     maven("https://repo.nyon.dev/releases")
     maven("https://maven.isxander.dev/releases")
     maven("https://maven.neoforged.net/releases/")
+    // Has to be removed when NeoForge 26.2 is stable
+    maven("https://prmaven.neoforged.net/NeoForge/pr3198") {
+        content {
+            includeModule("net.neoforged", "neoforge")
+        }
+    }
 }
 
-val fabric_language_kotlin: String = "${libs.versions.fabric.language.kotlin.orNull}${libs.versions.kotlin.orNull}"
+val fabricLanguageKotlin: String = "${libs.versions.fabric.language.kotlin.orNull}${libs.versions.kotlin.orNull}"
 dependencies {
     fun modDependency(
         artifact: String,
@@ -141,7 +146,7 @@ dependencies {
 
     if (isFabric) {
         propModDependency("fapi", { "net.fabricmc.fabric-api:fabric-api:$it" }, api = true)
-        modDependency("net.fabricmc:fabric-language-kotlin:$fabric_language_kotlin")
+        modDependency("net.fabricmc:fabric-language-kotlin:$fabricLanguageKotlin")
         propModDependency("modMenu", { "com.terraformersmc:modmenu:$it" })
     } else {
         propModDependency("klf", { "dev.nyon:KotlinLangForge:2.11.2-k${libs.versions.kotlin.orNull}-$it+neoforge" }, api = true)
@@ -206,7 +211,7 @@ publishMods {
     curseforge {
         projectId = "1244691"
         accessToken = providers.environmentVariable("CURSEFORGE_API_KEY")
-        minecraftVersions.addAll(supportedMcVersions)
+        minecraftVersions.addAll(supportedMcVersions.map { if (it.contains('-')) "${it.substringBefore('-')}-Snapshot" else it })
 
         if (isFabric) {
             requires { slug = "fabric-api" }

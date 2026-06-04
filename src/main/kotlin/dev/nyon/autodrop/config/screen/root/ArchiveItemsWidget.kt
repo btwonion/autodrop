@@ -4,6 +4,7 @@ import dev.nyon.autodrop.config.Archive
 import dev.nyon.autodrop.config.ArchiveEntry
 import dev.nyon.autodrop.config.screen.modify.ModifyEntryScreen
 import dev.nyon.autodrop.extensions.narration
+import dev.nyon.autodrop.extensions.openScreen
 import dev.nyon.autodrop.extensions.screenComponent
 import dev.nyon.autodrop.extensions.screenHeight
 import dev.nyon.autodrop.extensions.screenWidth
@@ -71,7 +72,7 @@ class ArchiveItemEntry(
     }.width(75).build()
 
     private val modifyButton = Button.builder(screenComponent("widget.items.modify")) {
-        internalMinecraft.setScreen(ModifyEntryScreen(parent, archiveEntry))
+        internalMinecraft.openScreen(ModifyEntryScreen(parent, archiveEntry))
     }.width(75).build()
 
     override fun extractContent(

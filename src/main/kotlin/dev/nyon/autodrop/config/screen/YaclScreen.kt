@@ -5,6 +5,7 @@ import dev.nyon.autodrop.config.config
 import dev.nyon.autodrop.config.reloadArchiveProperties
 import dev.nyon.autodrop.config.screen.root.ArchiveScreen
 import dev.nyon.autodrop.AutoDrop.minecraft
+import dev.nyon.autodrop.extensions.openScreen
 import dev.nyon.konfig.config.saveConfig
 import net.minecraft.client.gui.screens.Screen
 
@@ -20,7 +21,7 @@ fun createYaclScreen(parent: Screen? = null): Screen = YetAnotherConfigLib("auto
 
         val screen by rootOptions.registeringButton {
             action { parent, _ ->
-                minecraft.setScreen(ArchiveScreen(parent))
+                minecraft.openScreen(ArchiveScreen(parent))
             }
             available(minecraft.connection != null)
 

@@ -4,6 +4,7 @@ import dev.nyon.autodrop.config.Archive
 import dev.nyon.autodrop.config.config
 import dev.nyon.autodrop.config.screen.root.INNER_PAD
 import dev.nyon.autodrop.config.screen.root.OUTER_PAD
+import dev.nyon.autodrop.extensions.openScreen
 import dev.nyon.autodrop.extensions.screenComponent
 import dev.nyon.autodrop.extensions.screenHeight
 import dev.nyon.autodrop.extensions.screenWidth
@@ -73,7 +74,7 @@ class CreateArchiveScreen(private val parent: Screen?, private val onClose: (Arc
         config.archives.add(archive)
         onClose(archive)
 
-        internalMinecraft.setScreen(parent)
+        internalMinecraft.openScreen(parent)
         saveConfig(config)
     }
 }

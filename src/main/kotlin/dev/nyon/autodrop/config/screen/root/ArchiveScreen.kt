@@ -7,6 +7,7 @@ import dev.nyon.autodrop.config.reloadArchiveProperties
 import dev.nyon.autodrop.config.screen.create.CreateArchiveScreen
 import dev.nyon.autodrop.config.screen.ignored.IgnoredSlotsScreen
 import dev.nyon.autodrop.config.screen.modify.ModifyEntryScreen
+import dev.nyon.autodrop.extensions.openScreen
 import dev.nyon.autodrop.extensions.screenComponent
 import dev.nyon.autodrop.extensions.screenHeight
 import dev.nyon.autodrop.extensions.screenWidth
@@ -36,11 +37,11 @@ class ArchiveScreen(private val parent: Screen?) : Screen(screenComponent("title
     }.build()
 
     private val setIgnoredSlotsButton = Button.builder(screenComponent("ignored")) {
-        internalMinecraft.setScreen(IgnoredSlotsScreen(selected ?: return@builder, this@ArchiveScreen))
+        internalMinecraft.openScreen(IgnoredSlotsScreen(selected ?: return@builder, this@ArchiveScreen))
     }.build().also { it.active = selected != null}
 
     private val createArchiveButton = Button.builder(screenComponent("create")) {
-        internalMinecraft.setScreen(CreateArchiveScreen(this@ArchiveScreen) {
+        internalMinecraft.openScreen(CreateArchiveScreen(this@ArchiveScreen) {
             archivesWidget.refreshEntries()
             select(it)
             setIgnoredSlotsButton.active = true
@@ -68,7 +69,7 @@ class ArchiveScreen(private val parent: Screen?) : Screen(screenComponent("title
         val newIdentifier = ArchiveEntry(null, "[]", 1, true)
 
         selected?.entries?.add(newIdentifier) ?: return@builder
-        internalMinecraft.setScreen(
+        internalMinecraft.openScreen(
             ModifyEntryScreen(
                 this@ArchiveScreen, newIdentifier
             )
@@ -87,7 +88,7 @@ class ArchiveScreen(private val parent: Screen?) : Screen(screenComponent("title
     }
 
     override fun onClose() {
-        internalMinecraft.setScreen(parent)
+        internalMinecraft.openScreen(parent)
         saveConfig(config)
         reloadArchiveProperties()
     }

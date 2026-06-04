@@ -4,6 +4,7 @@ import dev.nyon.autodrop.AutoDrop.invokeAutodrop
 import dev.nyon.autodrop.config.config
 import dev.nyon.autodrop.config.screen.root.ArchiveScreen
 import dev.nyon.autodrop.extensions.keyMapping
+import dev.nyon.autodrop.extensions.openScreen
 import dev.nyon.konfig.config.saveConfig
 import net.minecraft.client.KeyMapping
 import net.minecraft.client.Minecraft
@@ -25,7 +26,7 @@ object KeyBindings {
         toggleKeyBind to { client ->
             config.enabled = !config.enabled
             saveConfig(config)
-            client.gui.setOverlayMessage(
+            client.gui/*? if >26.1 {*/.hud/*?}*/.setOverlayMessage(
                 Component.translatable("menu.autodrop.name").append(" ").append(
                     Component.translatable(if (config.enabled) "menu.autodrop.overlay.enabled" else "menu.autodrop.overlay.disabled")
                 ).withStyle(Style.EMPTY.withColor(0xF99147)), false
@@ -33,7 +34,7 @@ object KeyBindings {
             if (config.enabled) invokeAutodrop()
         },
         menuKeyBind to { client ->
-            if (Minecraft.getInstance().connection != null) client.setScreen(ArchiveScreen(null))
+            if (Minecraft.getInstance().connection != null) client.openScreen(ArchiveScreen(null))
         },
         triggerKeyBind to { invokeAutodrop() }
     )
