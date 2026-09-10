@@ -10,7 +10,7 @@ jobs:
     permissions: write-all
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Set up JDK
         uses: actions/setup-java@v5
         with:
@@ -19,18 +19,27 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
+        uses: gradle/actions/setup-gradle@v5
       - name: Build with Gradle
-        uses: Wandalen/wretry.action@master
-        with:
-          command: ./gradlew build --stacktrace
+        run: ./gradlew build --stacktrace
       - name: Release with Gradle
-        run: ./gradlew releaseMod postUpdate --stacktrace
+        run: ./gradlew releaseMod --stacktrace
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MODRINTH_API_KEY: ${{ secrets.MODRINTH_API_KEY }}
           CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
-          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-          DISCORD_ROLE_ID: ${{ secrets.DISCORD_ROLE_ID }}
           NYON_USERNAME: ${{ secrets.NYON_USERNAME }}
           NYON_PASSWORD: ${{ secrets.NYON_PASSWORD }}
+      - name: Post Discord Webhook
+        run: ./gradlew postUpdate --stacktrace
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+          DISCORD_ROLE_ID: ${{ secrets.DISCORD_ROLE_ID }}
+      - name: Sync Modrinth description
+        uses: btwonion/mc-readme-sync@v1
+        with:
+          modrinth-api-key: ${{ secrets.MODRINTH_API_KEY }}
+          curseforge-api-key: ${{ secrets.CURSEFORGE_API_KEY }}
+          modrinth-project-id: "lg17V3i3"
+          curseforge-project-id: "1244691"
+          readme-path: README.md

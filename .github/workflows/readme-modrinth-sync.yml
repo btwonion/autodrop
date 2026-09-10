@@ -14,8 +14,11 @@ jobs:
     runs-on: ubuntu-latest
     name: Sync Modrinth description
     steps:
-      - uses: actions/checkout@v4
-      - uses: funnyboy-roks/modrinth-auto-desc@v1.6
+      - uses: actions/checkout@v7
+      - uses: btwonion/mc-readme-sync@v1
         with:
-          auth-token: ${{ secrets.MODRINTH_API_KEY }}
-          slug: 'autodrop'
+          modrinth-api-key: ${{ secrets.MODRINTH_API_KEY }}
+          curseforge-api-key: ${{ secrets.CURSEFORGE_API_KEY }}
+          modrinth-project-id: "lg17V3i3"
+          curseforge-project-id: "1244691"
+          readme-path: README.md
