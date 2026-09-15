@@ -6,21 +6,21 @@ import dev.nyon.autodrop.config.screen.root.ArchiveScreen
 import dev.nyon.autodrop.extensions.keyMapping
 import dev.nyon.autodrop.extensions.openScreen
 import dev.nyon.konfig.config.saveConfig
+import com.mojang.blaze3d.platform.InputConstants
 import net.minecraft.client.KeyMapping
 import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
-import org.lwjgl.glfw.GLFW
 
 object KeyBindings {
     private val toggleKeyBind by lazy {
-        keyMapping("key.autodrop.toggle", GLFW.GLFW_KEY_J)
+        keyMapping("key.autodrop.toggle", InputConstants.KEY_J)
     }
     private val menuKeyBind by lazy {
-        keyMapping("key.autodrop.gui", GLFW.GLFW_KEY_O)
+        keyMapping("key.autodrop.gui", InputConstants.KEY_O)
     }
     private val triggerKeyBind by lazy {
-        keyMapping("key.autodrop.trigger", GLFW.GLFW_KEY_K)
+        keyMapping("key.autodrop.trigger", InputConstants.KEY_K)
     }
     val keyBinds: Map<KeyMapping, (Minecraft) -> Unit> = mapOf(
         toggleKeyBind to { client ->
