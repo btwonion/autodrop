@@ -14,7 +14,6 @@ import net.minecraft.commands.CommandBuildContext
 import net.minecraft.commands.arguments.item.ItemPredicateArgument
 import net.minecraft.world.flag.FeatureFlags
 import net.minecraft.world.inventory.ContainerInput
-import net.minecraft.world.inventory.Slot
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import kotlin.time.Duration.Companion.milliseconds
@@ -56,9 +55,12 @@ object AutoDrop {
 
             val screen = InventoryScreen(player)
             screen.menu.slots.filter {
-                it.hasItem() && !ignoredSlots.contains(it.correctSlotId())
+                it.hasItem() && !ignoredSlots.contains(it.index)
             }.forEach { slot ->
-                val itemStack = slot.item
+                val currentSlot = player.containerMenu.slots.firstOrNull {
+                    it.container === slot.container && it.containerSlot == slot.containerSlot
+                } ?: return@forEach
+                val itemStack = currentSlot.item
                 val validIdentifiers = currentItems.mapNotNull { identifier ->
                     val typeValid =
                         identifier.type == null || identifier.type == Items.AIR || itemStack.item == identifier.type
@@ -74,14 +76,14 @@ object AutoDrop {
                     val shouldDropEverything = validIdentifiers.all(ArchiveEntry::dropEverything)
                     if (shouldDropEverything) {
                         minecraft.gameMode?.handleContainerInput(
-                            player.containerMenu.containerId, slot.correctSlotId(), 1, ContainerInput.THROW, player
+                            player.containerMenu.containerId, currentSlot.index, 1, ContainerInput.THROW, player
                         )
                         return@forEach
                     }
                     if (itemStack.count > 1) { // When the stack count is bigger than one, the whole stack will be dropped like a player would do in-game.
                         // First the stack is picked up with the mouse, and in a second packets dropped out of the inventory.
                         minecraft.gameMode?.handleContainerInput(
-                            player.containerMenu.containerId, slot.correctSlotId(), 1, ContainerInput.PICKUP, player
+                            player.containerMenu.containerId, currentSlot.index, 1, ContainerInput.PICKUP, player
                         )
                         minecraft.gameMode?.handleContainerInput(
                             player.containerMenu.containerId, -999, 0, ContainerInput.PICKUP, player
@@ -102,20 +104,4 @@ object AutoDrop {
         return predicateResult.test(itemStack)
     }
 
-    /**
-     * Transforms the requested slot index to the index matching the schema of the player's inventory.
-     */
-    private fun Slot.correctSlotId(): Int { // The number of slots that are currently accessible to the player.
-        // If no container is opened, it is expected to be a player's inventory menu with the inventory's index starting at 0.
-        val openedContainerSize = minecraft.player?.containerMenu?.slots?.size ?: (0 + index)
-
-        // The starting index of the actual inventory of the player.
-        // In the case of the Crafter's and the player's inventory menu, the last slot is placed incorrectly, leading to wrong slot identification.
-        // -> start slot is 9
-        val invStartIndex = if (openedContainerSize == 46) 9 else openedContainerSize - 36
-
-        // The index of the slot subtracted by the above 9 slots of the player's inventory menu.
-        val flattenedInvIndex = index - 9
-        return invStartIndex + flattenedInvIndex
-    }
 }

@@ -1,1 +1,2 @@
 - update to 26.3
+- fix slot bugs in crafting table [**#35**](https://github.com/btwonion/autodrop/issues/35)
