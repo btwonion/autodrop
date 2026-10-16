@@ -6,7 +6,7 @@
 
 ## 🎬 Showcase
 
-https://github.com/user-attachments/assets/367edeea-eb4b-499e-b0d6-2287eb52405c
+![AutoDrop showcase](https://raw.githubusercontent.com/btwonion/autodrop/refs/heads/main/media/mod-showcase.gif)
 
 ---
 
