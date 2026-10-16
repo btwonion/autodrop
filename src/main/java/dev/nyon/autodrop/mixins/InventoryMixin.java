@@ -1,7 +1,6 @@
 package dev.nyon.autodrop.mixins;
 
 import dev.nyon.autodrop.AutoDrop;
-import dev.nyon.autodrop.config.ConfigHandlerKt;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
@@ -22,9 +21,7 @@ public class InventoryMixin {
         ItemStack stack,
         CallbackInfoReturnable<Boolean> cir
     ) {
-        if (ConfigHandlerKt.getConfig()
-            .getTriggerConfig()
-            .getOnPickup()) AutoDrop.INSTANCE.invokeAutodrop();
+        AutoDrop.INSTANCE.onInventoryChanged((Inventory) (Object) this);
     }
 
     @Inject(
@@ -36,9 +33,7 @@ public class InventoryMixin {
         ItemStack itemStack,
         CallbackInfo ci
     ) {
-        if (ConfigHandlerKt.getConfig()
-            .getTriggerConfig()
-            .getOnPickup()) AutoDrop.INSTANCE.invokeAutodrop();
+        AutoDrop.INSTANCE.onInventoryChanged((Inventory) (Object) this);
     }
 
     @Inject(
@@ -50,8 +45,6 @@ public class InventoryMixin {
         ItemStack stack,
         CallbackInfoReturnable<Integer> cir
     ){
-        if (ConfigHandlerKt.getConfig()
-            .getTriggerConfig()
-            .getOnPickup()) AutoDrop.INSTANCE.invokeAutodrop();
+        AutoDrop.INSTANCE.onInventoryChanged((Inventory) (Object) this);
     }
 }

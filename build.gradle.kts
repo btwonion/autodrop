@@ -48,8 +48,7 @@ modstitch {
         replacementProperties.put("fabric_loader", fabricLoader)
         replacementProperties.put("flk", flk)
         prop("vers.deps.fapi") { replacementProperties.put("fapi", it) }
-        prop("vers.deps.yacl") { replacementProperties.put("yacl", it) }
-        prop("version.deps.modmenu") { replacementProperties.put("modmenu", it) }
+        prop("vers.deps.modMenu") { replacementProperties.put("modmenu", it) }
     }
 
     loom {
@@ -104,7 +103,6 @@ repositories {
     mavenCentral()
     maven("https://maven.terraformersmc.com")
     maven("https://repo.nyon.dev/releases")
-    maven("https://maven.isxander.dev/releases")
     maven("https://maven.neoforged.net/releases/")
     // Has to be removed when NeoForge 26.2 is stable
     maven("https://prmaven.neoforged.net/NeoForge/pr3198") {
@@ -152,8 +150,6 @@ dependencies {
     } else {
         propModDependency("klf", { "dev.nyon:KotlinLangForge:2.11.2-k${libs.versions.kotlin.orNull}-$it+neoforge" }, api = true)
     }
-
-    propModDependency("yacl", { "dev.isxander:yet-another-config-lib:$it" })
 
     modstitchApi(libs.konfig)
     modstitchJiJ(libs.konfig)
@@ -205,8 +201,6 @@ publishMods {
         } else {
             requires { slug = "kotlin-lang-forge" }
         }
-
-        requires { slug = "yacl" }
     }
 
     curseforge {
@@ -223,8 +217,6 @@ publishMods {
         } else {
             requires { slug = "kotlinlangforge" }
         }
-
-        requires { slug = "yacl" }
     }
 
     github {

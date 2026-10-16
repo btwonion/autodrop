@@ -1,2 +1,18 @@
-- update to 26.3
-- fix slot bugs in crafting table [**#35**](https://github.com/btwonion/autodrop/issues/35)
+- rework the config screen from scratch with vanilla widgets
+  - **YACL is no longer required**
+  - archives are now called profiles and are managed in a single workspace: profile list on the left, tabs for items, protected slots and a live preview on the right
+  - pick several items at once from a creative-inventory style picker with search and an "in my inventory" filter
+  - all edits happen in a draft: save applies them, discard reverts them, and dropping is paused while the screen is open
+  - the screen also works outside a world again; only the inventory view and the preview need one
+- add keep lists: a profile can keep its listed items and drop everything else instead
+  - enabled keep lists combine, and you review what would be dropped before a keep list can be turned on
+- add new amount options per item rule: all matching items, half of each stack, or exactly X items per trigger
+  - the old per-stack amount is replaced by "minimum in inventory", which counts all matching items you carry
+- add a preview that shows which items would be dropped right now and explains why each slot is dropped or kept
+- new profiles start turned off and protect the armor slots by default
+- old archives are migrated to profiles automatically
+  - items with "drop everything" turned off become "half of each stack" rules
+  - the old per-stack amount becomes the new inventory-wide minimum
+- the pickup trigger now reacts to actual inventory changes and is no longer triggered by AutoDrop's own drops
+- the crouch trigger now only fires when you start crouching and no longer blocks the other triggers
+- an invalid item data filter now pauses dropping instead of failing on every trigger

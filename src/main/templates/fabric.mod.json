@@ -20,7 +20,6 @@
         "fabricloader": ">=${fabric_loader}",
         "fabric-language-kotlin": ">=${flk}",
         "fabric-api": ">=${fapi}",
-        "yet_another_config_lib_v3": ">=${yacl}",
         "minecraft": "${mc}"
     },
     "suggests": {

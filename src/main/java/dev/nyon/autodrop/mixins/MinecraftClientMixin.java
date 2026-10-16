@@ -1,6 +1,7 @@
 package dev.nyon.autodrop.mixins;
 
 import dev.nyon.autodrop.KeyBindings;
+import dev.nyon.autodrop.AutoDrop;
 import net.minecraft.client.Minecraft;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -16,5 +17,6 @@ public class MinecraftClientMixin {
     )
     public void onTick(CallbackInfo ci) {
         KeyBindings.INSTANCE.handleKeybindings((Minecraft) (Object) this);
+        AutoDrop.INSTANCE.tick();
     }
 }
