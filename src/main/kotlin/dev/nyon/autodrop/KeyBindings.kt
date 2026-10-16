@@ -1,12 +1,12 @@
 package dev.nyon.autodrop
 
+import com.mojang.blaze3d.platform.InputConstants
 import dev.nyon.autodrop.AutoDrop.invokeAutodrop
 import dev.nyon.autodrop.config.config
 import dev.nyon.autodrop.config.screen.ProfileWorkspaceScreen
 import dev.nyon.autodrop.extensions.keyMapping
 import dev.nyon.autodrop.extensions.openScreen
 import dev.nyon.konfig.config.saveConfig
-import com.mojang.blaze3d.platform.InputConstants
 import net.minecraft.client.KeyMapping
 import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
@@ -22,25 +22,21 @@ object KeyBindings {
     internal val triggerKeyBind by lazy {
         keyMapping("key.autodrop.trigger", InputConstants.KEY_K)
     }
-    val keyBinds: Map<KeyMapping, (Minecraft) -> Unit> = mapOf(
-        toggleKeyBind to { client ->
-            if (AutoDrop.isEditing) return@to
-            AutoDrop.cancelPending()
-            config.enabled = !config.enabled
-            saveConfig(config)
-            client.gui/*? if >26.1 {*/.hud/*?}*/.setOverlayMessage(
-                Component.translatable("menu.autodrop.name").append(" ").append(
-                    Component.translatable(if (config.enabled) "menu.autodrop.overlay.enabled" else "menu.autodrop.overlay.disabled")
-                ).withStyle(Style.EMPTY.withColor(0xF99147)), false
-            )
-            if (config.enabled) invokeAutodrop()
-        },
-        menuKeyBind to { client ->
-            if (AutoDrop.isEditing) return@to
-            client.openScreen(ProfileWorkspaceScreen(null))
-        },
-        triggerKeyBind to { invokeAutodrop() }
-    )
+    val keyBinds: Map<KeyMapping, (Minecraft) -> Unit> = mapOf(toggleKeyBind to { client ->
+        if (AutoDrop.isEditing) return@to
+        AutoDrop.cancelPending()
+        config.enabled = !config.enabled
+        saveConfig(config)
+        client.gui/*? if >26.1 {*/.hud/*?}*/.setOverlayMessage(
+            Component.translatable("menu.autodrop.name").append(" ").append(
+                Component.translatable(if (config.enabled) "menu.autodrop.overlay.enabled" else "menu.autodrop.overlay.disabled")
+            ).withStyle(Style.EMPTY.withColor(0xF99147)), false
+        )
+        if (config.enabled) invokeAutodrop()
+    }, menuKeyBind to { client ->
+        if (AutoDrop.isEditing) return@to
+        client.openScreen(ProfileWorkspaceScreen(null))
+    }, triggerKeyBind to { invokeAutodrop() })
 
     fun handleKeybindings(client: Minecraft) {
         keyBinds.forEach { (bind, function) -> if (bind.consumeClick()) function(client) }

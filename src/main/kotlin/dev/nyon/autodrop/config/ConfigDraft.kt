@@ -10,9 +10,13 @@ class ConfigDraft(source: Config) {
         private set
     private val original = source.deepCopy()
     val dirty: Boolean get() = value != original
-    fun discard() { value = original.deepCopy() }
+    fun discard() {
+        value = original.deepCopy()
+    }
+
     /** Whether the saved config already contains [predicate], so it was accepted when that config was saved. */
-    fun isSavedPredicate(predicate: String) = original.profiles.any { profile -> profile.entries.any { it.predicate == predicate } }
+    fun isSavedPredicate(predicate: String) =
+        original.profiles.any { profile -> profile.entries.any { it.predicate == predicate } }
 }
 
 /**
@@ -29,7 +33,7 @@ private val RULE_TYPE = Regex("[a-z0-9_.-]+:[a-z0-9/._-]+")
 fun isValidRuleType(type: String) = type.matches(RULE_TYPE) && type != "minecraft:air"
 
 fun validateConfig(value: Config, predicateError: (String) -> String? = { null }): ValidationIssue? {
-    if (value.dropDelay !in 0..Int.MAX_VALUE.toLong()) return ValidationIssue("invalid.delay")
+    if (value.dropDelay !in 0 .. Int.MAX_VALUE.toLong()) return ValidationIssue("invalid.delay")
     value.profiles.forEach { profile ->
         if (profile.name.isBlank()) return ValidationIssue("invalid.name")
         if (profile.enabled && profile.mode == ProfileMode.KEEP) {
@@ -38,7 +42,10 @@ fun validateConfig(value: Config, predicateError: (String) -> String? = { null }
         }
         profile.entries.forEach { rule ->
             if (rule.type?.let { !isValidRuleType(it) } == true) return ValidationIssue("invalid.type", profile.name)
-            if (rule.quantity <= 0 || rule.minimumInventory < 0) return ValidationIssue("invalid.quantity", profile.name)
+            if (rule.quantity <= 0 || rule.minimumInventory < 0) return ValidationIssue(
+                "invalid.quantity",
+                profile.name
+            )
             predicateError(rule.predicate)?.let { return ValidationIssue("invalid.predicate", "${profile.name}: $it") }
         }
     }

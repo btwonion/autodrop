@@ -2,8 +2,8 @@ package dev.nyon.autodrop
 
 import dev.nyon.autodrop.config.config
 import dev.nyon.autodrop.config.screen.DraftScreen
-import dev.nyon.autodrop.extensions.currentScreen
 import dev.nyon.autodrop.extensions.VanillaRegistryAccess
+import dev.nyon.autodrop.extensions.currentScreen
 import dev.nyon.autodrop.planning.*
 import kotlinx.coroutines.*
 import net.minecraft.client.Minecraft
@@ -21,7 +21,9 @@ object AutoDrop {
     val mcScope: CoroutineScope by lazy {
         CoroutineScope(SupervisorJob() + minecraft.asCoroutineDispatcher())
     }
+
     private data class StackKey(val type: Any, val components: Any)
+
     private val triggers = DropTriggerState<StackKey>()
     private var pendingJob: Job? = null
     private var inventoryEvent = false
@@ -29,16 +31,22 @@ object AutoDrop {
     val isEditing: Boolean get() = triggers.editing
 
     val itemPredicateArgument: ItemPredicateArgument
-        get() = ItemPredicateArgument(CommandBuildContext.simple(
-            minecraft.connection?.registryAccess() ?: VanillaRegistryAccess.createVanillaRegistryAccess(), FeatureFlags.DEFAULT_FLAGS
-        ))
+        get() = ItemPredicateArgument(
+            CommandBuildContext.simple(
+                minecraft.connection?.registryAccess() ?: VanillaRegistryAccess.createVanillaRegistryAccess(),
+                FeatureFlags.DEFAULT_FLAGS
+            )
+        )
 
     fun setEditing(editing: Boolean) {
         cancelPending()
         triggers.setEditing(editing)
         inventoryEvent = false
     }
-    fun cancelPending() { pendingJob?.cancel(); pendingJob = null }
+
+    fun cancelPending() {
+        pendingJob?.cancel(); pendingJob = null
+    }
 
     fun onInventoryChanged(inventory: Inventory) {
         if (inventory === minecraft.player?.inventory && !triggers.executing && !isEditing) inventoryEvent = true
@@ -56,14 +64,12 @@ object AutoDrop {
             val ownJob = currentCoroutineContext().job
             try {
                 delay(delay)
-                if (minecraft.player !== player || !config.enabled || isEditing || minecraft.currentScreen is DraftScreen ||
-                    !triggers.begin()) return@launch
+                if (minecraft.player !== player || !config.enabled || isEditing || minecraft.currentScreen is DraftScreen || !triggers.begin()) return@launch
                 dropBatch()
             } finally {
                 if (pendingJob === ownJob) pendingJob = null
             }
-        }
-        // Assign before starting, including when a zero delay completes immediately.
+        } // Assign before starting, including when a zero delay completes immediately.
         pendingJob = job
         job.start()
     }
@@ -80,7 +86,9 @@ object AutoDrop {
         val externalChange = triggers.observe(observe(snapshot))
         val trigger = externalChange && inventoryEvent && config.triggerConfig.onPickup && config.enabled
         inventoryEvent = false
-        if (!config.enabled || isEditing) { cancelPending(); return }
+        if (!config.enabled || isEditing) {
+            cancelPending(); return
+        }
         if (trigger) invokeAutodrop()
     }
 
@@ -90,23 +98,30 @@ object AutoDrop {
             val snapshot = MinecraftPlanner.snapshot() ?: return
             val plan = MinecraftPlanner.plan(config, snapshot)
             val drops = plan.slots.filter { it.dropCount > 0 }
-            val gameMode = minecraft.gameMode ?: return
-            // Preflight the entire batch, so an exact amount is never intentionally partially allocated.
+            val gameMode = minecraft.gameMode
+                ?: return // Preflight the entire batch, so an exact amount is never intentionally partially allocated.
             if (player.containerMenu !== snapshot.menu || !snapshot.menu.carried.isEmpty || drops.any {
-                val target = snapshot.targets[it.slot]
-                target == null || !target.mayPickup(player) || !ItemStack.matches(target.item, snapshot.items[it.slot]!!)
-            }) return
+                    val target = snapshot.targets[it.slot]
+                    target == null || !target.mayPickup(player) || !ItemStack.matches(
+                        target.item,
+                        snapshot.items[it.slot]!!
+                    )
+                }) return
             val menu = snapshot.menu.containerId
             drops.forEach { decision ->
                 val slot = snapshot.targets.getValue(decision.slot).index
                 when (decision.method) {
                     DropMethod.STACK -> gameMode.handleContainerInput(menu, slot, 1, ContainerInput.THROW, player)
-                    DropMethod.HALF -> {
-                        // Right click takes the larger half onto the empty cursor, then a click outside drops it.
+                    DropMethod.HALF -> { // Right click takes the larger half onto the empty cursor, then a click outside drops it.
                         gameMode.handleContainerInput(menu, slot, 1, ContainerInput.PICKUP, player)
-                        gameMode.handleContainerInput(menu, AbstractContainerMenu.SLOT_CLICKED_OUTSIDE, 0, ContainerInput.PICKUP, player)
-                    }
-                    // The cursor cannot split off this amount; the rule editor and preview warn about it.
+                        gameMode.handleContainerInput(
+                            menu,
+                            AbstractContainerMenu.SLOT_CLICKED_OUTSIDE,
+                            0,
+                            ContainerInput.PICKUP,
+                            player
+                        )
+                    } // The cursor cannot split off this amount; the rule editor and preview warn about it.
                     DropMethod.SINGLE_ITEMS -> repeat(decision.dropCount) {
                         gameMode.handleContainerInput(menu, slot, 0, ContainerInput.THROW, player)
                     }

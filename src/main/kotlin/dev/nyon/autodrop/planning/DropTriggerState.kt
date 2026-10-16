@@ -10,13 +10,19 @@ class DropTriggerState<K> {
         private set
     private var previous: Map<Int, ObservedStack<K>>? = null
 
-    fun setEditing(value: Boolean) { editing = value }
+    fun setEditing(value: Boolean) {
+        editing = value
+    }
+
     fun begin(): Boolean {
         if (editing || executing) return false
         executing = true
         return true
     }
-    fun finish() { executing = false }
+
+    fun finish() {
+        executing = false
+    }
 
     fun observe(snapshot: Map<Int, ObservedStack<K>>): Boolean {
         val before = previous
@@ -25,7 +31,11 @@ class DropTriggerState<K> {
     }
 
     /** Accepts an own batch's predicted result; any later change, even picking items straight back up, triggers again. */
-    fun afterOwnBatch(after: Map<Int, ObservedStack<K>>) { previous = after }
+    fun afterOwnBatch(after: Map<Int, ObservedStack<K>>) {
+        previous = after
+    }
 
-    fun reset() { previous = null; executing = false }
+    fun reset() {
+        previous = null; executing = false
+    }
 }

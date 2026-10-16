@@ -1,8 +1,9 @@
 package dev.nyon.autodrop.config.screen
 
-import dev.nyon.autodrop.config.*
+import dev.nyon.autodrop.config.ConfigDraft
+import dev.nyon.autodrop.config.Profile
 import dev.nyon.autodrop.extensions.screenComponent
-import dev.nyon.autodrop.planning.*
+import dev.nyon.autodrop.planning.MinecraftPlanner
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.network.chat.Component
 
@@ -17,15 +18,22 @@ internal class ConfirmDraftScreen(
     override fun init() {
         footerButtons(confirm, danger = true) { show(parent); accept() }
     }
-    override fun onClose() { show(parent) }
+
+    override fun onClose() {
+        show(parent)
+    }
+
     override fun extractRenderState(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         super.extractRenderState(graphics, mouseX, mouseY, delta)
         paragraphs(graphics, listOf(description to WHITE))
     }
 }
 
-internal class KeepReviewScreen(private val parent: ProfileWorkspaceScreen, draft: ConfigDraft, private val profile: Profile) :
-    DraftScreen(screenComponent("keep_review.title"), draft) {
+internal class KeepReviewScreen(
+    private val parent: ProfileWorkspaceScreen,
+    draft: ConfigDraft,
+    private val profile: Profile
+) : DraftScreen(screenComponent("keep_review.title"), draft) {
     private var offline = emptyList<Pair<Component, Int>>()
     override fun init() {
         val area = minOf(width - 16, 520)
@@ -38,14 +46,20 @@ internal class KeepReviewScreen(private val parent: ProfileWorkspaceScreen, draf
             add(screenComponent("keep_review.description", profile.name) to GOLD)
             add(screenComponent("keep_review.details") to MUTED)
             if (masterOff) add(screenComponent("keep_review.master_off") to MUTED)
-        }
-        // Without a world there is nothing to preview, so the dialog only explains what turning it on does.
-        offline = if (snapshot == null) explanation + (screenComponent("keep_review.no_world") to WHITE) else emptyList()
+        } // Without a world there is nothing to preview, so the dialog only explains what turning it on does.
+        offline =
+            if (snapshot == null) explanation + (screenComponent("keep_review.no_world") to WHITE) else emptyList()
         if (snapshot != null) {
             val plan = MinecraftPlanner.plan(proposed, snapshot)
             val list = addRenderableWidget(RowList((width - area) / 2, HEADER + 6, area, height - HEADER - FOOTER - 12))
             val w = list.rowWidth
-            list.rows(explanation.map<Pair<Component, Int>, NativeRow> { (text, color) -> TextRow(text, w, color) } + buildList {
+            list.rows(explanation.map<Pair<Component, Int>, NativeRow> { (text, color) ->
+                TextRow(
+                    text,
+                    w,
+                    color
+                )
+            } + buildList {
                 add(TextRow(screenComponent("keep_review.preview", plan.dropCount, plan.stackCount), w, WHITE))
                 add(InventoryRow(profile, { snapshot }, { plan }, true, inventoryScale(w, list.height - 80, 2)) {})
                 add(LegendRow(listOf(RED to screenComponent("legend.drop"), GREEN to screenComponent("legend.kept"))))
@@ -56,7 +70,11 @@ internal class KeepReviewScreen(private val parent: ProfileWorkspaceScreen, draf
             profile.keepReviewed = true; profile.enabled = true; show(parent)
         }.active = profile.entries.isNotEmpty() && profile.entries.all { predicateError(it.predicate) == null }
     }
-    override fun onClose() { show(parent) }
+
+    override fun onClose() {
+        show(parent)
+    }
+
     override fun extractRenderState(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         super.extractRenderState(graphics, mouseX, mouseY, delta)
         if (offline.isNotEmpty()) paragraphs(graphics, offline)

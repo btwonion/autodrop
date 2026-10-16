@@ -20,8 +20,7 @@ object AutoDropEntrypoint : ClientModInitializer {
     }
 }
 
-/*?} else {*/
-/*import dev.nyon.autodrop.config.screen.ProfileWorkspaceScreen
+/*?} else {*//*import dev.nyon.autodrop.config.screen.ProfileWorkspaceScreen
 import dev.nyon.klf.MOD_BUS
 import net.neoforged.fml.ModLoadingContext
 import net.neoforged.fml.common.Mod

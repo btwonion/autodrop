@@ -16,18 +16,24 @@ private const val GRID_WIDTH = 162
 private const val GRID_HEIGHT = 100
 
 /** Largest whole-number scale at which the inventory fits, so slots grow with the available space. */
-internal fun inventoryScale(width: Int, height: Int, max: Int = 3) = minOf(width / GRID_WIDTH, height / (GRID_HEIGHT + 8), max).coerceAtLeast(1)
+internal fun inventoryScale(width: Int, height: Int, max: Int = 3) =
+    minOf(width / GRID_WIDTH, height / (GRID_HEIGHT + 8), max).coerceAtLeast(1)
 
 /** Uses the InventoryMenu slot IDs that profiles store: 5–8 armor, 9–35 inventory, 36–44 hotbar, 45 offhand. */
 private fun slotOffset(slot: Int): Pair<Int, Int> = when (slot) {
-    in 5..8 -> (slot - 5) * 18 to 0
+    in 5 .. 8 -> (slot - 5) * 18 to 0
     45 -> 8 * 18 to 0
-    in 9..35 -> (slot - 9) % 9 * 18 to 24 + (slot - 9) / 9 * 18
+    in 9 .. 35 -> (slot - 9) % 9 * 18 to 24 + (slot - 9) / 9 * 18
     else -> (slot - 36) * 18 to 82
 }
 
-private val EMPTY_SLOT_SPRITES = mapOf(5 to "helmet", 6 to "chestplate", 7 to "leggings", 8 to "boots", 45 to "shield")
-    .mapValues { sprite("container/slot/${it.value}") }
+private val EMPTY_SLOT_SPRITES = mapOf(
+    5 to "helmet",
+    6 to "chestplate",
+    7 to "leggings",
+    8 to "boots",
+    45 to "shield"
+).mapValues { sprite("container/slot/${it.value}") }
 
 internal class InventoryRow(
     profile: Profile?,
@@ -37,10 +43,17 @@ internal class InventoryRow(
     private val scale: Int,
     onSlot: (Int) -> Unit
 ) : NativeRow(GRID_HEIGHT * scale + 8) {
-    private val slots = ((5..8) + (9..45)).associateWith { slot ->
+    private val slots = ((5 .. 8) + (9 .. 45)).associateWith { slot ->
         InventorySlotButton(slot, scale, profile, snapshot, plan, preview) { onSlot(slot) }.also { controls += it }
     }
-    override fun extractContent(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, hovered: Boolean, delta: Float) {
+
+    override fun extractContent(
+        graphics: GuiGraphicsExtractor,
+        mouseX: Int,
+        mouseY: Int,
+        hovered: Boolean,
+        delta: Float
+    ) {
         val left = x + (width - GRID_WIDTH * scale) / 2
         slots.forEach { (slot, button) ->
             val (dx, dy) = slotOffset(slot)
@@ -60,7 +73,11 @@ private class InventorySlotButton(
     action: () -> Unit
 ) : FlatButton(slotName(slot), action) {
     private var tooltipText = ""
-    init { setSize(18 * scale, 18 * scale) }
+
+    init {
+        setSize(18 * scale, 18 * scale)
+    }
+
     override fun extractContents(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         val stack = snapshot()?.items?.get(slot) ?: ItemStack.EMPTY
         val decision = plan().at(slot)
@@ -85,13 +102,16 @@ private class InventorySlotButton(
         }
         updateTooltip(stack, decision, protected)
     }
+
     private fun updateTooltip(stack: ItemStack, decision: SlotDecision?, protected: Boolean) {
-        val tip = slotName(slot).copy().append(": ").append(if (stack.isEmpty) screenComponent("slot.empty") else stack.hoverName)
+        val tip = slotName(slot).copy().append(": ")
+            .append(if (stack.isEmpty) screenComponent("slot.empty") else stack.hoverName)
         if (!preview) tip.append("\n").append(screenComponent(if (protected) "slot.protected" else "slot.unprotected"))
-        if (decision != null) tip.append("\n").append(screenComponent("preview.slot_count", decision.dropCount, decision.remaining))
-            .append("\n").append(reasonText(decision))
-        if (decision?.method == DropMethod.SINGLE_ITEMS)
-            tip.append("\n").append(singleItemsWarning(decision).withStyle(ChatFormatting.GOLD))
+        if (decision != null) tip.append("\n")
+            .append(screenComponent("preview.slot_count", decision.dropCount, decision.remaining)).append("\n")
+            .append(reasonText(decision))
+        if (decision?.method == DropMethod.SINGLE_ITEMS) tip.append("\n")
+            .append(singleItemsWarning(decision).withStyle(ChatFormatting.GOLD))
         if (tip.string == tooltipText) return
         tooltipText = tip.string
         message = tip
@@ -101,7 +121,13 @@ private class InventorySlotButton(
 
 /** Colour key for the inventory grid, centered under it. */
 internal class LegendRow(private val entries: List<Pair<Int, Component>>) : NativeRow(16) {
-    override fun extractContent(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, hovered: Boolean, delta: Float) {
+    override fun extractContent(
+        graphics: GuiGraphicsExtractor,
+        mouseX: Int,
+        mouseY: Int,
+        hovered: Boolean,
+        delta: Float
+    ) {
         val font = client.font
         val total = entries.sumOf { 14 + font.width(it.second) } + 12 * (entries.size - 1)
         var left = x + ((width - total) / 2).coerceAtLeast(0)
@@ -118,19 +144,36 @@ internal fun singleItemsWarning(decision: SlotDecision) = screenComponent("previ
 
 /** The reason for a planned slot, then a warning when its items can only be thrown one at a time. */
 private fun decisionLines(decision: SlotDecision, width: Int): List<Pair<FormattedCharSequence, Int>> =
-    wrap(reasonText(decision), width).map { it to MUTED } +
-        if (decision.method == DropMethod.SINGLE_ITEMS) wrap(singleItemsWarning(decision), width).map { it to GOLD } else emptyList()
+    wrap(reasonText(decision), width).map { it to MUTED } + if (decision.method == DropMethod.SINGLE_ITEMS) wrap(
+        singleItemsWarning(decision),
+        width
+    ).map { it to GOLD } else emptyList()
 
 /** One planned slot of the preview with its item, the amount and the reason. */
 internal class PreviewDecisionRow(private val decision: SlotDecision, private val stack: ItemStack, wrapWidth: Int) :
     NativeRow(maxOf(26, 16 + decisionLines(decision, wrapWidth - 24).size * 10 + 2)) {
     private val lines = decisionLines(decision, wrapWidth - 24)
-    override fun extractContent(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, hovered: Boolean, delta: Float) {
+    override fun extractContent(
+        graphics: GuiGraphicsExtractor,
+        mouseX: Int,
+        mouseY: Int,
+        hovered: Boolean,
+        delta: Float
+    ) {
         drawSlot(graphics, x, y + 3)
         graphics.item(stack, x + 1, y + 4)
         graphics.itemDecorations(client.font, stack, x + 1, y + 4)
-        val title = slotName(decision.slot).copy().append(" · ").append(screenComponent("preview.slot_count", decision.dropCount, decision.remaining))
+        val title = slotName(decision.slot).copy().append(" · ")
+            .append(screenComponent("preview.slot_count", decision.dropCount, decision.remaining))
         text(graphics, title, x + 24, y + 3, width - 24, if (decision.dropCount > 0) RED else WHITE)
-        lines.forEachIndexed { index, (line, color) -> graphics.text(client.font, line, x + 24, y + 14 + index * 10, color) }
+        lines.forEachIndexed { index, (line, color) ->
+            graphics.text(
+                client.font,
+                line,
+                x + 24,
+                y + 14 + index * 10,
+                color
+            )
+        }
     }
 }

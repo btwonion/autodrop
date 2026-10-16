@@ -18,7 +18,8 @@ data class Config(
     val profiles: MutableList<Profile> = mutableListOf(),
     var dropDelay: Long = 200
 ) {
-    fun deepCopy() = copy(triggerConfig = triggerConfig.copy(), profiles = profiles.map { it.deepCopy() }.toMutableList())
+    fun deepCopy() =
+        copy(triggerConfig = triggerConfig.copy(), profiles = profiles.map { it.deepCopy() }.toMutableList())
 }
 
 /**
@@ -35,11 +36,18 @@ val ARMOR_SLOTS = setOf(5, 6, 7, 8)
 
 /** Defines whether a profile drops its listed items or keeps them and drops unlisted items. */
 @Serializable
-enum class ProfileMode { DROP, KEEP }
+enum class ProfileMode {
+    DROP,
+    KEEP
+}
 
 /** Defines whether a rule drops every matching item, half of each stack, or one exact total across stacks. */
 @Serializable
-enum class QuantityMode { ALL, HALF, EXACT }
+enum class QuantityMode {
+    ALL,
+    HALF,
+    EXACT
+}
 
 /**
  * Represents a profile and its item and slot rules.
@@ -62,7 +70,8 @@ data class Profile(
     var mode: ProfileMode = ProfileMode.DROP,
     var keepReviewed: Boolean = false
 ) {
-    fun deepCopy() = copy(entries = entries.map { it.copy() }.toMutableList(), protectedSlots = protectedSlots.toMutableSet())
+    fun deepCopy() =
+        copy(entries = entries.map { it.copy() }.toMutableList(), protectedSlots = protectedSlots.toMutableSet())
 }
 
 /**

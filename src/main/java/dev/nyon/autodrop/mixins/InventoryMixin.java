@@ -44,7 +44,7 @@ public class InventoryMixin {
         int slot,
         ItemStack stack,
         CallbackInfoReturnable<Integer> cir
-    ){
+    ) {
         AutoDrop.INSTANCE.onInventoryChanged((Inventory) (Object) this);
     }
 }
