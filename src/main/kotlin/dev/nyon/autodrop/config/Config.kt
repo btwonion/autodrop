@@ -1,64 +1,95 @@
 package dev.nyon.autodrop.config
 
-import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
-import net.minecraft.world.item.Item
 
 /**
  * Represents the root config.
  *
  * @param enabled defines whether the mod is enabled or not.
  * @param triggerConfig defines the triggers for clearing the inventory of unwanted items.
- * @param archives define the archives, represented by [dev.nyon.autodrop.config.Archive].
- * @param dropDelay defines the delay between trigger and drop of unwanted items.
+ * @param profiles define the profiles, represented by [Profile]. There are none by default, so the workspace
+ * creates the first one with a name in the player's language.
+ * @param dropDelay defines the delay in milliseconds between a trigger and dropping unwanted items.
  */
-
 @Serializable
 data class Config(
     var enabled: Boolean = true,
     val triggerConfig: TriggerConfig = TriggerConfig(),
-    val archives: MutableList<Archive> = mutableListOf(Archive(true, "Archive 1", mutableListOf(), mutableSetOf())),
+    val profiles: MutableList<Profile> = mutableListOf(),
     var dropDelay: Long = 200
-)
+) {
+    fun deepCopy() =
+        copy(triggerConfig = triggerConfig.copy(), profiles = profiles.map { it.deepCopy() }.toMutableList())
+}
 
 /**
  * Represents the trigger config.
  *
- * @param onPickup defines whether the inventory should be cleared on item pickups.
- * @param onSneak defines whether the inventory should be cleared on sneak.
+ * @param onPickup defines whether inventory changes should trigger dropping unwanted items.
+ * @param onSneak defines whether starting to crouch triggers dropping unwanted items. It never restricts other triggers.
  */
 @Serializable
-data class TriggerConfig(
-    var onPickup: Boolean = true, var onSneak: Boolean = false
-)
+data class TriggerConfig(var onPickup: Boolean = true, var onSneak: Boolean = false)
+
+/** InventoryMenu indices of the helmet, chestplate, leggings and boots slots. */
+val ARMOR_SLOTS = setOf(5, 6, 7, 8)
+
+/** Defines whether a profile drops its listed items or keeps them and drops unlisted items. */
+@Serializable
+enum class ProfileMode {
+    DROP,
+    KEEP
+}
+
+/** Defines whether a rule drops every matching item, half of each stack, or one exact total across stacks. */
+@Serializable
+enum class QuantityMode {
+    ALL,
+    HALF,
+    EXACT
+}
 
 /**
- * Represents a config entry for an archive.
+ * Represents a profile and its item and slot rules.
  *
- * @param enabled defines whether the archive is enabled.
- * @param name is the identifier of the archive.
- * @param entries define the entries of the archive. Those are represented by [dev.nyon.autodrop.config.ArchiveEntry].
- * @param ignoredSlots define the slots that are ignored by the mod and thus don't get cleared automatically.
+ * @param enabled defines whether the profile is enabled. New profiles start disabled.
+ * @param name is the identifier displayed for the profile.
+ * @param entries define the item rules, represented by [ProfileRule].
+ * @param protectedSlots define the player slots protected across all enabled profiles. These are
+ * InventoryMenu indices: 5–8 armor, 9–35 inventory, 36–44 hotbar, and 45 offhand. New profiles protect the
+ * armor slots, so worn armor is never dropped unless the player unprotects it.
+ * @param mode defines whether listed items should be dropped or kept.
+ * @param keepReviewed defines whether the current keep list has been reviewed before enabling it.
  */
 @Serializable
-data class Archive(
-    var enabled: Boolean = true,
-    val name: String,
-    var entries: MutableList<ArchiveEntry>,
-    var ignoredSlots: MutableSet<Int>
-)
+data class Profile(
+    var enabled: Boolean = false,
+    var name: String,
+    val entries: MutableList<ProfileRule> = mutableListOf(),
+    val protectedSlots: MutableSet<Int> = ARMOR_SLOTS.toMutableSet(),
+    var mode: ProfileMode = ProfileMode.DROP,
+    var keepReviewed: Boolean = false
+) {
+    fun deepCopy() =
+        copy(entries = entries.map { it.copy() }.toMutableList(), protectedSlots = protectedSlots.toMutableSet())
+}
 
 /**
- * Represents an entry of an archive for identification of items that are valid to be dropped.
+ * Represents an item rule for identifying items to drop or keep.
  *
- * @param type is the type of the item and serialized as a [dev.nyon.autodrop.extensions.ResourceLocation], e.g. minecraft:stone.
- * @param predicate is the item data to be filtered for. The format should match the syntax of the item predicate.
- * @param amount is the amount of the item that is required for the item to be dropped.
+ * @param type is the registry ID of the item, e.g. minecraft:stone. Null explicitly matches any item;
+ * unknown registry IDs remain IDs and never become wildcards.
+ * @param predicate is the item data to filter for, using Minecraft's item-predicate syntax.
+ * @param quantityMode defines how many matching items to drop. Keep rules protect every matching amount.
+ * @param quantity is the exact total to drop across eligible stacks for one trigger when using [QuantityMode.EXACT].
+ * @param minimumInventory is the matching total required in the player inventory before dropping,
+ * including protected slots. It is a condition, not an amount to reserve.
  */
 @Serializable
-data class ArchiveEntry(
-    var type: @Contextual Item?,
-    var predicate: String,
-    var amount: Int,
-    var dropEverything: Boolean = true
+data class ProfileRule(
+    var type: String? = null,
+    var predicate: String = "",
+    var quantityMode: QuantityMode = QuantityMode.ALL,
+    var quantity: Int = 16,
+    var minimumInventory: Int = 0
 )

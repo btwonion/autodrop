@@ -1,14 +1,11 @@
 package dev.nyon.autodrop
 
+import dev.nyon.autodrop.config.CONFIG_VERSION
 import dev.nyon.autodrop.config.Config
 import dev.nyon.autodrop.config.config
 import dev.nyon.autodrop.config.migrate
-import dev.nyon.autodrop.config.reloadArchiveProperties
-import dev.nyon.autodrop.extensions.ItemSerializer
 import dev.nyon.konfig.config.config
 import dev.nyon.konfig.config.loadConfig
-import kotlinx.serialization.modules.SerializersModule
-import net.minecraft.world.item.Item
 import java.nio.file.Path
 
 /*? if fabric {*/
@@ -24,7 +21,7 @@ object AutoDropEntrypoint : ClientModInitializer {
 }
 
 /*?} else {*/
-/*import dev.nyon.autodrop.config.screen.createYaclScreen
+/*import dev.nyon.autodrop.config.screen.ProfileWorkspaceScreen
 import dev.nyon.klf.MOD_BUS
 import net.neoforged.fml.ModLoadingContext
 import net.neoforged.fml.common.Mod
@@ -43,19 +40,13 @@ object AutoDropEntrypoint {
         }
 
         ModLoadingContext.get().registerExtensionPoint(IConfigScreenFactory::class.java) {
-            IConfigScreenFactory { _, parent -> createYaclScreen(parent) }
+            IConfigScreenFactory { _, parent -> ProfileWorkspaceScreen(parent) }
         }
     }
 }
 *//*?}*/
 
 private fun initialize(configDir: Path) {
-    config(configDir, 2, Config(), jsonBuilder = {
-        serializersModule = SerializersModule {
-            contextual(Item::class, ItemSerializer)
-        }
-    }) { json, jsonTree, version -> migrate(json, jsonTree, version) }
+    config(configDir, CONFIG_VERSION, Config()) { json, jsonTree, version -> migrate(json, jsonTree, version) }
     config = loadConfig<Config>()
-
-    reloadArchiveProperties()
 }

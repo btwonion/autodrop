@@ -1,16 +1,16 @@
 package dev.nyon.autodrop.extensions
 
-import net.minecraft.core.RegistryAccess
-import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.core.HolderLookup
+import net.minecraft.data.registries.VanillaRegistries
 
 object VanillaRegistryAccess {
-    fun createVanillaRegistryAccess(): RegistryAccess.ImmutableRegistryAccess {
-        return RegistryAccess.ImmutableRegistryAccess(
-            listOf(
-                BuiltInRegistries.ITEM,
-                BuiltInRegistries.DATA_COMPONENT_TYPE,
-                BuiltInRegistries.DATA_COMPONENT_PREDICATE_TYPE
-            )
-        )
+    private val lookup: HolderLookup.Provider by lazy {
+        // Include dynamic vanilla registries (notably enchantments) for editing outside a world.
+        //? if >=26.3
+        VanillaRegistries.createWorldLookup()
+        //? if <26.3
+        //VanillaRegistries.createLookup()
     }
+
+    fun createVanillaRegistryAccess(): HolderLookup.Provider = lookup
 }

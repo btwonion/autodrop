@@ -1,55 +1,61 @@
 package dev.nyon.autodrop.config
 
-import dev.nyon.autodrop.extensions.identifier
 import kotlinx.serialization.json.*
-import net.minecraft.core.registries.BuiltInRegistries
-import kotlin.jvm.optionals.getOrNull
 
 var config: Config = Config()
-var currentItems = mutableSetOf<ArchiveEntry>()
-var ignoredSlots = mutableSetOf<Int>()
+    internal set
 
-fun reloadArchiveProperties() {
-    currentItems.clear()
-    ignoredSlots.clear()
-    config.archives.filter(Archive::enabled).forEach { archive ->
-        currentItems += archive.entries
-        ignoredSlots += archive.ignoredSlots
-    }
-}
+const val CONFIG_VERSION = 3
 
-internal fun migrate(
-    json: Json, jsonTree: JsonElement, version: Int?
-): Config? {
-    val jsonObject = jsonTree.jsonObject
-    return when (version) {
-        null, 1 -> Config(
-            jsonObject["enabled"]?.jsonPrimitive?.content?.toBooleanStrictOrNull() ?: return null,
-            TriggerConfig(),
-            jsonObject["archives"]?.jsonArray?.map { element ->
-                val archiveObject = element.jsonObject
-                return@map Archive(
-                    true,
-                    archiveObject["name"]?.jsonPrimitive?.content ?: return null,
-                    archiveObject["items"]?.jsonArray?.map secMap@{ content ->
-                        val resourceLocation = identifier(content.jsonPrimitive.contentOrNull ?: return null)
-                        return@secMap ArchiveEntry(
-                            resourceLocation?.let { BuiltInRegistries.ITEM.get(it).getOrNull()?.value() }, "", 1, true
-                        )
-                    }?.toMutableList() ?: return null,
-                    archiveObject["lockedSlots"]?.jsonArray?.map secMap@{ content ->
-                        content.jsonPrimitive.content.toIntOrNull() ?: return null
-                    }?.toMutableSet() ?: return null
-                )
-            }?.toMutableList() ?: return null,
-            jsonObject["dropDelay"]?.jsonPrimitive?.longOrNull ?: return null
-        )
-        2 -> Config(
-            jsonObject["enabled"]?.jsonPrimitive?.content?.toBooleanStrictOrNull() ?: return null,
-            json.decodeFromJsonElement(TriggerConfig.serializer(), jsonObject["triggerConfig"] ?: return null),
-            jsonObject["archives"]?.jsonArray?.map { json.decodeFromJsonElement(Archive.serializer(), it) }?.toMutableList() ?: return null,
-            jsonObject["dropDelay"]?.jsonPrimitive?.longOrNull ?: return null
-        )
+/**
+ * Converts older formats when Konfig requests a migration. Konfig only asks after the current format failed to
+ * decode, so unknown keys must keep failing: that is what routes old archives here instead of to defaults.
+ *
+ * @param json is the serializer configured by Konfig.
+ * @param jsonTree is the config content supplied by Konfig.
+ * @param version is the stored config version, or null for the original unversioned format.
+ * @return the migrated config, or null if Konfig should apply its default config.
+ */
+internal fun migrate(json: Json, jsonTree: JsonElement, version: Int?): Config? = runCatching {
+    when (version) {
+        null, 1, 2 -> migrateArchives(json, jsonTree, version)
         else -> null
     }
+}.getOrNull()
+
+private fun migrateArchives(json: Json, jsonTree: JsonElement, version: Int?): Config? {
+    val root = jsonTree.jsonObject
+    val profiles = root["archives"]?.jsonArray?.map { element ->
+        val old = element.jsonObject
+        val rules = if (version == 2) {
+            old["entries"]!!.jsonArray.map { entry ->
+                val rule = entry.jsonObject
+                ProfileRule(
+                    type = legacyType(rule["type"]),
+                    predicate = rule["predicate"]?.jsonPrimitive?.contentOrNull ?: "",
+                    quantityMode = if (rule["dropEverything"]?.jsonPrimitive?.booleanOrNull != false) QuantityMode.ALL else QuantityMode.HALF, // The old per-stack minimum becomes an inventory-wide minimum; 1 never restricted anything.
+                    minimumInventory = (rule["amount"]?.jsonPrimitive?.intOrNull ?: 1).takeIf { it > 1 } ?: 0)
+            }
+        } else {
+            old["items"]!!.jsonArray.map { ProfileRule(type = legacyType(it)) }
+        }
+        Profile(
+            enabled = old["enabled"]?.jsonPrimitive?.booleanOrNull ?: true,
+            name = old["name"]!!.jsonPrimitive.content,
+            entries = rules.toMutableList(),
+            protectedSlots = (old[if (version == 2) "ignoredSlots" else "lockedSlots"]?.jsonArray
+                ?: JsonArray(emptyList())).map { it.jsonPrimitive.int }.toMutableSet()
+        )
+    }?.toMutableList() ?: return null
+    return Config(
+        enabled = root["enabled"]?.jsonPrimitive?.booleanOrNull ?: true,
+        triggerConfig = root["triggerConfig"]?.let { json.decodeFromJsonElement<TriggerConfig>(it) } ?: TriggerConfig(),
+        profiles = profiles,
+        dropDelay = root["dropDelay"]?.jsonPrimitive?.longOrNull ?: 200)
+}
+
+private fun legacyType(value: JsonElement?): String? {
+    val id = value?.jsonPrimitive?.contentOrNull ?: return null
+    if (id == "air" || id == "minecraft:air" || id.isBlank()) return null
+    return if (':' in id) id else "minecraft:$id"
 }

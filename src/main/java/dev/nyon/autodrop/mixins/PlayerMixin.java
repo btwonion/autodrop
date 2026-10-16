@@ -24,9 +24,10 @@ public class PlayerMixin {
         Pose pose,
         Operation<Void> original
     ) {
-        if (ConfigHandlerKt.getConfig()
-            .getTriggerConfig()
-            .getOnSneak() && pose == Pose.CROUCHING) AutoDrop.INSTANCE.invokeAutodrop();
+        boolean enteringCrouch = instance.getPose() != Pose.CROUCHING && pose == Pose.CROUCHING;
         original.call(instance, pose);
+        if (instance == AutoDrop.INSTANCE.getMinecraft().player && enteringCrouch && ConfigHandlerKt.getConfig()
+            .getTriggerConfig()
+            .getOnSneak()) AutoDrop.INSTANCE.invokeAutodrop();
     }
 }
