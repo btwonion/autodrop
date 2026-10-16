@@ -12,4 +12,5 @@ class ModMenuImpl : ModMenuApi {
             ProfileWorkspaceScreen(it)
         }
     }
-}/*?}*/
+}
+/*?}*/

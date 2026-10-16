@@ -5,7 +5,7 @@ import kotlinx.serialization.json.*
 var config: Config = Config()
     internal set
 
-const val CONFIG_VERSION = 4
+const val CONFIG_VERSION = 3
 
 /**
  * Converts older formats when Konfig requests a migration. Konfig only asks after the current format failed to
@@ -19,32 +19,9 @@ const val CONFIG_VERSION = 4
 internal fun migrate(json: Json, jsonTree: JsonElement, version: Int?): Config? = runCatching {
     when (version) {
         null, 1, 2 -> migrateArchives(json, jsonTree, version)
-        3 -> migrateStackMinimum(json, jsonTree)
         else -> null
     }
 }.getOrNull()
-
-/** Version 3 kept the old per-stack minimum as `legacyMinimumStack`; it becomes the inventory minimum. */
-private fun migrateStackMinimum(json: Json, jsonTree: JsonElement): Config {
-    val root = jsonTree.jsonObject
-    val profiles = root["profiles"]!!.jsonArray.map { profile ->
-        val entries = profile.jsonObject["entries"]!!.jsonArray.map { entry ->
-            val rule = entry.jsonObject
-            val stack = rule["legacyMinimumStack"]?.jsonPrimitive?.intOrNull ?: 1
-            val minimum = rule["minimumInventory"]?.jsonPrimitive?.intOrNull ?: 0
-            JsonObject(
-                rule - "legacyMinimumStack" + ("minimumInventory" to JsonPrimitive(
-                    if (stack > 1) maxOf(
-                        minimum,
-                        stack
-                    ) else minimum
-                ))
-            )
-        }
-        JsonObject(profile.jsonObject + ("entries" to JsonArray(entries)))
-    }
-    return json.decodeFromJsonElement(JsonObject(root + ("profiles" to JsonArray(profiles))))
-}
 
 private fun migrateArchives(json: Json, jsonTree: JsonElement, version: Int?): Config? {
     val root = jsonTree.jsonObject
