@@ -6,7 +6,7 @@
 
 ## 🎬 Showcase
 
-<video src="https://github.com/user-attachments/assets/470a3d66-1e79-49e9-88df-522e7640d1c1" controls muted width="100%"><a href="https://github.com/user-attachments/assets/470a3d66-1e79-49e9-88df-522e7640d1c1">Watch the mod showcase</a></video>
+<video src="https://github.com/user-attachments/assets/367edeea-eb4b-499e-b0d6-2287eb52405c" controls muted width="100%"><a href="https://github.com/user-attachments/assets/367edeea-eb4b-499e-b0d6-2287eb52405c">Watch the mod showcase</a></video>
 
 ---
 
