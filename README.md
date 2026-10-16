@@ -1,7 +1,9 @@
 # autodrop
 
-This mod provides a function to automatically drop items from the
-inventory.
+This mod provides a function to automatically drop items from the inventory.
+
+https://github.com/user-attachments/assets/470a3d66-1e79-49e9-88df-522e7640d1c1
+
 
 ## Managing profiles
 
